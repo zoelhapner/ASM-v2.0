@@ -8,15 +8,12 @@ use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-
-
-
-  
+ 
 class UsersController extends Controller
 {
     
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
+    
         if ($request->ajax()) {
 
             $users = User::query();
@@ -45,14 +42,13 @@ class UsersController extends Controller
         return view('users.index');
     }
 
-    public function create()
-    {
+    public function create() {
+    
         return view('users.create');
     }
 
- public function store(Request $request)
-    {
-
+    public function store(Request $request) {
+    
         $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email', 'password' => 'required']);
         User::create([
             'name' => $request->name,
@@ -68,7 +64,7 @@ class UsersController extends Controller
        return view('users.edit', compact('user'));
     }
 
-     public function update(Request $request, User $user) {
+    public function update(Request $request, User $user) {
         
        $validated = $request->validate([
         'name' => 'required',
@@ -80,12 +76,10 @@ class UsersController extends Controller
         'password' => 'required',
     ]);
 
-    $user->update($validated);
-    return redirect()->route('users.index')->with('success', 'Data berhasil diperbarui.');
+        $user->update($validated);
+        return redirect()->route('users.index')->with('success', 'Data berhasil diperbarui.');
 
     } 
-
-   
 
     public function destroy(User $user) {
     

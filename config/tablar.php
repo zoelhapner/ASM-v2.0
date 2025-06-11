@@ -45,8 +45,8 @@ return [
             'path' => 'assets/aha-warna-new.png',
             'alt' => 'SIM AHA Right Brain',
             'class' => 'navbar-brand-image',
-            'width' => 150,
-            'height' => 60,
+            'width' =>  50,
+            'height' => 50,
         ],
     ],
 
