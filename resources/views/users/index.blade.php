@@ -1,4 +1,4 @@
-{{-- Penting --}}
+
 @extends('tablar::page')
 
 @section('content')
@@ -85,165 +85,65 @@
                     { data: 'created_at', name: 'created_at'},
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ],
-
-                columnDefs: [
-        {
-            targets: 0, // Kolom "No."
-            orderable: false,
-            searchable: false,
-            className: 'text-center',
-            width: '5%'
-        },
-        {
-            targets: 4, // Kolom terakhir (tombol Edit/Delete)
-            orderable: false,
-            searchable: false,
-            className: 'text-center',
-            width: '15%'
-        }
-    ]
     
             });
 
             // Delete user functionally
-            $('table').on('click', '.delete-user', function() {
-                const userId = $(this).data('id');
-                
-                if (userId) {
-                    if (confirm('Are you sure, you want to delete?')) {
-                        $.ajax({
-                            url: `{{ url('users/delete') }}/${userId}`,
-                            method: 'DELETE',
-                            data: {
-                                _token: '{{ csrf_token() }}',
-                            },
-                            success:function(response) {
-                                if (response.status === 'success') {
-                                    table.ajax.reload(null, false);
-                                } else {
-                                    alert(response.message);
-                                }
-                            },
-                            errror: function(error) {
-                                alert('something went wrong!')
-                            }
-                    })
+            $('table').on('click', '.delete-user', function () {
+    const userId = $(this).data('id');
 
+    Swal.fire({
+        title: 'Yakin ingin menghapus?',
+        text: "Data akan hilang secara permanen.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: `/users/${userId}`,
+                method: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function (response) {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'User telah dihapus.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        table.ajax.reload(null, false); // refresh datatable
+                    } else {
+                        Swal.fire('Gagal', response.message || 'Tidak bisa menghapus data.', 'error');
                     }
-                    
+                },
+                error: function () {
+                    Swal.fire('Error', 'Terjadi kesalahan saat menghapus.', 'error');
                 }
             });
-
-           // const editableColumns = [1, 2];
-           // let currentEditableRow = null;
-
-            // Edit user functionally
-            // $('table').on('click', '.edit-user', function() {
-            //     const userId = $(this).data('id');
-            //     const currentRow = $(this).closest('tr');
-
-            //     // Check if current row is editable then this will reset the other row edit
-            //     if (currentEditableRow && currentEditableRow !== currentRow) {
-            //         resetEditableRow(currentEditableRow);
-            //     }
-
-            //     // Calling Make Editable Row Function
-            //     makeEditableRow(currentRow);
-
-            //     // Updating the current row to editable
-            //     currentEditableRow = currentRow;
-
-            //     // Appending action buttons in the lasr column
-            //     currentRow.find('td:last').html(`
-            //         <button class="btn btn-primary btn-sm btn-update" data-id="${userId}">Update</button>
-            //         <button data-id="${userId}" class="btn btn-danger btn-sm delete-user">Delete</button> 
-            //     `);
-                
-            // });
-
-            // Function : Make Editable Row
-            // function makeEditableRow(currentRow) {
-            //     currentRow.find('td').each(function(index) {
-
-            //         const currentCell = $(this);
-            //         const currentText = currentCell.text().trim();
-
-            //     if (editableColumns.includes(index)) {
-            //             currentCell.html(`<input type="text" class="form-control editable-input" value="${currentText}" />`);
-            //     }
-            //     });
-
-                
-            // }
-
-            // Function : Reset Current Row Editable
-            // function resetEditableRow(currentEditableRow) {
-            //     currentEditableRow.find('td').each(function(index) {
-
-            //         const currentCell = $(this);
-
-            //         if (editableColumns.includes(index)) {
-            //             const currentValue = currentCell.find('input').val();
-            //             currentCell.html(`${currentValue}`);
-            //         }
-            //     });
-
-            //     const userId = currentEditableRow.find('.btn-update').data('id');
-
-            //     currentEditableRow.find('td:last').html(`
-            //         <button class="btn btn-success btn-sm btn-edit" data-id="${userId}">Edit</button>
-            //         <button data-id="${userId}" class="btn btn-danger btn-sm delete-user">Delete</button>
-                
-            //     `);
-            // }
-
-            // Update function
-            // $('table').on('click', '.btn-update', function() {
-            //     const userId = $(this).data('id');
-
-            //     const currentRow = $(this).closest('tr');
-
-            //     const updatedUserData = {};
-
-            //     currentRow.find('td').each(function(index) {
-            //         if (editableColumns.includes(index)) {
-            //             const inputValue = $(this).find('input').val();
-
-            //             if(index === 1)
-            //                 updatedUserData.name = inputValue;
-
-            //             if(index === 2)
-            //                 updatedUserData.email = inputValue;
-
-            //         }
-            //     });
+        }
+    });
+});
 
 
-            //     // Ajax call to update user data
-
-            //     $.ajax({
-            //         url: '{{ route("users.update") }}',
-            //         type: 'PUT',
-            //         data: {
-            //             id: userId,
-            //             name: updatedUserData.name,
-            //             email : updatedUserData.email,
-            //             _token: '{{ csrf_token() }}',
-            //         },
-            //         success: function(response){
-            //             if (response.status === 'success') {
-            //                 table.ajax.reload(function() {
-            //                     $('#row-id-' + userId).addClass('highlight');
-            //                 });
-            //             } else {
-            //                 alert(response.message);
-            //             }
-            //         },
-            //         error: function(errorResponse) {
-            //             alert(errorResponse.message);
-            //         }
-            //     });
-            // });
+           
         });
     </script>
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Sukses!',
+        text: '{{ session('success') }}',
+        timer: 2000,
+        showConfirmButton: false
+    });
+</script>
+@endif
 @endpush

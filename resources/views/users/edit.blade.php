@@ -36,10 +36,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Edit Data</h3>
+                            <p class="text-center mb-4" style="font-size: 1.4rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                                Edit Data Pengguna
+                            </p>
                         </div>
                         <div class="card-body">
-                             <form action="{{ route('users.update', $user) }}" method="POST">
+                             <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('users.update', $user) }}" method="POST">
                                 @csrf
                                 @method('put')
 

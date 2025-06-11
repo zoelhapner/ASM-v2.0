@@ -195,12 +195,6 @@ return [
             
         ],
 
-        [
-    'text' => 'Test Icon',
-    'icon' => 'ti ti-alarm',
-    'url' => '#'
-],
-
     ],
 
     /*

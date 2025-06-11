@@ -19,6 +19,9 @@
     @if(config('tablar','vite'))
         @vite('resources/js/app.js')
     @endif
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     {{-- Livewire Styles --}}
     @if(config('tablar.livewire'))

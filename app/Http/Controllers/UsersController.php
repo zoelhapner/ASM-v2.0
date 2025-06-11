@@ -60,7 +60,7 @@ class UsersController extends Controller
         'password' => Hash::make($request['password']),
         ]);
 
-        return redirect()->route('users.index')->with('success', 'Users created.');
+        return redirect()->route('users.index')->with('success', 'Data berhasil ditambahkan.');
     }
 
     public function edit(User $user) {
@@ -70,7 +70,7 @@ class UsersController extends Controller
 
      public function update(Request $request, User $user) {
         
-       $request->validate([
+       $validated = $request->validate([
         'name' => 'required',
         'email' => [
             'required',
@@ -80,22 +80,15 @@ class UsersController extends Controller
         'password' => 'required',
     ]);
 
-    $user->update([
+    $user->update($validated);
+    return redirect()->route('users.index')->with('success', 'Data berhasil diperbarui.');
 
-    'name' => $request->name,
-    'email' => $request->email,
-    'password' => $request->password,
-
-]);
-
-    return redirect()->route('users.index')->with(['success', 'Berhasil diperbarui.']);
-                
     } 
 
    
 
-    public function destroy($id) {
-        $user = User::findorFail($id);
+    public function destroy(User $user) {
+    
         if ($user) {
             $user->delete();
             return response()->json(['status' => 'success', 'message' => 'User deleted successfully']);
@@ -103,29 +96,5 @@ class UsersController extends Controller
 
         return response()->json(['status' => 'failed', 'message' => 'Unable to delete']);
     }
-
-
-   
-
-//     public function update(Request $request, $id)
-// {
-//     $validated = $request->validate([
-//         'name' => 'required',
-//         'email' => 'required|email',
-//         'password' => 'nullable|min:8',
-//     ]);
-
-//     $user = User::findOrFail($id);
-
-//      if (!empty($validated['password'])) {
-//         $validated['password'] = Hash::make($validated['password']);
-//     } else {
-//         unset($validated['password']); // jangan update password jika kosong
-//     }
-
-//     $user->update($validated);
-
-//     return redirect()->route('users.index')->with('success', 'User updated.');
-// }
 
 }
