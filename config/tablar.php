@@ -177,7 +177,7 @@ return [
                 [
                     'text' => 'Input Keuangan',
                     'url' => '#',
-                    'icon' => 'ti ti-cash-backnote',
+                    'icon' => 'ti ti-currency-dollar',
                 ],
                 [
                     'text' => 'Laporan Keuangan',
