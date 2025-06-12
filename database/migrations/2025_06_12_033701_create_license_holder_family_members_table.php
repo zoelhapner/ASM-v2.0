@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('license_holder_family_members', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('license_holder_id')->constrained();
+            $table->uuid('id')->primary();
+            $table->uuid('license_holder_id');
+            $table->foreign('license_holder_id')->references('id')->on('license_holders')->onDelete('cascade');
             $table->string('name');
             $table->unsignedTinyInteger('relationship');
             $table->unsignedtinyInteger('gender');
-            $table->date('birth_date');
+            $table->string('birth_date', 10);
             $table->string('job');
             $table->string('job_phone');
             $table->string('last_education_level');

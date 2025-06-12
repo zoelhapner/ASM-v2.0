@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('license_holder_educations', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('license_holder_id')->constrained();
+        Schema::create('license_holders_educations', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('license_holder_id');
+            $table->foreign('license_holder_id')->references('id')->on('license_holders')->onDelete('cascade');
             $table->string('education_level');
             $table->string('institution_name');
             $table->string('major');
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('license_holder_educations');
+        Schema::dropIfExists('license_holders_educations');
     }
 };

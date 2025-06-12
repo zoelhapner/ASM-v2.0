@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('license_holder_work_experiences', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('license_holder_id')->constrained();
+        Schema::create('license_holders_work_experiences', function (Blueprint $table) {
+            $table->uuid('id')->primary();
+            $table->uuid('license_holder_id');
+            $table->foreign('license_holder_id')->references('id')->on('license_holders')->onDelete('cascade');
             $table->string('company_name');
             $table->string('city');
             $table->string('phone');
             $table->string('position');
             $table->unsignedTinyInteger('employment_type');
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->string('start_date', 10);
+            $table->string('end_date', 10);
             $table->boolean('is_current');
             $table->string('skills_used');
             $table->text('job_description');
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('license_holder_work_experiences');
+        Schema::dropIfExists('license_holders_work_experiences');
     }
 };
