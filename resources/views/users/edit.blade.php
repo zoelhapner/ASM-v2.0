@@ -1,6 +1,8 @@
 {{-- Penting --}}
 @extends('tablar::page')
 
+@section('title', 'Edit Pengguna')
+
 @section('content')
     <!-- Page header -->
     <div class="page-header d-print-none">
