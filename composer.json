@@ -12,6 +12,7 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "laravolt/indonesia": "^0.36.0",
         "spatie/laravel-permission": "^6.18",
         "takielias/tablar": "^12",
         "yajra/laravel-datatables-oracle": "^12.3"

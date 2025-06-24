@@ -11,7 +11,7 @@
                         Overview
                     </div>
                     <h2 class="page-title">
-                        Lisensi
+                        Pemilik Lisensi
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -19,7 +19,7 @@
                     <div class="btn-list">
                   <span class="d-none d-sm-inline">
                   
-                        <a href="{{ route("licenses.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href="{{ route("license_holders.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -28,7 +28,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19"/>
                                 <line x1="5" y1="12" x2="19" y2="12"/>
                             </svg>
-                            Tambah Data Lisensi
+                            Tambah Data Pemilik
                         </a>
                         
                     </div>
@@ -44,41 +44,33 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.4rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
-                                 Lisensi
+                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                                 Pemilik Lisensi
                             </p>
                         </div>
                         <div class="table-responsive">
-                            <table id="tableLicenses" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                            <table id="tableLicenseHolders" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
                                 <thead>
                                     <tr>
                                         <th class="w-1">Id Lisensi</th>
-                                        <th>Tipe Lisensi</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
+                                        <th>Nama Lisensi</th>
+                                        <th>Nama Pemilik</th>
+                                        <th>Agama</th>
+                                        <th>Nomor KTP</th>
+                                        <th>Nomor SIM</th>
+                                        <th>Tempat Lahir</th>
+                                        <th>Tanggal Lahir</th>
                                         <th>Alamat</th>
-                                        <th>Provinsi</th>
-                                        <th>Kabupaten/Kota</th>
-                                        <th>Kecamatan</th>
-                                        <th>Kelurahan</th>
-                                        <th>Kode Pos</th>
                                         <th>Telepon</th>
-                                        <th>Tanggal Bergabung</th>
-                                        <th>Expired date</th>
-                                        <th>Nomor Aqad</th>
-                                        <th>Status</th>
-                                        <th>Tipe Bangunan</th>
-                                        <th>Status Bangunan</th>
-                                        <th>Tanggal Expired Sewa Bangunan</th>
-                                        <th>Luas Bangunan</th>
-                                        <th>Kondisi Bangunan</th>
-                                        <th>Bangunan Punya AC?</th>
-                                        <th>Instagram</th>
-                                        <th>Halaman Facebook</th>
-                                        <th>Tiktok</th>
-                                        <th>Youtube</th>
-                                        <th>Google Maps</th>
-                                        <th>Landing Page Pendaftaran Siswa</th>
+                                        <th>Hobi</th>
+                                        <th>Status Pernikahan</th>
+                                        <th>Tanggal Pernikahan</th>
+                                        <th>Bahasa Indonesia(Baca/Tulis)</th>
+                                        <th>Bahasa Indonesia(Bicara)</th>
+                                        <th>Bahasa Arab (Baca/Tulis)</th>
+                                        <th>Bahasa Arab (Bicara)</th>
+                                        <th>Bahasa Inggris (Baca/Tulis)</th>
+                                        <th>Bahasa Inggris (Bicara)</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -96,46 +88,38 @@
 @push('js')
     <script>
         $(function() {
-            const table = $('#tableLicenses').DataTable({
+            const table = $('#tableLicenseHolders').DataTable({
                 serverSide: true,
                 processing: true,
-                ajax: '{{ route("licenses.index") }}',
+                ajax: '{{ route("license_holders.index") }}',
                 columns: [
                     { data: 'license_id', name: 'license_id' },
-                    { data: 'license_type', name: 'license_type' },
+                    { data: 'license_name', name: 'license.name' },
                     { data: 'name', name: 'name' },
-                    { data: 'email', name: 'email'},
+                    { data: 'religion_name', name: 'religion.name'},
+                    { data: 'identity_number', name: 'identity_number' },
+                    { data: 'driver_license_number', name: 'driver_license_number' },
+                    { data: 'birth_place', name: 'birth_place'},
+                    { data: 'birth_date', name: 'birth_date' },
                     { data: 'address', name: 'address' },
-                    { data: 'province_name', name: 'province.name' },
-                    { data: 'city_name', name: 'city.name'},
-                    { data: 'district_name', name: 'district.name' },
-                    { data: 'sub_district_name', name: 'sub_district_name' },
-                    { data: 'postal_code', name: 'postal_code' },
                     { data: 'phone', name: 'phone'},
-                    { data: 'join_date', name: 'join_date' },
-                    { data: 'expired_date', name: 'expired_date' },
-                    { data: 'contract_agreement_number', name: 'contract_agreement_number'},
-                    { data: 'status', name: 'status' },
-                    { data: 'building_type', name: 'building_type' },
-                    { data: 'building_status', name: 'building_status'},
-                    { data: 'building_rent_expired_date', name: 'building_rent_expired_date' },
-                    { data: 'building_area', name: 'building_area' },
-                    { data: 'building_condition', name: 'building_condition'},
-                    { data: 'building_has_ac', name: 'building_has_ac' },
-                    { data: 'instagram', name: 'instagram' },
-                    { data: 'facebook_page', name: 'facebook_page'},
-                    { data: 'tiktok', name: 'tiktok' },
-                    { data: 'youtube', name: 'youtube' },
-                    { data: 'google_maps', name: 'google_maps'},
-                    { data: 'landing_page_student_registration', name: 'landing_page_student_registration' },
+                    { data: 'hobby', name: 'hobby' },
+                    { data: 'marital_status', name: 'marital_status' },
+                    { data: 'married_date', name: 'married_date'},
+                    { data: 'indonesian_literacy', name: 'indonesian_literacy' },
+                    { data: 'indonesian_proficiency', name: 'indonesian_proficiency' },
+                    { data: 'arabic_literacy', name: 'arabic_literacy'},
+                    { data: 'arabic_proficiency', name: 'arabic_proficiency' },
+                    { data: 'english_literacy', name: 'english_literacy' },
+                    { data: 'english_proficiency', name: 'english_proficiency'},                    
                     { data: 'action', name: 'action', orderable: false, searchable: false },
                 ],
     
             });
 
             // Delete user functionally
-            $('table').on('click', '.delete-license', function () {
-            const licenseId = $(this).data('id');
+            $('table').on('click', '.delete-license_holder', function () {
+            const license_holderId = $(this).data('id');
 
             Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -152,7 +136,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
 
-                        url: `/licenses/${licenseId}`,
+                        url: `/license_holders/${license_holderId}`,
                         method: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}',
@@ -163,7 +147,7 @@
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Berhasil!',
-                                    text: 'Lisensi telah dihapus.',
+                                    text: 'Pemilik telah dihapus.',
                                     timer: 2000,
                                     showConfirmButton: false
                             });

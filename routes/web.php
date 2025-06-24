@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\LicensesController;
+use App\Http\Controllers\LicenseHoldersController;
+use App\Http\Controllers\LicenseHolderEducationController;
+use App\Http\Controllers\LicenseHolderWorkExperience;
+use App\Http\Controllers\LicenseHolderFamilyMember;
 
 
 
@@ -33,6 +37,18 @@ Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->nam
 route::resource('/users', UsersController::class);
 
 Route::resource('/licenses', LicensesController::class);
+
+route::resource('/license_holders', LicenseHoldersController::class);
+
+Route::get('/license_holders/{id}/profile', [LicenseHoldersController::class, 'showProfile'])->name('license_holders.profile');
+Route::get('/license_holders/{id}/educations', [LicenseHoldersController::class, 'showTab'])->name('license_holders.educations');
+Route::get('/license_holders/{id}/workers', [LicenseHoldersController::class, 'showWorks'])->name('license_holders.workers');
+Route::get('/license_holders/{id}/families', [LicenseHoldersController::class, 'showFams'])->name('license_holders.families');
+
+route::resource('/license_holder_educations', LicenseHolderEducationController::class);
+route::resource('/license_holder_workers', LicenseHolderWorkExperience::class);
+route::resource('/license_holder_families', LicenseHolderFamilyMember::class);
+
 
 Route::get('/api/cities/{province_id}', function ($province_id) {
     return \App\Models\City::where('province_id', $province_id)->select('id', 'name')->get();

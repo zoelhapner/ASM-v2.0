@@ -18,13 +18,13 @@ return new class extends Migration
             $table->string('company_name');
             $table->string('city');
             $table->string('phone');
-            $table->string('position');
+            $table->string('position')->nullable();
             $table->unsignedTinyInteger('employment_type');
             $table->string('start_date', 10);
-            $table->string('end_date', 10);
+            $table->string('end_date', 10)->nullable();
             $table->boolean('is_current');
-            $table->string('skills_used');
-            $table->text('job_description');
+            $table->string('skills_used')->nullable();
+            $table->text('job_description')->nullable();
         });
     }
 

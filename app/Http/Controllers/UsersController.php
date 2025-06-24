@@ -23,14 +23,14 @@ class UsersController extends Controller
             ->addIndexColumn()
             
             ->addColumn('created_at', function($user) {
-                return Carbon::parse($user->created_at)->format('Y-m-d');
+                return Carbon::parse($user->created_at)->format('d-m-Y');
             })
 
             ->addColumn('action', function($user) {
                 $editUrl = route('users.edit', $user->id);
 
                 return ' 
-                    <a href="'.$editUrl.'" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="'.$editUrl.'" class="btn btn-success btn-sm">Edit</a>
                     <button data-id="'.$user->id.'" class="btn btn-danger btn-sm delete-user">Delete</button>
                 '; 
             })
@@ -51,7 +51,7 @@ class UsersController extends Controller
     
         $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email', 'password' => 'required']);
         User::create([
-            'name' => $request->name,
+        'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request['password']),
         ]);
@@ -71,7 +71,7 @@ class UsersController extends Controller
         'email' => [
             'required',
             'email',
-            Rule::unique('users')->ignore($user->id),
+             Rule::unique('users')->ignore($user->id),
         ],
         'password' => 'required',
     ]);

@@ -6,15 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Province extends Model
 {
-    public function Country() {
+    public function country() {
         return $this->belongsTo(Country::class);
     }
 
-    public function Cities() {
+    public function cities() {
         return $this->hasMany(City::class);
     }
 
-    public function Licenses() {
+    public function licenses() {
         return $this->hasMany(License::class);
     }
 }

@@ -151,9 +151,22 @@ return [
         ],
 
         [
-            'text' => 'Data Lisensi',
+            'text' => 'Lisensi',
             'icon' => 'ti ti-license',
-            'url' => '#'
+            'url' => '#',
+            'active' => ['licenses'],
+            'submenu' => [
+                [
+                    'text' => 'Data Lisensi',
+                    'url' => 'licenses',
+                    'icon' => 'ti ti-currency-dollar',
+                ],
+                [
+                    'text' => 'Data Pemilik',
+                    'url' => 'license_holders',
+                    'icon' => 'ti ti-currency-dollar',
+                ],
+            ],
         ],
 
         [
@@ -191,7 +204,7 @@ return [
             'text' => 'User',
             'url' => 'users',
             'icon' => 'ti ti-users',
-            'active' => ['users'],
+            'active' => ['users*'],
             
         ],
 

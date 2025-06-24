@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('license_holders_educations', function (Blueprint $table) {
+        Schema::create('license_holder_educations', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('license_holder_id');
             $table->foreign('license_holder_id')->references('id')->on('license_holders')->onDelete('cascade');
             $table->string('education_level');
             $table->string('institution_name');
-            $table->string('major');
+            $table->string('major')->nullable();
             $table->integer('start_year');
-            $table->integer('end_year');
+            $table->integer('end_year')->nullable();
             $table->boolean('is_graduated');
         });
     }

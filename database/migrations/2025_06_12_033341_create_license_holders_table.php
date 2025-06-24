@@ -19,20 +19,20 @@ return new class extends Migration
             $table->unsignedBigInteger('religion_id');
             $table->foreign('religion_id')->references('id')->on('religions')->onDelete('cascade');
             $table->string('identity_number', 16);
-            $table->string('driver_license_number', 20);
+            $table->string('driver_license_number', 20)->nullable();
             $table->string('birth_place');
             $table->string('birth_date', 10);
             $table->longText('address');
             $table->string('phone');
             $table->string('hobby');
             $table->unsignedTinyInteger('marital_status');
-            $table->string('married_date', 10);
-            $table->unsignedTinyInteger('indonesian_literacy');
-            $table->unsignedTinyInteger('indonesian_profiency');
-            $table->unsignedTinyInteger('arabic_literacy');
-            $table->unsignedTinyInteger('arabic_profiency');
-            $table->unsignedTinyInteger('engish_literacy');
-            $table->unsignedTinyInteger('english_profiency');
+            $table->string('married_date', 10)->nullable();
+            $table->unsignedTinyInteger('indonesian_literacy')->nullable();
+            $table->unsignedTinyInteger('indonesian_proficiency')->nullable();
+            $table->unsignedTinyInteger('arabic_literacy')->nullable();
+            $table->unsignedTinyInteger('arabic_proficiency')->nullable();
+            $table->unsignedTinyInteger('english_literacy')->nullable();
+            $table->unsignedTinyInteger('english_proficiency')->nullable();
         });
     }
 

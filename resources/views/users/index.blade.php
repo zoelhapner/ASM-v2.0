@@ -49,7 +49,7 @@
                             </p>
                         </div>
                         <div class="table-responsive">
-                            <table id="tableUsers" class="table card-table table-vcenter text-nowrap">
+                            <table id="tableUsers" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
                                 <thead>
                                     <tr>
                                         <th class="w-1">No.</th>

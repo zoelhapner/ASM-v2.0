@@ -58,7 +58,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="license_type">Tipe Lisensi *:</label>
-                                                <select name="license_type" class="form-control" required>
+                                                <select name="license_type" class="form-select" required>
                                                 <option value="">Pilih Data</option>
                                                 <option value="fo">FO</option>
                                                 <option value="so">SO</option>

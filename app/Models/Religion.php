@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class religion extends Model
+class Religion extends Model
 {
-    public function LicenseHolder()
+    public function licenseHolders()
 {
-    return $this->belongsTo(LicenseHolder::class);
+    return $this->hasMany(LicenseHolder::class, 'religion_id');
 }
 
 }

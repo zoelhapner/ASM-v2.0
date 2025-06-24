@@ -31,6 +31,7 @@
     {{-- Custom Stylesheets (post Tablar) --}}
     @yield('tablar_css')
     <link href="https://cdn.datatables.net/v/bs5/dt-2.3.1/datatables.min.css" rel="stylesheet" integrity="sha384-rcK/Hw0a8czqNV8XiNNbA2kqXBypz/reTTu9ewJiCYQRES16Xpl47dKudYItkU7M" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.css') }}">
 </head>
 
 @yield('body')
