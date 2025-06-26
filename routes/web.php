@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LicensesController;
 use App\Http\Controllers\LicenseHoldersController;
 use App\Http\Controllers\LicenseHolderEducationController;
@@ -25,6 +26,34 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'permission:lisensi.tambah'])->group(function () {
+    Route::resource('/licenses', LicensesController::class)->only(['create', 'store']);
+});
+
+Route::middleware(['auth', 'permission:lisensi.ubah'])->group(function () {
+    Route::resource('/licenses', LicensesController::class)->only(['edit', 'update']);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/licenses', LicensesController::class)->only(['index', 'show', 'destroy']);
+});
+
+Route::middleware(['auth', 'permission:pemilik-lisensi.tambah'])->group(function () {
+    Route::resource('/license_holders', LicenseHoldersController::class)->only(['create', 'store']);
+});
+
+Route::middleware(['auth', 'permission:pemilik-lisensi.ubah'])->group(function () {
+    Route::resource('/license_holders', LicenseHoldersController::class)->only(['edit', 'update']);
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/license_holders', LicenseHoldersController::class)->only(['index', 'show', 'destroy']);
+});
+
+Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
+    Route::resource('roles', RoleController::class);
+});
+
 require __DIR__.'/auth.php';
 Auth::routes();
 
@@ -34,11 +63,9 @@ Auth::routes();
 
 Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-route::resource('/users', UsersController::class);
-
-Route::resource('/licenses', LicensesController::class);
-
-route::resource('/license_holders', LicenseHoldersController::class);
+Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
+    route::resource('/users', UsersController::class);
+});
 
 Route::get('/license_holders/{id}/profile', [LicenseHoldersController::class, 'showProfile'])->name('license_holders.profile');
 Route::get('/license_holders/{id}/educations', [LicenseHoldersController::class, 'showTab'])->name('license_holders.educations');

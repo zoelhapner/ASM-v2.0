@@ -45,6 +45,9 @@
                             <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('licenses.update', $license->id) }}" method="POST">
                                         @csrf
                                         @method('put')
+                                        @php
+                                            $disabled = auth()->user()->hasRole('Pemilik Lisensi') ? 'disabled' : '';
+                                        @endphp
 
                                     {{-- SECTION 1: Informasi Lead --}}
                                     <h5 class="mt-4 mb-3">Data Lisensi</h5>
@@ -52,7 +55,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="license_id">ID Lisensi <code>*</code></label>
-                                            <input type="text" class="form-control @error('license_id') is-invalid @enderror" id="license_id" name="license_id" value="{{ old('license_id', $license->license_id) }}" required>
+                                            <input type="text" class="form-control @error('license_id') is-invalid @enderror" id="license_id" name="license_id" value="{{ old('license_id', $license->license_id) }}" required {{ $disabled }}>
                                             @error('license_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -60,18 +63,18 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="license_type">Tipe Lisensi *:</label>
-                                                <select name="license_type" class="form-control" required>
+                                                <select name="license_type" class="form-control" required {{ $disabled }}>
                                                 <option value="">Pilih Data</option>
-                                                <option value="fo" {{ $license->license_type == 'fo' ? 'selected' : '' }}>FO</option>
-                                                <option value="so" {{ $license->license_type == 'so' ? 'selected' : '' }}>SO</option>
-                                                <option value="lo" {{ $license->license_type == 'lo' ? 'selected' : '' }}>LO</option>
-                                                <option value="lc" {{ $license->license_type == 'lc' ? 'selected' : '' }}>LC</option>
+                                                <option value="FO" {{ $license->license_type == 'FO' ? 'selected' : '' }}>FO</option>
+                                                <option value="SO" {{ $license->license_type == 'SO' ? 'selected' : '' }}>SO</option>
+                                                <option value="LO" {{ $license->license_type == 'LO' ? 'selected' : '' }}>LO</option>
+                                                <option value="LC" {{ $license->license_type == 'LC' ? 'selected' : '' }}>LC</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nama *</label>
-                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $license->name) }}" required>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $license->name) }}" required {{ $disabled }}>
                                             @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -95,7 +98,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Provinsi *</label>
-                                            <select name="province_id" id="province" class="form-control" required>
+                                            <select name="province_id" id="province" class="form-select select2" required>
                                                 <option value="">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}"
@@ -108,7 +111,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Kabupaten/Kota *</label>
-                                            <select name="city_id" id="city" class="form-control" required>
+                                            <select name="city_id" id="city" class="form-select select2" required>
                                                 <option value="city">-- Pilih Kota --</option>
                                                 @foreach($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -121,7 +124,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Kecamatan *</label>
-                                            <select name="district_id" id="district" class="form-control" required>
+                                            <select name="district_id" id="district" class="form-select select2" required>
                                                 <option value="district">-- Pilih Kecamatan --</option>
                                                 @foreach($districts as $district)
                                                     <option value="{{ $district->id }}"
@@ -134,7 +137,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Desa *</label>
-                                            <select name="sub_district_id" id="sub_district" class="form-control" required>
+                                            <select name="sub_district_id" id="sub_district" class="form-select select2" required>
                                                 <option value="sub_district">-- Pilih Desa --</option>
                                                 @foreach($subDistricts as $subdistrict)
                                                     <option value="{{ $subdistrict->id }}"
@@ -147,7 +150,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Kode Pos *</label>
-                                            <select name="postal_code_id" id="postal_code" class="form-control" required>
+                                            <select name="postal_code_id" id="postal_code" class="form-select select2" required>
                                                 <option value="postal_code">-- Pilih Desa --</option>
                                                 @foreach($postalCodes as $postal_code)
                                                     <option value="{{ $postal_code->id }}"
@@ -157,70 +160,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
-                                        <!-- Script AJAX -->
-                                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                                        <script>
-                                        $('#province').change(function () {
-                                        var id = $(this).val();
-                                        $('#city').html('<option>Loading...</option>');
-                                        $('#district').html('<option value="">-- Pilih kecamatan --</option>');
-                                        $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
-
-                                            if (id) {
-                                            $.get('/api/cities/' + id, function (data) {
-                                            $('#city').empty().append('<option value="">-- Pilih Kabupaten --</option>');
-                                            $.each(data, function (i, city) {
-                                            $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
-                                                        });
-                                                    });
-                                                }
-                                            });
-
-                                            $('#city').change(function () {
-                                                var id = $(this).val();
-                                                $('#district').html('<option>Loading...</option>');
-                                                $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
-
-                                                if (id) {
-                                                    $.get('/api/districts/' + id, function (data) {
-                                                        $('#district').empty().append('<option value="">-- Pilih Kecamatan --</option>');
-                                                        $.each(data, function (i, district) {
-                                                            $('#district').append('<option value="' + district.id + '">' + district.name + '</option>');
-                                                        });
-                                                    });
-                                                }
-                                            });
-
-                                            $('#district').change(function () {
-                                                var id = $(this).val();
-                                                $('#sub_district').html('<option>Loading...</option>');
-
-                                                if (id) {
-                                                    $.get('/api/sub_districts/' + id, function (data) {
-                                                        $('#sub_district').empty().append('<option value="">-- Pilih Kelurahan --</option>');
-                                                        $.each(data, function (i, sub_district) {
-                                                            $('#sub_district').append('<option value="' + sub_district.id + '">' + sub_district.name + '</option>');
-                                                        });
-                                                    });
-                                                }
-                                            });
-
-                                            $('#sub_district').change(function () {
-                                                var id = $(this).val();
-                                                $('#postal_code').html('<option>Loading...</option>');
-
-                                                if (id) {
-                                                    $.get('/api/postal_codes/' + id, function (data) {
-                                                        $('#postal_code').empty().append('<option value="">-- Pilih Kode Pos --</option>');
-                                                        $.each(data, function (i, postal_code) {
-                                                            $('#postal_code').append('<option value="' + postal_code.id + '">' + postal_code.postal_code + '</option>');
-                                                        });
-                                                    });
-                                                }
-                                            });
-                                        </script>
-                                    
+                                                                            
                                         <div class="col-md-6 mb-3">
                                             <label>Telepon *</label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $license->phone) }}" required>
@@ -229,12 +169,11 @@
                                             @enderror
                                         </div>
                                     
-
                                         <div class="col-md-6 mb-3">
                                             <label>Tanggal Bergabung *</label>
                                             <input type="date" name="join_date" class="form-control" required
                                                 value="{{ old('join_date', $license->join_date) }}"
-                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
+                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
                                     
 
@@ -242,13 +181,13 @@
                                             <label>Tanggal Expired *</label>
                                             <input type="date" name="expired_date" class="form-control" required
                                                 value="{{ old('expired_date', $license->expired_date) }}"
-                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
+                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
                                     
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nomor Aqad *</label>
-                                            <input type="text" class="form-control @error('contract_agreement_number') is-invalid @enderror" id="contract_agreement_number" name="contract_agreement_number" value="{{ old('contract_agreement_number', $license->contract_agreement_number) }}" required>
+                                            <input type="text" class="form-control @error('contract_agreement_number') is-invalid @enderror" id="contract_agreement_number" name="contract_agreement_number" value="{{ old('contract_agreement_number', $license->contract_agreement_number) }}" required {{ $disabled }}>
                                             @error('contract_agreement_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -256,7 +195,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Status Lisensi *</label>
-                                            <select name="status" class="form-control" required>
+                                            <select name="status" class="form-control" required {{ $disabled }}>
                                                 <option value="">-- Pilih Status --</option>
                                                 <option value="active" {{ $license->status == 'active' ? 'selected' : '' }}>Active</option>
                                                 <option value="inactive" {{ $license->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
@@ -362,3 +301,75 @@
         </div>
     </div>
 @endsection
+
+@push('js')
+                                    <script>
+                                            $(document).ready(function() {
+                                                $('.select2').select2({
+                                                    placeholder: "-- Pilih --",
+                                                    width: '100%'
+                                                });
+                                            });
+                                    </script>
+
+                                    <script>
+                                        $('#province').change(function () {
+                                        var id = $(this).val();
+                                        $('#city').html('<option>Loading...</option>');
+                                        $('#district').html('<option value="">-- Pilih kecamatan --</option>');
+                                        $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
+
+                                            if (id) {
+                                            $.get('/api/cities/' + id, function (data) {
+                                            $('#city').empty().append('<option value="">-- Pilih Kabupaten --</option>');
+                                            $.each(data, function (i, city) {
+                                            $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#city').change(function () {
+                                                var id = $(this).val();
+                                                $('#district').html('<option>Loading...</option>');
+                                                $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
+
+                                                if (id) {
+                                                    $.get('/api/districts/' + id, function (data) {
+                                                        $('#district').empty().append('<option value="">-- Pilih Kecamatan --</option>');
+                                                        $.each(data, function (i, district) {
+                                                            $('#district').append('<option value="' + district.id + '">' + district.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#district').change(function () {
+                                                var id = $(this).val();
+                                                $('#sub_district').html('<option>Loading...</option>');
+
+                                                if (id) {
+                                                    $.get('/api/sub_districts/' + id, function (data) {
+                                                        $('#sub_district').empty().append('<option value="">-- Pilih Kelurahan --</option>');
+                                                        $.each(data, function (i, sub_district) {
+                                                            $('#sub_district').append('<option value="' + sub_district.id + '">' + sub_district.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#sub_district').change(function () {
+                                                var id = $(this).val();
+                                                $('#postal_code').html('<option>Loading...</option>');
+
+                                                if (id) {
+                                                    $.get('/api/postal_codes/' + id, function (data) {
+                                                        $('#postal_code').empty().append('<option value="">-- Pilih Kode Pos --</option>');
+                                                        $.each(data, function (i, postal_code) {
+                                                            $('#postal_code').append('<option value="' + postal_code.id + '">' + postal_code.postal_code + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                    </script>
+@endpush

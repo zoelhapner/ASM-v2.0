@@ -17,8 +17,8 @@
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
+                 @can('pemilik-lisensi.tambah')       
                   <span class="d-none d-sm-inline">
-                  
                         <a href="{{ route("license_holders.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
@@ -30,6 +30,8 @@
                             </svg>
                             Tambah Data Pemilik
                         </a>
+                 </span>
+                 @endcan
                         
                     </div>
                 </div>
@@ -61,6 +63,11 @@
                                         <th>Tempat Lahir</th>
                                         <th>Tanggal Lahir</th>
                                         <th>Alamat</th>
+                                        <th>Provinsi</th>
+                                        <th>Kabupaten/Kota</th>
+                                        <th>Kecamatan</th>
+                                        <th>Kelurahan</th>
+                                        <th>Kode Pos</th>
                                         <th>Telepon</th>
                                         <th>Hobi</th>
                                         <th>Status Pernikahan</th>
@@ -102,6 +109,11 @@
                     { data: 'birth_place', name: 'birth_place'},
                     { data: 'birth_date', name: 'birth_date' },
                     { data: 'address', name: 'address' },
+                    { data: 'province_name', name: 'province.name' },
+                    { data: 'city_name', name: 'city.name'},
+                    { data: 'district_name', name: 'district.name' },
+                    { data: 'sub_district_name', name: 'sub_district_name' },
+                    { data: 'postal_code', name: 'postal_code' },
                     { data: 'phone', name: 'phone'},
                     { data: 'hobby', name: 'hobby' },
                     { data: 'marital_status', name: 'marital_status' },

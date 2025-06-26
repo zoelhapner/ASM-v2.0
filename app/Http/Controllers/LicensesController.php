@@ -9,6 +9,7 @@ use App\Models\SubDistrict;
 use App\Models\PostalCode;
 use Illuminate\Http\Request;
 use App\Models\License;
+use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
  
@@ -20,6 +21,9 @@ class LicensesController extends Controller
         if ($request->ajax()) {
 
             $licenses = License::with(['province', 'city', 'district', 'subDistrict', 'postalCode']);
+            $buildingTypes = [1 => 'Ruko', 2 => 'Gedung', 3 => 'Rumah'];
+            $buildingStatuses = [1 => 'Milik Sendiri', 2 => 'Sewa'];
+            $buildingConditions = [1 => 'Baik', 2 => 'Perlu Renovasi', 3 => 'Rusak Berat'];
 
             return Datatables::eloquent($licenses)
 
@@ -28,25 +32,107 @@ class LicensesController extends Controller
             ->addColumn('district_name', fn($row) => $row->district->name ?? '-')
             ->addColumn('sub_district_name', fn($row) => $row->subDistrict->name ?? '-')
             ->addColumn('postal_code', fn($row) => $row->postalCode->postal_code ?? '-')
+            ->editColumn('building_type', fn($row) => $buildingTypes[$row->building_type] ?? 'Tidak Diketahui')
+            ->editColumn('building_status', fn($row) => $buildingStatuses[$row->building_status] ?? 'Tidak Diketahui')
+            ->editColumn('building_condition', fn($row) => $buildingConditions[$row->building_condition] ?? 'Tidak Diketahui')
 
-            ->addColumn('action', function($license) {
-                $editUrl = route('licenses.edit', $license->id);
-
-                return ' 
-                    <a href="'.$editUrl.'" class="btn btn-success btn-sm">Edit</a>
-                    <button data-id="'.$license->id.'" class="btn btn-danger btn-sm delete-license">Delete</button>
-                '; 
+            ->addColumn('instagram', function ($row) {
+                if ($row->instagram) {
+                    return '<a href="' . e($row->instagram) . '" target="_blank" title="Lihat Instagram"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
             })
 
-            ->rawColumns(['action'])
+            ->addColumn('facebook_page', function ($row) {
+                if ($row->facebook_page) {
+                    return '<a href="' . e($row->facebook_page) . '" target="_blank" title="Lihat Facebook"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
+            })
+
+            ->addColumn('tiktok', function ($row) {
+                if ($row->tiktok) {
+                    return '<a href="' . e($row->tiktok) . '" target="_blank" title="Lihat Tiktok"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
+            })
+
+            ->addColumn('youtube', function ($row) {
+                if ($row->youtube) {
+                    return '<a href="' . e($row->yotube) . '" target="_blank" title="Lihat Yotube"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
+            })
+
+            ->addColumn('google_maps', function ($row) {
+                if ($row->google_maps) {
+                    return '<a href="' . e($row->google_maps) . '" target="_blank" title="Lihat Maps"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
+            })
+
+            ->addColumn('landing_page_student_registration', function ($row) {
+                if ($row->landing_page_student_registration) {
+                    return '<a href="' . e($row->landing_page_student_registration) . '" target="_blank" title="Lihat Landing Page"><i class="ti ti-check text-success"></i></a>';
+                } else {
+                    return '<i class="ti ti-minus text-muted"></i>';
+                }
+            })
+
+            ->addColumn('join_date', function($row) {
+                return Carbon::parse($row->join_date)->format('d/m/Y');
+            })
+
+            ->addColumn('expired_date', function ($row) {
+                return $row->expired_date ? Carbon::parse($row->expired_date)->format('d/m/Y') : '-';
+            })
+
+            ->addColumn('building_rent_expired_date', function($row) {
+                return $row->building_rent_expired_date ? Carbon::parse($row->building_rent_expired_date)->format('d/m/Y') : '-';
+            })
+
+            ->addColumn('status', function ($row) {
+                $status = strtolower($row->status);
+
+                $color = match ($status) {
+                    'active' => 'success',     // hijau
+                    'inactive' => 'warning',   // kuning
+                    'expired' => 'danger',     // merah
+                    default => 'secondary',
+                };
+
+                return '<span class="badge bg-' . $color . '">' . ucfirst($row->status) . '</span>';
+            })
+
+
+            ->addColumn('action', function($license) {
+                $buttons = '';
+
+            if (auth()->user()->can('lisensi.ubah')) {
+                $buttons .= '<a href="' . route('licenses.edit', $license->id) . '" class="btn btn-success btn-sm">Edit</a> ';
+            }
+
+            if (auth()->user()->can('lisensi.hapus')) {
+                $buttons .= '<button data-id="' . $license->id . '" class="btn btn-danger btn-sm delete-license">Delete</button>';
+            }
+
+            return $buttons;
+            })
+
+            ->rawColumns(['action', 'status', 'instagram', 'facebook_page', 'tiktok', 'youtube', 'google_maps', 'landing_page_student_registration'])
             ->make(true);
         }
           
         return view('licenses.index');
     }
 
-    public function create() {
-
+    public function create() 
+    {
         $provinces = Province::all();
         return view('licenses.create', compact('provinces'));
     }
@@ -55,7 +141,7 @@ class LicensesController extends Controller
     
         $request->validate([
             'license_id' => 'required',
-            'license_type' => 'required|in:fo,so,lo,lc', 
+            'license_type' => 'required|in:FO,SO,LO,LC', 
             'name' => 'required',
             'email' => 'required|email',
             'address' => 'required',
@@ -131,7 +217,7 @@ class LicensesController extends Controller
         
        $validated = $request->validate([
             'license_id' => 'required',
-            'license_type' => 'required|in:fo,so,lo,lc', 
+            'license_type' => 'required|in:FO,SO,LO,LC', 
             'name' => 'required',
             'email' => 'required|email',
             'address' => 'required',

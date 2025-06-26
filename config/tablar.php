@@ -172,13 +172,15 @@ return [
         [
             'text' => 'Data Karyawan',
             'icon' => 'ti ti-id-badge',
-            'url' => '#'
+            'url' => '#',
+            'role' => 'Super-Admin',
         ],
 
         [
             'text' => 'Data Siswa',
             'icon' => 'ti ti-users-group',
-            'url' => '#'
+            'url' => '#',
+            'role' => 'Super-Admin',
         ],
 
         [
@@ -186,6 +188,7 @@ return [
             'url' => '#',
             'icon' => 'ti ti-user-cog',
             'active' => ['support1'],
+            'role' => 'Super-Admin',
             'submenu' => [
                 [
                     'text' => 'Input Keuangan',
@@ -205,10 +208,21 @@ return [
             'url' => 'users',
             'icon' => 'ti ti-users',
             'active' => ['users*'],
+            'role' => 'Super-Admin',
             
         ],
 
+        [
+            'text' => 'Manajemen Role',
+            'url' => 'roles',
+            'icon' => 'ti ti-users',
+            'active' => ['roles'],
+            'role' => 'Super-Admin',
+            
+        ],
     ],
+
+    
 
     /*
     |--------------------------------------------------------------------------

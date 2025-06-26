@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
   
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -49,12 +50,15 @@ class UsersController extends Controller
 
     public function store(Request $request) {
     
-        $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email', 'password' => 'required']);
-        User::create([
+        $request->validate(['name' => 'required', 'email' => 'required|email|unique:users,email', 'password' => 'required', 'role' => 'required|string|exists:roles,name',]);
+
+        $user = User::create([
         'name' => $request->name,
         'email' => $request->email,
         'password' => Hash::make($request['password']),
         ]);
+           // Assign role langsung
+        $user->assignRole($request->role);
 
         return redirect()->route('users.index')->with('success', 'Data berhasil ditambahkan.');
     }
@@ -74,6 +78,7 @@ class UsersController extends Controller
              Rule::unique('users')->ignore($user->id),
         ],
         'password' => 'required',
+        'role' => 'required|string|exists:roles,name',
     ]);
 
         $user->update($validated);

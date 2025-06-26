@@ -23,6 +23,16 @@ return new class extends Migration
             $table->string('birth_place');
             $table->string('birth_date', 10);
             $table->longText('address');
+            $table->unsignedBigInteger('province_id');
+            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
+            $table->unsignedBigInteger('city_id');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('cascade');
+            $table->unsignedBigInteger('district_id');
+            $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
+            $table->unsignedBigInteger('sub_district_id');
+            $table->foreign('sub_district_id')->references('id')->on('sub_districts')->onDelete('cascade');
+            $table->unsignedBigInteger('postal_code_id');
+            $table->foreign('postal_code_id')->references('id')->on('postal_codes')->onDelete('cascade');
             $table->string('phone');
             $table->string('hobby');
             $table->unsignedTinyInteger('marital_status');

@@ -36,7 +36,7 @@
                     <div class="card">
                                     <div class="card-header">
                                         <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
-                                            Tambah Data Lisensi
+                                            Tambah Data Pemilik
                                         </p>
                                     </div>
 
@@ -119,6 +119,47 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Provinsi *</label>
+                                            <select name="province_id" id="province" class="form-select select2" required>
+                                                <option value="">-- Pilih Provinsi --</option>
+                                                @foreach($provinces as $province)
+                                                    <option value="{{ $province->id }}">{{ $province->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kabupaten/Kota *</label>
+                                            <select name="city_id" id="city" class="form-select select2" required>
+                                                <option value="city">-- Pilih Kota --</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kecamatan *</label>
+                                            <select name="district_id" id="district" class="form-select select2" required>
+                                                <option value="district">-- Pilih Kecamatan --</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Desa *</label>
+                                            <select name="sub_district_id" id="sub_district" class="form-select select2" required>
+                                                <option value="sub_district">-- Pilih Desa --</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kode Pos *</label>
+                                            <select name="postal_code_id" id="postal_code" class="form-select select2" required>
+                                                <option value="postal_code">-- Pilih Desa --</option>
+                                            </select>
+                                        </div>
+
+                                        
+                                       
 
                                         <div class="col-md-6 mb-3">
                                             <label>Telepon *</label>
@@ -239,3 +280,75 @@
         </div>
     </div>
 @endsection
+
+                                    @push('js')
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('.select2').select2({
+                                                    placeholder: "-- Pilih --",
+                                                    width: '100%'
+                                                });
+                                            });
+                                        </script>
+
+                                        <script>
+                                            $('#province').change(function () {
+                                            var id = $(this).val();
+                                            $('#city').html('<option>Loading...</option>');
+                                            $('#district').html('<option value="">-- Pilih kecamatan --</option>');
+                                            $('#sub_district').html('<option value="">-- Pilih kelurahan --</option>');
+
+                                            if (id) {
+                                            $.get('/api/cities/' + id, function (data) {
+                                            $('#city').empty().append('<option value="">-- Pilih city --</option>');
+                                            $.each(data, function (i, city) {
+                                                $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                                                    });
+                                                });
+                                                }
+                                            });
+
+                                            $('#city').change(function () {
+                                            var id = $(this).val();
+                                            $('#district').html('<option>Loading...</option>');
+                                            $('#sub_district').html('<option value="">-- Pilih kelurahan --</option>');
+
+                                            if (id) {
+                                                $.get('/api/districts/' + id, function (data) {
+                                                    $('#district').empty().append('<option value="">-- Pilih kecamatan --</option>');
+                                                    $.each(data, function (i, district) {
+                                                        $('#district').append('<option value="' + district.id + '">' + district.name + '</option>');
+                                                            });
+                                                        });
+                                                    }
+                                                });
+
+                                            $('#district').change(function () {
+                                            var id = $(this).val();
+                                            $('#sub_district').html('<option>Loading...</option>');
+
+                                                if (id) {
+                                                    $.get('/api/sub_districts/' + id, function (data) {
+                                                        $('#sub_district').empty().append('<option value="">-- Pilih kelurahan --</option>');
+                                                        $.each(data, function (i, sub_district) {
+                                                            $('#sub_district').append('<option value="' + sub_district.id + '">' + sub_district.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#sub_district').change(function () {
+                                            var id = $(this).val();
+                                            $('#postal_code').html('<option>Loading...</option>');
+
+                                            if (id) {
+                                                $.get('/api/postal_codes/' + id, function (data) {
+                                                    $('#postal_code').empty().append('<option value="">-- Pilih kode pos --</option>');
+                                                    $.each(data, function (i, postal_code) {
+                                                        $('#postal_code').append('<option value="' + postal_code.id + '">' + postal_code.postal_code + '</option>');
+                                                    });
+                                                });
+                                              }
+                                         });
+                                        </script>
+                                    @endpush

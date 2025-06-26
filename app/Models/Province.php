@@ -17,4 +17,8 @@ class Province extends Model
     public function licenses() {
         return $this->hasMany(License::class);
     }
+
+     public function license_holder() {
+        return $this->hasMany(LicenseHolder::class);
+    }
 }

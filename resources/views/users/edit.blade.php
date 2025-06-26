@@ -44,36 +44,51 @@
                         </div>
 
                         <div class="card-body">
-                            <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('users.update', $user) }}" method="POST">
-                                        @csrf
-                                        @method('put')
+                            <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('users.update', $user) }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                @method('put')
 
-                                <div class="form-group">
-                                    <label for="name">Nama:</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}">
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name">Nama: *</label>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}" required>
                                         @error('name')
-                                    <div class="invalid-feedback">{{ $message }}</div>
+                                            <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                    </div>
+                                
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email">Email: *</label>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                        @error('email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="email">Email:</label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}">
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="row mb-4">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="password">Password: *</label>
+                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" required>
+                                        @error('password')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="role">Role: *</label>
+                                        <select name="role" class="form-select" required>
+                                            <option value="">-- Pilih Role --</option>
+                                            @foreach (\Spatie\Permission\Models\Role::all() as $role)
+                                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" autocomplete="new-password">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <button type="submit" class="btn btn-primary mt-4">Update</button>
-                             </form>
+                                <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                            </form>
 
                         </div>
                     </div>

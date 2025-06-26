@@ -51,9 +51,10 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="license_id">Pilh Lisensi <code>*</code></label>
-                                            <select name="license_id" class="form-control" required>
+                                            <select name="license_id" class="form-control" required
+                                                @role('Pemilik Lisensi') disabled @endrole>
                                             <option value="">-- Pilih Lisensi --</option>
-                                            @foreach($licenses as $license)
+                                            @foreach($allLicenses as $license)
                                                 <option value="{{ $license->id }}" {{ old('license_id', $license_holder->license_id) == $license->id ? 'selected' : '' }}>
                                                     {{ $license->name }}
                                                 </option>
@@ -119,6 +120,71 @@
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Provinsi *</label>
+                                            <select name="province_id" id="province" class="form-select select2" required>
+                                                <option value="">-- Pilih Provinsi --</option>
+                                                @foreach($provinces as $province)
+                                                    <option value="{{ $province->id }}"
+                                                        {{ $license->province_id == $province->id ? 'selected' : '' }}>
+                                                        {{ $province->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kabupaten/Kota *</label>
+                                            <select name="city_id" id="city" class="form-select select2" required>
+                                                <option value="city">-- Pilih Kota --</option>
+                                                @foreach($cities as $city)
+                                                    <option value="{{ $city->id }}"
+                                                        {{ $license->city_id == $city->id ? 'selected' : '' }}>
+                                                        {{ $city->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kecamatan *</label>
+                                            <select name="district_id" id="district" class="form-select select2" required>
+                                                <option value="district">-- Pilih Kecamatan --</option>
+                                                @foreach($districts as $district)
+                                                    <option value="{{ $district->id }}"
+                                                        {{ $license->district_id == $district->id ? 'selected' : '' }}>
+                                                        {{ $district->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Desa *</label>
+                                            <select name="sub_district_id" id="sub_district" class="form-select select2" required>
+                                                <option value="sub_district">-- Pilih Desa --</option>
+                                                @foreach($subDistricts as $subdistrict)
+                                                    <option value="{{ $subdistrict->id }}"
+                                                        {{ $license->sub_district_id == $subdistrict->id ? 'selected' : '' }}>
+                                                        {{ $subdistrict->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Kode Pos *</label>
+                                            <select name="postal_code_id" id="postal_code" class="form-select select2" required>
+                                                <option value="postal_code">-- Pilih Desa --</option>
+                                                @foreach($postalCodes as $postal_code)
+                                                    <option value="{{ $postal_code->id }}"
+                                                        {{ $license->postal_code_id == $postal_code->id ? 'selected' : '' }}>
+                                                        {{ $postal_code->postal_code }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -249,3 +315,75 @@
         </div>
     </div>
 @endsection
+
+                                    @push('js')
+                                        <script>
+                                            $(document).ready(function() {
+                                                $('.select2').select2({
+                                                    placeholder: "-- Pilih --",
+                                                    width: '100%'
+                                                });
+                                            });
+                                        </script>
+
+                                        <script>
+                                        $('#province').change(function () {
+                                        var id = $(this).val();
+                                        $('#city').html('<option>Loading...</option>');
+                                        $('#district').html('<option value="">-- Pilih kecamatan --</option>');
+                                        $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
+
+                                            if (id) {
+                                            $.get('/api/cities/' + id, function (data) {
+                                            $('#city').empty().append('<option value="">-- Pilih Kabupaten --</option>');
+                                            $.each(data, function (i, city) {
+                                            $('#city').append('<option value="' + city.id + '">' + city.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#city').change(function () {
+                                                var id = $(this).val();
+                                                $('#district').html('<option>Loading...</option>');
+                                                $('#sub_district').html('<option value="">-- Pilih Kelurahan --</option>');
+
+                                                if (id) {
+                                                    $.get('/api/districts/' + id, function (data) {
+                                                        $('#district').empty().append('<option value="">-- Pilih Kecamatan --</option>');
+                                                        $.each(data, function (i, district) {
+                                                            $('#district').append('<option value="' + district.id + '">' + district.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#district').change(function () {
+                                                var id = $(this).val();
+                                                $('#sub_district').html('<option>Loading...</option>');
+
+                                                if (id) {
+                                                    $.get('/api/sub_districts/' + id, function (data) {
+                                                        $('#sub_district').empty().append('<option value="">-- Pilih Kelurahan --</option>');
+                                                        $.each(data, function (i, sub_district) {
+                                                            $('#sub_district').append('<option value="' + sub_district.id + '">' + sub_district.name + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+
+                                            $('#sub_district').change(function () {
+                                                var id = $(this).val();
+                                                $('#postal_code').html('<option>Loading...</option>');
+
+                                                if (id) {
+                                                    $.get('/api/postal_codes/' + id, function (data) {
+                                                        $('#postal_code').empty().append('<option value="">-- Pilih Kode Pos --</option>');
+                                                        $.each(data, function (i, postal_code) {
+                                                            $('#postal_code').append('<option value="' + postal_code.id + '">' + postal_code.postal_code + '</option>');
+                                                        });
+                                                    });
+                                                }
+                                            });
+                                        </script>
+                                    @endpush

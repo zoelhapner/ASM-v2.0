@@ -39,10 +39,10 @@ class LicenseHolderFamilyMember extends Controller
         'relationship' => 'required|in:1,2,3,4,5',
         'gender' => 'required|in:1,2',
         'birth_date' => ['required', 'date_format:Y-m-d'],
-        'job' => 'required',
-        'job_phone' => 'required',
-        'last_education_level' => 'required',
-        'institution_name' => 'required',
+        'job' => 'nullable',
+        'job_phone' => 'nullable',
+        'last_education_level' => 'nullable',
+        'institution_name' => 'nullable',
     ]);
 
     LicenseHolderFamilyMembers::create($validated);
@@ -83,10 +83,10 @@ class LicenseHolderFamilyMember extends Controller
             'relationship' => 'required|in:1,2,3,4,5',
             'gender' => 'required|in:1,2',
             'birth_date' => ['required', 'date_format:Y-m-d'],
-            'job' => 'required',
-            'job_phone' => 'required',
-            'last_education_level' => 'required',
-            'institution_name' => 'required',
+            'job' => 'nullable',
+            'job_phone' => 'nullable',
+            'last_education_level' => 'nullable',
+            'institution_name' => 'nullable',
         ]);
 
         $families = LicenseHolderFamilyMembers::findOrFail($id);

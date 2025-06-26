@@ -14,7 +14,11 @@ class City extends Model
         return $this->hasMany(District::class);
     }
 
-    public function Licenses() {
+    public function licenses() {
         return $this->hasMany(License::class);
+    }
+
+     public function license_holder() {
+        return $this->hasMany(LicenseHolder::class);
     }
 }

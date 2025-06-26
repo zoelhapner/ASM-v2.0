@@ -54,6 +54,31 @@ public function getReadableLanguagesAttribute()
     return $this->belongsTo(License::class, 'license_id','id');
 }
 
+    public function province()
+{
+    return $this->belongsTo(Province::class);
+}
+
+       public function city()
+{
+    return $this->belongsTo(City::class);
+}
+
+       public function district()
+{
+    return $this->belongsTo(District::class);
+}
+
+       public function subDistrict()
+{
+    return $this->belongsTo(SubDistrict::class);
+}
+
+    public function postalCode()
+{
+    return $this->belongsTo(PostalCode::class, 'postal_code_id');
+}
+
     public function religion()
 {
     return $this->belongsTo(Religion::class, 'religion_id');
@@ -89,6 +114,11 @@ public function getReadableLanguagesAttribute()
         'birth_place',
         'birth_date',
         'address',
+        'province_id',
+        'city_id',
+        'district_id',
+        'sub_district_id',
+        'postal_code_id',
         'phone',
         'hobby',
         'marital_status',

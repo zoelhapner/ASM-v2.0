@@ -19,10 +19,10 @@ return new class extends Migration
             $table->unsignedTinyInteger('relationship');
             $table->unsignedtinyInteger('gender');
             $table->string('birth_date', 10);
-            $table->string('job');
-            $table->string('job_phone');
-            $table->string('last_education_level');
-            $table->string('institution_name');
+            $table->string('job')->nullable();
+            $table->string('job_phone')->nullable();
+            $table->string('last_education_level')->nullable();
+            $table->string('institution_name')->nullable();
         });
     }
 

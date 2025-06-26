@@ -17,6 +17,7 @@
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
+                @can('lisensi.tambah')
                   <span class="d-none d-sm-inline">
                   
                         <a href="{{ route("licenses.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
@@ -30,7 +31,8 @@
                             </svg>
                             Tambah Data Lisensi
                         </a>
-                        
+                    </span>
+                @endcan
                     </div>
                 </div>
             </div>
