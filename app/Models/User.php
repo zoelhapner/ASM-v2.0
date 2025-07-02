@@ -16,6 +16,16 @@ class User extends Authenticatable
 
     protected $guard_name = 'web';
 
+    public function licenseholder()
+{
+    return $this->hasOne(LicenseHolder::class);
+}
+
+public function licenses()
+{
+    return $this->belongsToMany(License::class, 'license_user', 'user_id', 'license_id');
+}
+
     /**
      * The attributes that are mass assignable.
      *

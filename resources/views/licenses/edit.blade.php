@@ -60,10 +60,13 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="license_id" value="{{ $license->license_id }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
                                             <label for="license_type">Tipe Lisensi *:</label>
-                                                <select name="license_type" class="form-control" required {{ $disabled }}>
+                                                <select name="license_type" class="form-select" required {{ $disabled }}>
                                                 <option value="">Pilih Data</option>
                                                 <option value="FO" {{ $license->license_type == 'FO' ? 'selected' : '' }}>FO</option>
                                                 <option value="SO" {{ $license->license_type == 'SO' ? 'selected' : '' }}>SO</option>
@@ -71,6 +74,9 @@
                                                 <option value="LC" {{ $license->license_type == 'LC' ? 'selected' : '' }}>LC</option>
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="license_type" value="{{ $license->license_type }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nama *</label>
@@ -79,6 +85,9 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="name" value="{{ $license->name }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
                                             <label>Email *</label>
@@ -175,6 +184,9 @@
                                                 value="{{ old('join_date', $license->join_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="join_date" value="{{ $license->join_date }}">
+                                        @endif
                                     
 
                                         <div class="col-md-6 mb-3">
@@ -183,6 +195,9 @@
                                                 value="{{ old('expired_date', $license->expired_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="expired_date" value="{{ $license->expired_date }}">
+                                        @endif
                                     
 
                                         <div class="col-md-6 mb-3">
@@ -192,16 +207,22 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="contract_agreement_number" value="{{ $license->contract_agreement_number }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
                                             <label>Status Lisensi *</label>
-                                            <select name="status" class="form-control" required {{ $disabled }}>
+                                            <select name="status" class="form-select" required {{ $disabled }}>
                                                 <option value="">-- Pilih Status --</option>
                                                 <option value="active" {{ $license->status == 'active' ? 'selected' : '' }}>Active</option>
                                                 <option value="inactive" {{ $license->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
                                                 <option value="expired" {{ $license->status == 'expired' ? 'selected' : '' }}>Expired</option>
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="status" value="{{ $license->status }}">
+                                        @endif
 
                                     </div>
 
@@ -210,7 +231,7 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
                                             <label>Tipe Bangunan *</label>
-                                            <select name="building_type" class="form-control">
+                                            <select name="building_type" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license->building_type == '1' ? 'selected' : '' }}>Rukan</option>
                                                 <option value="2" {{ $license->building_type == '2' ? 'selected' : '' }}>Residence</option>
@@ -220,7 +241,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Status Bangunan *</label>
-                                            <select name="building_status" class="form-control">
+                                            <select name="building_status" class="form-select">
                                                 <option value="">-- Pilih Status --</option>
                                                 <option value="1" {{ $license->building_status == '1' ? 'selected' : '' }}>Milik</option>
                                                 <option value="2" {{ $license->building_status == '2' ? 'selected' : '' }}>Sewa</option>
@@ -244,7 +265,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Kondisi Bangunan *</label>
-                                            <select name="building_condition" class="form-control">
+                                            <select name="building_condition" class="form-select">
                                                 <option value="">-- Pilih Kondisi --</option>
                                                 <option value="1" {{ $license->building_condition == '1' ? 'selected' : '' }}>Baik</option>
                                                 <option value="2" {{ $license->building_condition == '2' ? 'selected' : '' }}>Cukup</option>
@@ -254,7 +275,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>AC *</label>
-                                            <select name="building_has_ac" class="form-control">
+                                            <select name="building_has_ac" class="form-select">
                                                 <option value="">-- Pilih ac --</option>
                                                 <option value="1">Ya</option>
                                                 <option value="0">Tidak</option>
@@ -290,6 +311,26 @@
                                             <input type="url" name="landing_page_student_registration" class="form-control" value="{{ old('landing_page_student_registration', $license->landing_page_student_registration) }}">
                                         </div>
                                     </div>
+
+                                    {{-- Hanya tampil untuk Admin --}}
+                                    @can('lisensi.ubah')
+                                        <div class="col-md-6 mb-3">
+                                            <label for="owner">Pemilik Lisensi <span class="text-danger">*</span></label>
+                                            <select name="owner" id="owner" class="form-control @error('owner') is-invalid @enderror" required>
+                                                <option value="">-- Pilih Pemilik Lisensi --</option>
+                                                @foreach ($owners as $owner)
+                                                    <option value="{{ $owner->id }}"
+                                                        {{ (old('owner') ?? ($license->owners->first()->id ?? null)) == $owner->id ? 'selected' : '' }}>
+                                                        {{ $owner->name }} ({{ $owner->email }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('owner')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    @endcan
+
 
                                 <button type="submit" class="btn btn-primary mt-4">Update</button>
                              </form>

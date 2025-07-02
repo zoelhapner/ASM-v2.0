@@ -17,12 +17,25 @@ class UsersController extends Controller
     
         if ($request->ajax()) {
 
-            $users = User::query();
+            $auth = auth()->user();
 
-            return Datatables::eloquent($users)
+            if ($auth->hasRole('Super-Admin')) {
+                 $users = User::query();
+            }  else if ($auth->hasAnyRole(['Pemilik Lisensi', 'Karyawan'])) {
+                $users = User::where('license_id', $auth->license_id)
+                 ->whereHas('roles', function ($q) {
+                     $q->whereIn('name', ['Pemilik Lisensi', 'Karyawan']);
+                 });
+}
+ else {
+            // Default: hanya user itu sendiri
+            $users = User::where('user_id', $auth->id);
+        }
+
+            return Datatables::of($users)
 
             ->addIndexColumn()
-            
+
             ->addColumn('created_at', function($user) {
                 return Carbon::parse($user->created_at)->format('d-m-Y');
             })
@@ -77,7 +90,7 @@ class UsersController extends Controller
             'email',
              Rule::unique('users')->ignore($user->id),
         ],
-        'password' => 'required',
+        'password' => 'nullable',
         'role' => 'required|string|exists:roles,name',
     ]);
 

@@ -51,7 +51,12 @@ public function getReadableLanguagesAttribute()
 
     public function license()
 {
-    return $this->belongsTo(License::class, 'license_id','id');
+    return $this->belongsTo(License::class, 'license_id');
+}
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
 }
 
     public function province()
@@ -130,6 +135,7 @@ public function getReadableLanguagesAttribute()
         'english_literacy',
         'english_proficiency',
         'photo',
+        'user_id',
     ];
 
 }

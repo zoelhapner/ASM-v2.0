@@ -12,6 +12,8 @@ use App\Models\District;
 use App\Models\SubDistrict;
 use App\Models\PostalCode;
 use Illuminate\Support\Carbon;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -19,102 +21,88 @@ use Illuminate\Support\Str;
 
 class LicenseHoldersController extends Controller
 {
+    public function index(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $license_holders = $this->getFilteredLicenseHolders();
+
+            return DataTables::eloquent($license_holders)
+
+                ->addColumn('religion_name', fn($row) => $row->religion->name ?? '-')
+                ->addColumn('license_id', fn($row) => $row->license->license_id ?? '-')
+                ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
+                ->addColumn('province_name', fn($row) => $row->province->name ?? '-')
+                ->addColumn('city_name', fn($row) => $row->city->name ?? '-')
+                ->addColumn('district_name', fn($row) => $row->district->name ?? '-')
+                ->addColumn('sub_district_name', fn($row) => $row->subDistrict->name ?? '-')
+                ->addColumn('postal_code', fn($row) => $row->postalCode->postal_code ?? '-')
+                ->addColumn('indonesian_literacy', fn($row) => $this->readableLanguage($row->indonesian_literacy))
+                ->addColumn('indonesian_proficiency', fn($row) => $this->readableLanguage($row->indonesian_proficiency))
+                ->addColumn('arabic_literacy', fn($row) => $this->readableLanguage($row->arabic_literacy))
+                ->addColumn('arabic_proficiency', fn($row) => $this->readableLanguage($row->arabic_proficiency))
+                ->addColumn('english_literacy', fn($row) => $this->readableLanguage($row->english_literacy))
+                ->addColumn('english_proficiency', fn($row) => $this->readableLanguage($row->english_proficiency))
+                ->addColumn('birth_date', fn($row) => Carbon::parse($row->birth_date)->format('d/m/Y'))
+                ->addColumn('marital_status', fn($row) => $this->readableMaritalStatus($row->marital_status))
+                ->addColumn('married_date', fn($row) => $row->married_date ? Carbon::parse($row->married_date)->format('d/m/Y') : '-')
+                ->addColumn('name', function ($row) {
+                    $formattedName = Str::title($row->name);
+                    return '<a href="' . route('license_holders.show', $row->id) . '">' . e($formattedName) . '</a>';
+                })
+                ->addColumn('action', function ($license_holder) {
+                    $buttons = '';
+                    if (auth()->user()->can('pemilik-lisensi.ubah')) {
+                        $buttons .= '<a href="' . route('license_holders.edit', $license_holder->id) . '" class="btn btn-success btn-sm">Edit</a> ';
+                    }
+                    if (auth()->user()->can('pemilik-lisensi.lihat')) {
+                        $buttons .= '<a href="' . route('license_holders.show', $license_holder->id) . '" class="btn btn-secondary btn-sm">Show</a> ';
+                    }
+                    if (auth()->user()->can('pemilik-lisensi.hapus')) {
+                        $buttons .= '<button data-id="' . $license_holder->id . '" class="btn btn-danger btn-sm delete-license_holder">Delete</button>';
+                    }
+                    return $buttons;
+                })
+                ->rawColumns(['action', 'name'])
+                ->make(true);
+        }
+
+
+        return view('license_holders.index');
+    }
+
+    private function getFilteredLicenseHolders()
+    {
+        $auth = auth()->user();
+
+        $query = LicenseHolder::with(['religion', 'license', 'province', 'city', 'district', 'subDistrict', 'postalCode']);
+
+        if ($auth->hasRole('Pemilik Lisensi')) {
+            $query->where('user_id', $auth->id);
+        }
+
+        return $query;
+    }
+
     private function readableLanguage($value)
     {
-        return match ((int)$value) {
-            1 => 'Lancar',
-            2 => 'Tidak Lancar',
+        return match ((int) $value) {
+            1 => 'Kurang',
+            2 => 'Cukup',
+            3 => 'Baik',
             default => '-',
         };
     }
 
     private function readableMaritalStatus($value)
     {
-        return match ((int)$value) {
-            1 => 'Lajang',
-            2 => 'Menikah',
-            3 => 'Duda',
-            4 => 'Janda',
+        return match ((int) $value) {
+            1 => 'Belum Menikah',
+            2 => 'Sudah Menikah',
+            3 => 'Cerai Hidup',
+            4 => 'Cerai Mati',
             default => '-',
         };
-    }
-
-    public function index(Request $request)
-    {
-        if ($request->ajax()) {
-
-            $license_holder = LicenseHolder::with(['religion', 'license','province', 'city', 'district', 'subDistrict', 'postalCode']);
-
-            return Datatables::eloquent($license_holder)
-
-            ->addColumn('religion_name', fn($row) => $row->religion->name ?? '-')
-            ->addColumn('license_id', fn($row) => $row->license->license_id ?? '-')
-            ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
-            ->addColumn('province_name', fn($row) => $row->province->name ?? '-')
-            ->addColumn('city_name', fn($row) => $row->city->name ?? '-')
-            ->addColumn('district_name', fn($row) => $row->district->name ?? '-')
-            ->addColumn('sub_district_name', fn($row) => $row->subDistrict->name ?? '-')
-            ->addColumn('postal_code', fn($row) => $row->postalCode->postal_code ?? '-')
-
-            ->addColumn('indonesian_literacy', function ($row) {
-                    return $this->readableLanguage($row->indonesian_literacy);
-                })
-            ->addColumn('indonesian_proficiency', function ($row) {
-                    return $this->readableLanguage($row->indonesian_proficiency);
-                })
-            ->addColumn('arabic_literacy', function ($row) {
-                    return $this->readableLanguage($row->arabic_literacy);
-                })
-            ->addColumn('arabic_proficiency', function ($row) {
-                    return $this->readableLanguage($row->arabic_proficiency);
-                })
-            ->addColumn('english_literacy', function ($row) {
-                    return $this->readableLanguage($row->english_literacy);
-                })
-            ->addColumn('english_proficiency', function ($row) {
-                    return $this->readableLanguage($row->english_proficiency);
-                })
-
-            ->addColumn('birth_date', function($row) {
-                return Carbon::parse($row->birth_date)->format('d/m/Y');
-            })
-
-             ->addColumn('marital_status', function ($row) {
-                    return $this->readableMaritalStatus($row->marital_status);
-            })
-
-            ->addColumn('married_date', function ($row) {
-                return $row->married_date ? Carbon::parse($row->married_date)->format('d/m/Y') : '-';
-            })
-
-            ->addColumn('name', function ($row) {
-                $formattedName = Str::title($row->name);
-                return '<a href="' . route('license_holders.show', $row->id) . '">' . e($formattedName) . '</a>';
-            })
-
-            ->addColumn('action', function ($license_holder) {
-            $buttons = '';
-
-            if (auth()->user()->can('pemilik-lisensi.ubah')) {
-                $buttons .= '<a href="' . route('license_holders.edit', $license_holder->id) . '" class="btn btn-success btn-sm">Edit</a> ';
-            }
-
-            if (auth()->user()->can('pemilik-lisensi.lihat')) {
-                $buttons .= '<a href="' . route('license_holders.show', $license_holder->id) . '" class="btn btn-secondary btn-sm">Show</a> ';
-            }
-
-            if (auth()->user()->can('pemilik-lisensi.hapus')) {
-                $buttons .= '<button data-id="' . $license_holder->id . '" class="btn btn-danger btn-sm delete-license_holder">Delete</button>';
-            }
-
-            return $buttons;
-             })
-
-            ->rawColumns(['action', 'name'])
-            ->make(true);
-        }
-
-        return view('license_holders.index');
     }
 
     /**
@@ -136,6 +124,7 @@ class LicenseHoldersController extends Controller
         $validated = $request->validate([
             'license_id' => 'required|exists:licenses,id', 
             'name' => 'required',
+            'email' => 'required|email|unique:users,email',
             'religion_id' => 'required|exists:religions,id',
             'identity_number' => 'required|digits:16',
             'driver_license_number' => 'nullable|string|max:20',
@@ -167,7 +156,15 @@ class LicenseHoldersController extends Controller
             $validated['photo'] = $filename;
         }
 
+        $user = \App\Models\User::create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => bcrypt('password123'), // atau gunakan password generator
+        ]);
 
+        $user->assignRole('Pemilik Lisensi');
+
+        $validated['user_id'] = $user->id;
         LicenseHolder::create($validated);
              
 
@@ -207,6 +204,13 @@ class LicenseHoldersController extends Controller
 
     public function edit(LicenseHolder $license_holder)
     {
+        $auth = auth()->user();
+
+        // Batas akses: kalau user punya role Pemilik Lisensi, hanya bisa edit miliknya sendiri
+        if ($auth->hasRole('Pemilik Lisensi') && $license_holder->user_id !== $auth->id) {
+            abort(403); // atau redirect()->back()->with('error', 'Tidak diizinkan.');
+        }
+
         $religions = Religion::all();
         $provinces = Province::all();
         $allLicenses = License::all(); 
@@ -225,9 +229,16 @@ class LicenseHoldersController extends Controller
      */
     public function update(Request $request, LicenseHolder $license_holder)
     {
+            $auth = auth()->user();
+
+            
+            if ($auth->hasRole('Pemilik Lisensi') && $license_holder->user_id !== $auth->id) {
+                abort(403); // Forbidden
+            }
         $validated = $request->validate([
             'license_id' => 'required|exists:licenses,id', 
             'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $license_holder->user_id,
             'religion_id' => 'required|exists:religions,id',
             'identity_number' => 'required|digits:16',
             'driver_license_number' => 'nullable|string|max:20',
@@ -267,6 +278,14 @@ class LicenseHoldersController extends Controller
         }
 
             $license_holder->update($validated);
+
+            if ($license_holder->user) {
+                $license_holder->user->update([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                ]);
+            }
+
             return redirect()->route('license_holders.index')->with('success', 'Data berhasil diperbarui.');
     }
 

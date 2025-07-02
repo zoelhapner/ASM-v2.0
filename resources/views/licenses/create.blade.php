@@ -265,6 +265,22 @@
                                         </div>
                                     </div>
 
+                                     <!-- Owner Multi-Select (HANYA Admin yang lihat) -->
+                                    @can('lisensi.tambah')
+                                        <div class="col-md-4 mb-3">
+                                            <label for="owners">Pemilik Lisensi <span class="text-danger">*</span></label>
+                                            <select name="owners[]" id="owners" class="form-control @error('owners') is-invalid @enderror" multiple required>
+                                                <option value="">-- Pilih Pemilik Lisensi --</option>
+                                                @foreach ($owners as $owner)
+                                                    <option value="{{ $owner->id }}" {{ collect(old('owners'))->contains($owner->id) ? 'selected' : '' }}>
+                                                        {{ $owner->name }} ({{ $owner->email }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @error('owners') <div class="invalid-feedback">{{ $message }}</div> @enderror
+                                        </div>
+                                    @endcan
+
                                     {{-- Submit Button --}}
                                         <div class="text-end">
                                         <button type="submit" class="btn btn-primary">Simpan</button>

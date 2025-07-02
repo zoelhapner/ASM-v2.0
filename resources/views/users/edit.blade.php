@@ -51,7 +51,8 @@
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3">
                                         <label for="name">Nama: *</label>
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}"
+                                         @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
                                         @error('name')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -60,7 +61,8 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label for="email">Email: *</label>
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $user->email) }}"
+                                         @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
                                         @error('email')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -69,8 +71,9 @@
 
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3">
-                                        <label for="password">Password: *</label>
-                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" required>
+                                        <label for="password">Password:</label>
+                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password', $user->password) }}"
+                                         @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
                                         @error('password')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

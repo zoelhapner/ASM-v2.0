@@ -204,7 +204,7 @@ return [
         ],
 
         [
-            'text' => 'User',
+            'text' => 'Manajemen User',
             'url' => 'users',
             'icon' => 'ti ti-users',
             'active' => ['users*'],

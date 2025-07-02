@@ -63,7 +63,7 @@ Auth::routes();
 
 Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
+Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {
     route::resource('/users', UsersController::class);
 });
 

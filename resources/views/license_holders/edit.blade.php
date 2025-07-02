@@ -52,7 +52,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label for="license_id">Pilh Lisensi <code>*</code></label>
                                             <select name="license_id" class="form-control" required
-                                                @role('Pemilik Lisensi') disabled @endrole>
+                                                @role('Pemilik Lisensi') readonly @endrole>
                                             <option value="">-- Pilih Lisensi --</option>
                                             @foreach($allLicenses as $license)
                                                 <option value="{{ $license->id }}" {{ old('license_id', $license_holder->license_id) == $license->id ? 'selected' : '' }}>
@@ -66,6 +66,15 @@
                                             <label>Nama Pemilik *</label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $license_holder->name) }}" required>
                                             @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email">Email: *</label>
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $license_holder->user->email) }}"
+                                            @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
+                                            @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>

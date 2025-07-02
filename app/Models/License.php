@@ -34,10 +34,16 @@ class License extends Model
 }
 
 
-    public function licenseholder()
+ public function licenseHolders()
 {
-    return $this->hasMany(LicenseHolder::class);
+    return $this->hasMany(LicenseHolder::class, 'license_id');
 }
+
+public function owners()
+{
+    return $this->belongsToMany(User::class, 'license_user', 'license_id', 'user_id');
+}
+
 
     // Di model License
 
