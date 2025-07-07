@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\SubDistrict;
 use App\Models\PostalCode;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\License;
 use Illuminate\Support\Carbon;
@@ -102,9 +103,9 @@ class LicensesController extends Controller
     public function store(Request $request) {
     
         $validated = $request->validate([
-            'license_id' => 'required|unique',
+            'license_id' => 'required|unique:licenses,license_id',
             'license_type' => 'required|in:FO,SO,LO,LC', 
-            'name' => 'required|unique',
+            'name' => 'required|unique:licenses,name',
             'email' => 'required|email|unique:licenses,email',
             'address' => 'required',
             'province_id' => 'required|exists:provinces,id',
@@ -143,10 +144,13 @@ class LicensesController extends Controller
     }
 
      public function edit(License $license) {
-        $auth = auth()->user();
+         $owners = User::role('Pemilik Lisensi')->get();
 
-        if ($auth->hasRole('Pemilik Lisensi') && !$license->owners->contains($auth->id)) {
-        abort(403);
+        // Jika yang login Owner, pastikan dia hanya boleh buka lisensi miliknya.
+        if (auth()->user()->hasRole('Pemilik Lisensi')) {
+            if (!$license->owners->contains(auth()->id())) {
+                abort(403, 'Anda tidak memiliki izin mengedit lisensi ini.');
+            }
         }
 
         $provinces = Province::all();
@@ -162,13 +166,16 @@ class LicensesController extends Controller
     public function update(Request $request, License $license) {
         
        $validated = $request->validate([
-            'license_id' => 'required|unique',
+            'license_id' => [
+            'required',
+            Rule::unique('licenses', 'license_id')->ignore($license->id),
+            ],
             'license_type' => 'required|in:FO,SO,LO,LC', 
-            'name' => 'required|unique',
+            'name' => 'required|unique:licenses,name',
             'email' => [
             'required',
             'email',
-             Rule::unique('users')->ignore($user->id),
+             Rule::unique('licenses')->ignore($license->id),
             ], 
             'address' => 'required',
             'province_id' => 'required|exists:provinces,id',
@@ -212,7 +219,11 @@ class LicensesController extends Controller
 
     }
 
-    public function destroy(License $license) {
+    public function destroy(License $license) 
+    {
+        if (auth()->user()->hasRole('Pemilik Lisensi')) {
+        abort(403);
+        }
     
         if ($license) {
             $license->delete();

@@ -12,16 +12,16 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('license_holder_families.store') }}" method="POST">
+                        <form action="{{ route('employee_families.store') }}" method="POST">
                             @csrf
 
                             {{-- Hidden ID --}}
-                            <input type="hidden" name="license_holder_id" value="{{ $license_holder->id }}">
+                            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                             {{-- Informasi Pemilik --}}
                             <div class="mb-3">
                                 <label class="form-label">Nama Pemilik Lisensi</label>
-                                <input type="text" class="form-control" value="{{ $license_holder->fullname }}" disabled>
+                                <input type="text" class="form-control" value="{{ $employee->fullname }}" disabled>
                             </div>
 
                             <div class="row">
@@ -66,19 +66,19 @@
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="job" class="form-label">Pekerjaan <code></code></label>
-                                    <input type="text" name="job" class="form-control" >
+                                    <label for="job" class="form-label">Pekerjaan <code>*</code></label>
+                                    <input type="text" name="job" class="form-control" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="job_phone" class="form-label">Telepon Kantor <code></code></label>
-                                    <input type="number" name="job_phone" class="form-control" >
+                                    <label for="job_phone" class="form-label">Telepon Kantor <code>*</code></label>
+                                    <input type="number" name="job_phone" class="form-control" required>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="last_education_level" class="form-label">Pendidikan Terakhir <code></code></label>
-                                    <select name="last_education_level" class="form-select" >
+                                    <label for="last_education_level" class="form-label">Pendidikan Terakhir <code>*</code></label>
+                                    <select name="last_education_level" class="form-select" required>
                                         <option value="">-- Pilih Jenjang --</option>
                                         <option value="SD">SD</option>
                                         <option value="SMP">SMP</option>
@@ -91,17 +91,22 @@
                                 </div>
 
                                 <div class="col-md-6 mb-3">
-                                    <label for="institution_name" class="form-label">Nama Sekolah / Universitas <code></code></label>
-                                    <input type="text" name="institution_name" class="form-control" >
+                                    <label for="institution_name" class="form-label">Nama Sekolah / Universitas <code>*</code></label>
+                                    <input type="text" name="institution_name" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="company_name" class="form-label">Nama Lembaga / Perusahaan <code>*</code></label>
+                                    <input type="text" name="company_name" class="form-control" required>
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a href="{{ route('license_holders.show', $license_holder->id) }}" class="btn btn-secondary">
+                                <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-secondary">
                                     Batal
                                 </a>
                                 <button type="submit" class="btn btn-primary">
-                                    Simpan Data
+                                    Simpan Pekerjaan
                                 </button>
                             </div>
                         </form>

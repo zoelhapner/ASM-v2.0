@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("employees.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -42,15 +42,15 @@
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('license_holder_families.update', $families->id) }}" method="POST">
+                            <form action="{{ route('employee_families.update', $families->id) }}" method="POST">
                                 @csrf
                                 @method('PUT')
 
-                                <input type="hidden" name="license_holder_id" value="{{ $license_holder->id }}">
+                                <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                                 <div class="mb-3">
-                                    <label class="form-label">Nama Pemilik Lisensi</label>
-                                    <input type="text" class="form-control" value="{{ $license_holder->fullname }}" disabled>
+                                    <label class="form-label">Nama Karyawan</label>
+                                    <input type="text" class="form-control" value="{{ $employee->fullname }}" disabled>
                                 </div>
 
                                 <div class="row">
@@ -60,7 +60,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Hubungan dengan pemilik</label>
+                                        <label class="form-label">Hubungan dengan karyawan</label>
                                         <select name="relationship" class="form-select">
                                             <option value="">-- Pilih salah satu --</option>
                                             <option value="1" {{ $families->relationship == 1 ? 'selected' : '' }}>Suami</option>
@@ -85,7 +85,7 @@
                                     <div class="col-md-6 mb-3">
                                                 <label>Tanggal Lahir *</label>
                                                 <input type="date" name="birth_date" class="form-control" required
-                                                    value="{{ old('birth_date', $license_holder->birth_date) }}"
+                                                    value="{{ old('birth_date', $families->birth_date) }}"
                                                     pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                     </div>
                                 </div>
@@ -118,6 +118,11 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
+                                        <label class="form-label">Pekerjaan</label>
+                                        <input type="text" name="company_name" class="form-control" value="{{ old('company_name', $families->company_name) }}">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
                                                 <label class="form-label">Nama Sekolah</label>
                                                 <input type="text" name="institution_name" class="form-control" value="{{ old('institution_name', $families->institution_name) }}">
                                     </div>
@@ -125,7 +130,7 @@
 
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('license_holders.show', $license_holder->id) }}" class="btn btn-secondary">Batal</a>
+                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-success">Simpan Perubahan</button>
                         </div>
                     </form>

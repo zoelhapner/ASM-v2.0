@@ -11,7 +11,7 @@
                         Overview
                     </div>
                     <h2 class="page-title">
-                        Pemilik Lisensi
+                        Karyawan
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -19,7 +19,7 @@
                     <div class="btn-list">
                  @can('pemilik-lisensi.tambah')       
                   <span class="d-none d-sm-inline">
-                        <a href="{{ route("license_holders.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href="{{ route("employees.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -28,7 +28,7 @@
                                 <line x1="12" y1="5" x2="12" y2="19"/>
                                 <line x1="5" y1="12" x2="19" y2="12"/>
                             </svg>
-                            Tambah Data Pemilik
+                            Tambah Data Karyawan
                         </a>
                  </span>
                  @endcan
@@ -47,24 +47,25 @@
                     <div class="card">
                         <div class="card-header">
                             <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
-                                 Pemilik Lisensi
+                                 Data Karyawan
                             </p>
                         </div>
                         <div class="table-responsive">
-                            <table id="tableLicenseHolders" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                            <table id="tableEmployees" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
                                 <thead>
                                     <tr>
-                                        <th>ID Lisensi</th>
-                                        <th>Tipe Lisensi</th>
+                                        <th>NIK</th>
+                                        <th>Jenis Lisensi</th>
                                         <th>Nama Lisensi</th>
-                                        <th>Nama Pemilik</th>
+                                        <th>Nama Karyawan</th>
                                         <th>Panggilan</th>
                                         <th>Jenis kelamin</th>
-                                        <th>Agama</th>
-                                        <th>Nomor KTP</th>
-                                        <th>Nomor SIM</th>
                                         <th>Tempat Lahir</th>
                                         <th>Tanggal Lahir</th>
+                                        <th>Status Pernikahan</th>
+                                        <th>Agama</th>
+                                        <th>No KTP</th>
+                                        <th>Email</th>
                                         <th>Alamat</th>
                                         <th>Provinsi</th>
                                         <th>Kabupaten/Kota</th>
@@ -72,15 +73,17 @@
                                         <th>Kelurahan</th>
                                         <th>Kode Pos</th>
                                         <th>Telepon</th>
-                                        <th>Hobi</th>
-                                        <th>Status Pernikahan</th>
-                                        <th>Tanggal Pernikahan</th>
-                                        <th>Bahasa Indonesia(Baca/Tulis)</th>
-                                        <th>Bahasa Indonesia(Bicara)</th>
-                                        <th>Bahasa Arab (Baca/Tulis)</th>
-                                        <th>Bahasa Arab (Bicara)</th>
-                                        <th>Bahasa Inggris (Baca/Tulis)</th>
-                                        <th>Bahasa Inggris (Bicara)</th>
+                                        <th>Jabatan</th>
+                                        <th>Departemen</th>
+                                        <th>Unit Kerja</th>
+                                        <th>Status Karyawan</th>
+                                        <th>Tanggal Mlai Kerja</th>
+                                        <th>Gaji Pokok</th>
+                                        <th>Tunjangan</th>
+                                        <th>Potongan</th>
+                                        <th>Bonus</th>
+                                        <th>THR</th>
+                                        <th>Surat Perjanjian Kerja</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -96,40 +99,44 @@
 @push('js')
     <script>
         $(function() {
-            const table = $('#tableLicenseHolders').DataTable({
+            const table = $('#tableEmployees').DataTable({
                 serverSide: true,
                 processing: true,
-                ajax: '{{ route("license_holders.index") }}',
+                ajax: '{{ route("employees.index") }}',
                 columns: [
-                { data: 'license_id', name: 'licenses.license_id' },
-                { data: 'license_type', name: 'licenses.type' },
-                { data: 'license_name', name: 'licenses.name' },
-                { data: 'license_holder_name', name: 'license_holders.fullname' },
-                { data: 'nickname', name: 'license_holders.nickname' },
-                { data: 'gender', name: 'license_holders.gender' },
-                { data: 'religion_name', name: 'religions.name' },
-                { data: 'identity_number', name: 'license_holders.identity_number' },
-                { data: 'driver_license_number', name: 'license_holders.driver_license_number' },
-                { data: 'birth_place', name: 'license_holders.birth_place' },
-                { data: 'birth_date', name: 'license_holders.birth_date' },
-                { data: 'address', name: 'license_holders.address' },
-                { data: 'province_name', name: 'provinces.name' },
-                { data: 'city_name', name: 'cities.name' },
-                { data: 'district_name', name: 'districts.name' },
-                { data: 'sub_district_name', name: 'sub_districts.name' },
-                { data: 'postal_code', name: 'postal_codes.postal_code' },
-                { data: 'phone', name: 'license_holders.phone' },
-                { data: 'hobby', name: 'license_holders.hobby' },
-                { data: 'marital_status', name: 'license_holders.marital_status' },
-                { data: 'married_date', name: 'license_holders.married_date' },
-                { data: 'indonesian_literacy', name: 'license_holders.indonesian_literacy' },
-                { data: 'indonesian_proficiency', name: 'license_holders.indonesian_proficiency' },
-                { data: 'arabic_literacy', name: 'license_holders.arabic_literacy' },
-                { data: 'arabic_proficiency', name: 'license_holders.arabic_proficiency' },
-                { data: 'english_literacy', name: 'license_holders.english_literacy' },
-                { data: 'english_proficiency', name: 'license_holders.english_proficiency' },
-                { data: 'action', name: 'action', orderable: false, searchable: false }
-            ],
+    { data: 'nik', name: 'employees.nik' }, // NIK
+    { data: 'license_type', name: 'licenses.type' }, // Jenis Lisensi
+    { data: 'license_name', name: 'licenses.name' }, // Nama Lisensi
+    { data: 'employee_name', name: 'employees.fullname' },
+    { data: 'nickname', name: 'employees.nickname' }, // Nama Karyawan
+    { data: 'gender', name: 'employees.gender' }, // Jenis Kelamin
+    { data: 'birth_place', name: 'employees.birth_place' }, // Tempat Lahir
+    { data: 'birth_date', name: 'employees.birth_date' }, // Tanggal Lahir
+    { data: 'marital_status', name: 'employees.marital_status' }, // Status Pernikahan
+    { data: 'religion_name', name: 'religions.name' }, // Agama
+    { data: 'identity_number', name: 'employees.identity_number' }, // No KTP
+    { data: 'users_email', name: 'users_email' },
+    { data: 'address', name: 'employees.address' }, // Alamat
+    { data: 'province_name', name: 'provinces.name' }, // Provinsi
+    { data: 'city_name', name: 'cities.name' }, // Kabupaten/Kota
+    { data: 'district_name', name: 'districts.name' }, // Kecamatan
+    { data: 'sub_district_name', name: 'sub_districts.name' }, // Kelurahan
+    { data: 'postal_code', name: 'postal_codes.postal_code' }, // Kode Pos
+    { data: 'phone', name: 'employees.phone' }, // Telepon
+    { data: 'position', name: 'employees.position' }, // Jabatan
+    { data: 'department', name: 'employees.department' }, // Departemen
+    { data: 'unit', name: 'employees.unit' }, // Unit Kerja
+    { data: 'employment_status', name: 'employees.employment_status' }, // Status Karyawan
+    { data: 'start_date', name: 'employees.start_date' }, // Tanggal Mulai Kerja
+    { data: 'basic_salary', name: 'employees.basic_salary' }, // Gaji Pokok
+    { data: 'allowance', name: 'employees.allowance' }, // Tunjangan
+    { data: 'deduction', name: 'employees.deduction' }, // Potongan
+    { data: 'bonus', name: 'employees.bonus' }, // Bonus
+    { data: 'thr', name: 'employees.thr' }, // THR
+    { data: 'contract_letter_file', name: 'employees.contract_letter_file' }, // Surat Perjanjian Kerja
+    { data: 'action', name: 'action', orderable: false, searchable: false } // Aksi
+],
+
 order: [[2, 'asc']], // misal urutkan nama license_holder
 columnDefs: [
     { width: '50px', targets: 0 },
@@ -140,8 +147,8 @@ columnDefs: [
             });
 
             // Delete user functionally
-            $('table').on('click', '.delete-license_holder', function () {
-            const license_holderId = $(this).data('id');
+            $('table').on('click', '.delete-employee', function () {
+            const employeeId = $(this).data('id');
 
             Swal.fire({
             title: 'Yakin ingin menghapus?',
@@ -158,7 +165,7 @@ columnDefs: [
                 if (result.isConfirmed) {
                     $.ajax({
 
-                        url: `/license_holders/${license_holderId}`,
+                        url: `/employees/${employeeId}`,
                         method: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}',

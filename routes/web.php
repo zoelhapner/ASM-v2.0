@@ -9,6 +9,11 @@ use App\Http\Controllers\LicenseHoldersController;
 use App\Http\Controllers\LicenseHolderEducationController;
 use App\Http\Controllers\LicenseHolderWorkExperience;
 use App\Http\Controllers\LicenseHolderFamilyMember;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\EmployeeEducationController;
+use App\Http\Controllers\EmployeeWorkExperienceController;
+use App\Http\Controllers\EmployeeFamilyMemberController;
+
 
 
 
@@ -46,6 +51,9 @@ Route::middleware(['auth', 'permission:pemilik-lisensi.ubah'])->group(function (
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['edit', 'update']);
 });
 
+Route::resource('employees', EmployeeController::class);
+
+
 Route::middleware(['auth'])->group(function () {
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['index', 'show', 'destroy']);
 });
@@ -67,14 +75,26 @@ Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function 
     route::resource('/users', UsersController::class);
 });
 
+Route::get('/license_holders/{id}/licenses', [LicenseHoldersController::class, 'showLicense'])->name('license_holders.licenses');
 Route::get('/license_holders/{id}/profile', [LicenseHoldersController::class, 'showProfile'])->name('license_holders.profile');
 Route::get('/license_holders/{id}/educations', [LicenseHoldersController::class, 'showTab'])->name('license_holders.educations');
 Route::get('/license_holders/{id}/workers', [LicenseHoldersController::class, 'showWorks'])->name('license_holders.workers');
 Route::get('/license_holders/{id}/families', [LicenseHoldersController::class, 'showFams'])->name('license_holders.families');
 
+
+
 route::resource('/license_holder_educations', LicenseHolderEducationController::class);
 route::resource('/license_holder_workers', LicenseHolderWorkExperience::class);
 route::resource('/license_holder_families', LicenseHolderFamilyMember::class);
+
+Route::get('/employees/{id}/profile', [EmployeeController::class, 'showProfile'])->name('employees.profile');
+Route::get('/employees/{id}/educations', [EmployeeController::class, 'showTab'])->name('employees.educations');
+Route::get('/employees/{id}/workers', [EmployeeController::class, 'showWorks'])->name('employees.workers');
+Route::get('/employees/{id}/families', [EmployeeController::class, 'showFams'])->name('employees.families');
+
+route::resource('/employee_educations', EmployeeEducationController::class);
+route::resource('/employee_workers', EmployeeWorkExperienceController::class);
+route::resource('/employee_families', EmployeeFamilyMemberController::class);
 
 
 Route::get('/api/cities/{province_id}', function ($province_id) {

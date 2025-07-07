@@ -12,16 +12,16 @@
                     </div>
 
                     <div class="card-body">
-                        <form action="{{ route('license_holder_educations.store') }}" method="POST">
+                        <form action="{{ route('employee_educations.store') }}" method="POST">
                             @csrf
 
                             {{-- Hidden ID --}}
-                            <input type="hidden" name="license_holder_id" value="{{ $license_holder->id }}">
+                            <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
                             {{-- Informasi Pemilik --}}
                             <div class="mb-3">
                                 <label class="form-label">Nama Pemilik Lisensi</label>
-                                <input type="text" class="form-control" value="{{ $license_holder->fullname }}" disabled>
+                                <input type="text" class="form-control" value="{{ $employee->fullname }}" disabled>
                             </div>
 
                             {{-- Jenjang Pendidikan --}}
@@ -45,12 +45,6 @@
                                 <input type="text" name="institution_name" class="form-control" required>
                             </div>
 
-                            {{-- Jurusan --}}
-                            <div class="mb-3">
-                                <label for="major" class="form-label">Jurusan</label>
-                                <input type="text" name="major" class="form-control">
-                            </div>
-
                             {{-- Tahun Masuk & Lulus --}}
                             <div class="row">
                                 <div class="col-md-6 mb-3">
@@ -69,12 +63,12 @@
                                 <select name="is_graduated" class="form-select">
                                     <option value="">-- Pilih Status --</option>
                                     <option value="1">Lulus</option>
-                                    <option value="0">Tidak Lulus</option>
+                                    <option value="0">Belum Lulus</option>
                                 </select>
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a href="{{ route('license_holders.show', $license_holder->id) }}" class="btn btn-secondary">
+                                <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-secondary">
                                     Batal
                                 </a>
                                 <button type="submit" class="btn btn-primary">

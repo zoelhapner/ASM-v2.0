@@ -3,7 +3,7 @@
         <h3 class="card-title">Riwayat Pendidikan</h3>
     </div>
     <div class="card-body">
-        @if ($license_holder->educations && $license_holder->educations->count())
+        @if ($employee->educations && $employee->educations->count())
             <div class="table-responsive">
                 <table class="table table-vcenter card-table table-striped" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
                     <thead>
@@ -11,7 +11,6 @@
                             <th>#</th>
                             <th>Jenjang</th>
                             <th>Nama Sekolah</th>
-                            <th>Jurusan</th>
                             <th>Tahun Masuk</th>
                             <th>Tahun Lulus</th>
                             <th>Apakah Lulus?</th>
@@ -19,18 +18,17 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($license_holder->educations as $index => $edu)
+                        @foreach ($employee->educations as $index => $edu)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $edu->education_level }}</td>
                                 <td>{{ $edu->institution_name }}</td>
-                                <td>{{ $edu->major }}</td>
                                 <td>{{ $edu->start_year }}</td>
                                 <td>{{ $edu->end_year }}</td>
                                 <td>{{ $edu->readable_is_graduated }}</td>
                                 <td>
-                                <a href="{{ route('license_holder_educations.edit', $edu->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('license_holder_educations.destroy', $edu->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                <a href="{{ route('employee_educations.edit', $edu->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form action="{{ route('employee_educations.destroy', $edu->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
                                     @csrf
                                     @method('DELETE')
                                      <button class="btn btn-sm btn-danger">Hapus</button>
@@ -47,10 +45,10 @@
     </div>
 
     <div class="mt-4">
-            <a href="{{ route('license_holder_educations.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
+            <a href="{{ route('employee_educations.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary">
                 Tambah Data
             </a>
-            <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
+            <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
                 Back to List
             </a>
     </div>

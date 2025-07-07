@@ -27,7 +27,7 @@
             <a href="{{$profile_url}}" class="dropdown-item">Profile</a>
             <a class="dropdown-item"
                href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="fa fa-fw fa-power-off text-red"></i>
+                <i class="ti ti-logout"></i>
                 {{ __('tablar::tablar.log_out') }}
             </a>
 

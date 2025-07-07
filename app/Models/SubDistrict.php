@@ -19,6 +19,10 @@ class SubDistrict extends Model
         return $this->hasMany(LicenseHolder::class);
     }
 
+     public function employees() {
+        return $this->hasMany(Employee::class);
+    }
+
     protected $table = 'sub_districts';
 
 

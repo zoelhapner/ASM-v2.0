@@ -11,14 +11,14 @@
                         Overview
                     </div>
                     <p class="page-title">
-                       Pemilik Lisensi
+                       Karyawan
                     </p>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                  
-                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("employees.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -36,12 +36,12 @@
                     <div class="card">
                                     <div class="card-header">
                                         <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
-                                            Tambah Data Pemilik
+                                            Tambah Data Karyawan
                                         </p>
                                     </div>
 
                             <div class="card-body">
-                                <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('license_holders.store') }}" method="POST" enctype="multipart/form-data">
+                                <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     {{-- SECTION 1: Informasi Lead --}}
@@ -49,14 +49,22 @@
                                     <div class="row mb-4">
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nama Pemilik *</label>
+                                            <label>NIK *</label>
+                                            <input type="number" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" value="{{ old('nik') }}" required>
+                                            @error('nik')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                         <div class="col-md-6 mb-3">
+                                            <label>Nama Lengkap *</label>
                                             <input type="text" class="form-control @error('fullname') is-invalid @enderror" id="fullname" name="fullname" value="{{ old('fullname') }}" required>
                                             @error('fullname')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                         <div class="col-md-6 mb-3">
+                                        <div class="col-md-6 mb-3">
                                             <label>Nama Panggilan *</label>
                                             <input type="text" class="form-control @error('nickname') is-invalid @enderror" id="nickname" name="nickname" value="{{ old('nickname') }}" required>
                                             @error('nickname')
@@ -70,6 +78,36 @@
                                                 <option value="">-- Pilih Jenis Kelamin --</option>
                                                 <option value="1">Laki - Laki</option>
                                                 <option value="2">Perempuan</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Tempat Lahir *</label>
+                                            <input type="text" class="form-control @error('birth_place') is-invalid @enderror" id="birth_place" name="birth_place" value="{{ old('birth_place') }}" required>
+                                            @error('birth_place')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Tanggal Lahir *</label>
+                                            <input type="date" name="birth_date" class="form-control" required
+                                                value="{{ old('birth_date') }}"
+                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
+                                        </div>
+
+                                       
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="religion_id">Agama *</label>
+                                            <select name="religion_id" class="form-control" required>
+                                                <option value="">-- Pilih Agama --</option>
+                                                @foreach($religions as $religion)
+                                                    <option value="{{ $religion->id }}" {{ old('religion_id') == $religion->id ? 'selected' : '' }}>
+                                                        {{ $religion->name }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -90,17 +128,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="religion_id">Agama *</label>
-                                            <select name="religion_id" class="form-control" required>
-                                                <option value="">-- Pilih Agama --</option>
-                                                @foreach($religions as $religion)
-                                                    <option value="{{ $religion->id }}" {{ old('religion_id') == $religion->id ? 'selected' : '' }}>
-                                                        {{ $religion->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                        
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nomor KTP *</label>
@@ -109,30 +137,8 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label>Nomor SIM</label>
-                                            <input type="number" class="form-control @error('driver_license_number') is-invalid @enderror" id="driver_license_number" name="driver_license_number" value="{{ old('driver_license_number') }}">
-                                            @error('driver_license_number')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
                                     
-                                        <div class="col-md-6 mb-3">
-                                            <label>Tempat Lahir *</label>
-                                            <input type="text" class="form-control @error('birth_place') is-invalid @enderror" id="birth_place" name="birth_place" value="{{ old('birth_place') }}" required>
-                                            @error('birth_place')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    
-
-                                        <div class="col-md-6 mb-3">
-                                            <label>Tanggal Lahir *</label>
-                                            <input type="date" name="birth_date" class="form-control" required
-                                                value="{{ old('birth_date') }}"
-                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
-                                        </div>
+                                        
 
                                         <div class="col-md-6 mb-3">
                                             <label>Alamat *</label>
@@ -192,11 +198,42 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Hobi *</label>
-                                            <input type="text" class="form-control @error('hobby') is-invalid @enderror" id="hobby" name="hobby" value="{{ old('hobby') }}" required>
-                                            @error('hobby')
+                                            <label>Jabatan *</label>
+                                            <input type="text" class="form-control @error('position') is-invalid @enderror" id="position" name="position" value="{{ old('position') }}" required>
+                                            @error('position')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Departemen *</label>
+                                            <input type="text" class="form-control @error('department') is-invalid @enderror" id="department" name="department" value="{{ old('department') }}" required>
+                                            @error('department')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Unit Kerja *</label>
+                                            <input type="text" class="form-control @error('unit') is-invalid @enderror" id="unit" name="unit" value="{{ old('unit') }}" required>
+                                            @error('unit')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Status Karyawan *</label>
+                                            <input type="text" class="form-control @error('employment_status') is-invalid @enderror" id="employment_status" name="employment_status" value="{{ old('employment_status') }}" required>
+                                            @error('employment_status')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Tanggal Mulai Kerja *</label>
+                                            <input type="date" name="start_date" class="form-control" required
+                                                value="{{ old('start_date') }}"
+                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
 
                                          <div class="col-md-6 mb-3">
@@ -207,12 +244,20 @@
                                             @enderror
                                         </div>
 
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contract_letter_file" class="form-label">Upload Surat Perjanjian Kerja (PDF)</label>
+                                            <input type="file" name="contract_letter_file" class="form-control" accept="application/pdf" required>
+                                            @error('contract_letter_file')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
                                     </div>
 
                                     {{-- SECTION 2: Data Kontak --}}
                                     <h2 class="mt-4 mb-3">Data Pernikahan</h2>
                                     <div class="row mb-4">
-                                        <div class="col-md-6 mb-3">
+                                         <div class="col-md-6 mb-3">
                                             <label>Status Pernikahan *</label>
                                             <select name="marital_status" class="form-control">
                                                 <option value="">-- Pilih Tipe --</option>
@@ -223,69 +268,49 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label>Tanggal Pernikahan</label>
-                                            <input type="date" name="married_date" class="form-control"
-                                                value="{{ old('married_date') }}"
-                                                pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
-                                        </div>
                                     </div>
 
                                     {{-- SECTION 5: Sosial Media --}}
-                                    <h2 class="mt-4 mb-3">Kemampuan Bahasa</h2>
+                                    <h2 class="mt-4 mb-3">Data Pekerjaan</h2>
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Indonesia (Baca/Tulis) </label>
-                                            <select name="indonesian_literacy" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
+                                            <label>Gaji Pokok *</label>
+                                            <input type="number" class="form-control @error('basic_salary') is-invalid @enderror" id="basic_salary" name="basic_salary" value="{{ old('basic_salary') }}" required>
+                                            @error('basic_salary')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Indonesia (Bicara) </label>
-                                            <select name="indonesian_proficiency" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
+                                            <label>Tunjangan *</label>
+                                            <input type="number" class="form-control @error('allowance') is-invalid @enderror" id="allowance" name="allowance" value="{{ old('allowance') }}" required>
+                                            @error('allowance')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Arab (Baca/Tulis)</label>
-                                            <select name="arabic_literacy" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
+                                            <label>Potongan *</label>
+                                            <input type="number" class="form-control @error('deduction') is-invalid @enderror" id="deduction" name="deduction" value="{{ old('deduction') }}" required>
+                                            @error('deduction')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Arab (Bicara)</label>
-                                            <select name="arabic_proficiency" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
+                                            <label>Bonus *</label>
+                                            <input type="number" class="form-control @error('bonus') is-invalid @enderror" id="bonus" name="bonus" value="{{ old('bonus') }}" required>
+                                            @error('bonus')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Inggris (Baca/Tulis)</label>
-                                            <select name="english_literacy" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label>Bahasa Ingris (Bicara)</label>
-                                            <select name="english_proficiency" class="form-control">
-                                                <option value="">-- Pilih Tipe --</option>
-                                                <option value="1">Lancar</option>
-                                                <option value="2">Tidak Lancar</option>
-                                            </select>
+                                            <label>THR *</label>
+                                            <input type="number" class="form-control @error('thr') is-invalid @enderror" id="thr" name="thr" value="{{ old('thr') }}" required>
+                                            @error('thr')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
 
                                     </div>

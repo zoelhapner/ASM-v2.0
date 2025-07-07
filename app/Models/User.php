@@ -21,6 +21,12 @@ class User extends Authenticatable
     return $this->hasOne(LicenseHolder::class);
 }
 
+public function employee()
+{
+    return $this->hasOne(Employee::class);
+}
+
+
 public function licenses()
 {
     return $this->belongsToMany(License::class, 'license_user', 'user_id', 'license_id');

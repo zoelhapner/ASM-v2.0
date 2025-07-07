@@ -21,7 +21,7 @@
                             {{-- Informasi Pemilik --}}
                             <div class="mb-3">
                                 <label class="form-label">Nama Pemilik Lisensi</label>
-                                <input type="text" class="form-control" value="{{ $license_holder->name }}" disabled>
+                                <input type="text" class="form-control" value="{{ $license_holder->fullname }}" disabled>
                             </div>
 
                             <div class="row">

@@ -13,7 +13,8 @@ use Illuminate\Validation\Rule;
 class UsersController extends Controller
 {
     
-    public function index(Request $request) {
+    public function index(Request $request) 
+    {
     
         if ($request->ajax()) {
 

@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('license_holders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('license_id');
-            $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
-            $table->string('name');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
+            $table->string('fullname');
+            $table->string('nickname');
+            $table->unsignedtinyInteger('gender');
             $table->unsignedBigInteger('religion_id');
             $table->foreign('religion_id')->references('id')->on('religions')->onDelete('cascade');
             $table->string('identity_number', 16);
@@ -43,6 +45,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('arabic_proficiency')->nullable();
             $table->unsignedTinyInteger('english_literacy')->nullable();
             $table->unsignedTinyInteger('english_proficiency')->nullable();
+            $table->string('photo')->nullable();
         });
     }
 

@@ -17,4 +17,8 @@ class PostalCode extends Model
     public function license_holder() {
         return $this->hasMany(LicenseHolder::class);
     }
+
+     public function employees() {
+        return $this->hasMany(Employee::class);
+    }
 }

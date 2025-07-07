@@ -29,6 +29,8 @@ class LicenseHolder extends Model
     ][$this->marital_status] ?? 'Tidak diketahui';
     }
 
+   
+
     // app/Models/LicenseHolder.php
 
 public function getReadableLanguagesAttribute()
@@ -48,15 +50,9 @@ public function getReadableLanguagesAttribute()
     ];
 }
 
-
-    public function license()
-{
-    return $this->belongsTo(License::class, 'license_id');
-}
-
     public function user()
 {
-    return $this->belongsTo(User::class, 'user_id');
+    return $this->belongsTo(User::class);
 }
 
     public function province()
@@ -111,8 +107,10 @@ public function getReadableLanguagesAttribute()
     public $timestamps = false;
 
     protected $fillable = [
-        'license_id',
-        'name',
+        'user_id',
+        'fullname',
+        'nickname',
+        'gender',
         'religion_id',
         'identity_number',
         'driver_license_number',
@@ -135,7 +133,7 @@ public function getReadableLanguagesAttribute()
         'english_literacy',
         'english_proficiency',
         'photo',
-        'user_id',
+        
     ];
 
 }

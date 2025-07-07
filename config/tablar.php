@@ -159,12 +159,12 @@ return [
                 [
                     'text' => 'Data Lisensi',
                     'url' => 'licenses',
-                    'icon' => 'ti ti-currency-dollar',
+                    'icon' => 'ti ti-license',
                 ],
                 [
                     'text' => 'Data Pemilik',
                     'url' => 'license_holders',
-                    'icon' => 'ti ti-currency-dollar',
+                    'icon' => 'ti ti-users',
                 ],
             ],
         ],
@@ -172,7 +172,7 @@ return [
         [
             'text' => 'Data Karyawan',
             'icon' => 'ti ti-id-badge',
-            'url' => '#',
+            'url' => 'employees',
             'role' => 'Super-Admin',
         ],
 

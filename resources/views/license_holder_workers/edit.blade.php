@@ -50,7 +50,7 @@
 
                                 <div class="mb-3">
                                     <label class="form-label">Nama Pemilik Lisensi</label>
-                                    <input type="text" class="form-control" value="{{ $license_holder->name }}" disabled>
+                                    <input type="text" class="form-control" value="{{ $license_holder->fullname }}" disabled>
                                 </div>
 
                                 <div class="mb-3">
@@ -101,7 +101,7 @@
                                     <select name="is_current" class="form-select">
                                         <option value="">-- Pilih Tipe --</option>
                                         <option value="1" {{ $workers->is_current == 1 ? 'selected' : '' }}>Masih Bekerja</option>
-                                        <option value="0" {{ !$workers->is_current == 0 ? 'selected' : '' }}>Sudah Keluar</option>
+                                        <option value="0" {{ $workers->is_current == 0 ? 'selected' : '' }}>Sudah Keluar</option>
                                     </select>
                                 </div>
 
@@ -115,11 +115,11 @@
                                             <input type="text" name="job_description" class="form-control" value="{{ old('job_description', $workers->job_description) }}">
                                 </div>
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ route('license_holders.show', $license_holder->id) }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
-                        </div>
-                    </form>
+                                <div class="d-flex justify-content-between">
+                                    <a href="{{ route('license_holders.show', $license_holder->id) }}" class="btn btn-secondary">Batal</a>
+                                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                                </div>
+                            </form>
  
 
                         </div>

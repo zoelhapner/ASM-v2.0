@@ -11,4 +11,9 @@ class Religion extends Model
     return $this->hasMany(LicenseHolder::class, 'religion_id');
 }
 
+public function employees()
+{
+    return $this->hasMany(Employee::class, 'religion_id');
+}
+
 }

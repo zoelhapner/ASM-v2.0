@@ -33,16 +33,16 @@ class License extends Model
     return $this->belongsTo(PostalCode::class, 'postal_code_id');
 }
 
-
- public function licenseHolders()
-{
-    return $this->hasMany(LicenseHolder::class, 'license_id');
-}
-
 public function owners()
 {
     return $this->belongsToMany(User::class, 'license_user', 'license_id', 'user_id');
 }
+
+public function employees()
+{
+    return $this->belongsToMany(Employee::class, 'employee_license', 'license_id', 'employee_id');
+}
+
 
 
     // Di model License
