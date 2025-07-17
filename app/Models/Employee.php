@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Employee extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuid;
 
     protected $keyType = 'string';
     public $incrementing = false;
@@ -122,5 +123,10 @@ class Employee extends Model
         4 => 'Janda',
     ][$this->marital_status] ?? 'Tidak diketahui';
     }
+
+    public function getFullnameAttribute($value)
+{
+    return Str::title($value);
+}
 
 }

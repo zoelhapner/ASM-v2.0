@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('license_holders', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('fullname');
             $table->string('nickname');

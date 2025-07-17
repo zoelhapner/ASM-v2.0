@@ -16,4 +16,9 @@ public function employees()
     return $this->hasMany(Employee::class, 'religion_id');
 }
 
+public function students()
+{
+    return $this->hasMany(Student::class, 'student_id');
+}
+
 }

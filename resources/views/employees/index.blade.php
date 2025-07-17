@@ -104,38 +104,38 @@
                 processing: true,
                 ajax: '{{ route("employees.index") }}',
                 columns: [
-    { data: 'nik', name: 'employees.nik' }, // NIK
-    { data: 'license_type', name: 'licenses.type' }, // Jenis Lisensi
-    { data: 'license_name', name: 'licenses.name' }, // Nama Lisensi
-    { data: 'employee_name', name: 'employees.fullname' },
-    { data: 'nickname', name: 'employees.nickname' }, // Nama Karyawan
-    { data: 'gender', name: 'employees.gender' }, // Jenis Kelamin
-    { data: 'birth_place', name: 'employees.birth_place' }, // Tempat Lahir
-    { data: 'birth_date', name: 'employees.birth_date' }, // Tanggal Lahir
-    { data: 'marital_status', name: 'employees.marital_status' }, // Status Pernikahan
-    { data: 'religion_name', name: 'religions.name' }, // Agama
-    { data: 'identity_number', name: 'employees.identity_number' }, // No KTP
-    { data: 'users_email', name: 'users_email' },
-    { data: 'address', name: 'employees.address' }, // Alamat
-    { data: 'province_name', name: 'provinces.name' }, // Provinsi
-    { data: 'city_name', name: 'cities.name' }, // Kabupaten/Kota
-    { data: 'district_name', name: 'districts.name' }, // Kecamatan
-    { data: 'sub_district_name', name: 'sub_districts.name' }, // Kelurahan
-    { data: 'postal_code', name: 'postal_codes.postal_code' }, // Kode Pos
-    { data: 'phone', name: 'employees.phone' }, // Telepon
-    { data: 'position', name: 'employees.position' }, // Jabatan
-    { data: 'department', name: 'employees.department' }, // Departemen
-    { data: 'unit', name: 'employees.unit' }, // Unit Kerja
-    { data: 'employment_status', name: 'employees.employment_status' }, // Status Karyawan
-    { data: 'start_date', name: 'employees.start_date' }, // Tanggal Mulai Kerja
-    { data: 'basic_salary', name: 'employees.basic_salary' }, // Gaji Pokok
-    { data: 'allowance', name: 'employees.allowance' }, // Tunjangan
-    { data: 'deduction', name: 'employees.deduction' }, // Potongan
-    { data: 'bonus', name: 'employees.bonus' }, // Bonus
-    { data: 'thr', name: 'employees.thr' }, // THR
-    { data: 'contract_letter_file', name: 'employees.contract_letter_file' }, // Surat Perjanjian Kerja
-    { data: 'action', name: 'action', orderable: false, searchable: false } // Aksi
-],
+                    { data: 'nik', name: 'employees.nik' }, 
+                    { data: 'license_type', name: 'licenses.license_type' }, 
+                    { data: 'license_name', name: 'licenses.name' },
+                    { data: 'fullname', name: 'employees.fullname' },
+                    { data: 'nickname', name: 'employees.nickname' },
+                    { data: 'gender', name: 'employees.gender' },  
+                    { data: 'birth_place', name: 'employees.birth_place' },
+                    { data: 'birth_date', name: 'employees.birth_date' },  
+                    { data: 'marital_status', name: 'employees.marital_status' },  
+                    { data: 'religion_name', name: 'religions.name' },  
+                    { data: 'identity_number', name: 'employees.identity_number' },  
+                    { data: 'users_email', name: 'users.email' },
+                    { data: 'address', name: 'employees.address' },  
+                    { data: 'province_name', name: 'provinces.name' }, 
+                    { data: 'city_name', name: 'cities.name' },  
+                    { data: 'district_name', name: 'districts.name' },
+                    { data: 'sub_district_name', name: 'sub_districts.name' },  
+                    { data: 'postal_code', name: 'postal_codes.postal_code' },  
+                    { data: 'phone', name: 'employees.phone' },  
+                    { data: 'position', name: 'employees.position' },  
+                    { data: 'department', name: 'employees.department' },
+                    { data: 'unit', name: 'employees.unit' },  
+                    { data: 'employment_status', name: 'employees.employment_status' },
+                    { data: 'start_date', name: 'employees.start_date' },  
+                    { data: 'basic_salary', name: 'employees.basic_salary' },
+                    { data: 'allowance', name: 'employees.allowance' },  
+                    { data: 'deduction', name: 'employees.deduction' },  
+                    { data: 'bonus', name: 'employees.bonus' },  
+                    { data: 'thr', name: 'employees.thr' },  
+                    { data: 'contract_letter_file', name: 'employees.contract_letter_file' },  
+                    { data: 'action', name: 'action', orderable: false, searchable: false }  
+                ],
 
 order: [[2, 'asc']], // misal urutkan nama license_holder
 columnDefs: [

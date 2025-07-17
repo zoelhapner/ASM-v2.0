@@ -15,7 +15,7 @@ return new class extends Migration
             $table->uuid('license_id'); // harus uuid, BUKAN bigIncrements/bigInteger
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
 
-            $table->unsignedBigInteger('user_id');
+            $table->uuid('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->primary(['license_id', 'user_id']);

@@ -102,7 +102,7 @@
                 ajax: '{{ route("license_holders.index") }}',
                 columns: [
                 { data: 'license_id', name: 'licenses.license_id' },
-                { data: 'license_type', name: 'licenses.type' },
+                { data: 'license_type', name: 'licenses.license_type' },
                 { data: 'license_name', name: 'licenses.name' },
                 { data: 'license_holder_name', name: 'license_holders.fullname' },
                 { data: 'nickname', name: 'license_holders.nickname' },

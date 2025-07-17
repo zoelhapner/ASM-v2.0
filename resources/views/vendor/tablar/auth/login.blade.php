@@ -21,7 +21,7 @@
 
                     <div class="mb-3">
                         <label class="form-label ">Email</label>
-                        <input type="email" class="form-control font-normal @error('email') is-invalid @enderror" name="email"
+                        <input type="email" class="form-control font-normal italic-placeholder @error('email') is-invalid @enderror" name="email"
                                placeholder="emailkamu@email.com"
                                autocomplete="off">
                         @error('email')

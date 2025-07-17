@@ -4,6 +4,9 @@
                 aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <!-- Tambahkan di header.blade.php atau di layout master -->
+        
+
         <div class="navbar-nav flex-row order-md-last">
             <div class="d-none d-md-flex">
                 @include('tablar::partials.header.theme-mode')

@@ -21,7 +21,7 @@
                     <div class="list-group list-group-flush">
                         <div class="list-group-item">
                             <span class="text-secondary fw-normal">Lisensi:</span>
-                            {{ $employee->user->licenses->pluck('name')->implode(', ') ?: '-' }}
+                            {{ $employee->licenses->pluck('name')->implode(', ') ?: '-' }}
                         </div>
                         <div class="list-group-item">
                             <span class="text-secondary fw-normal">Telepon:</span> {{ $employee->phone ?? '-' }}

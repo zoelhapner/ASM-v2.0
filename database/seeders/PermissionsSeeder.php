@@ -3,17 +3,26 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Permission;
+use App\Models\Role;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Str;
 
 class PermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Clear cached permissions
+        // Clear Spatie permission cache
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
+          // Bersihkan dulu pivot biar FK aman
+        DB::table('model_has_roles')->truncate();
+        DB::table('role_has_permissions')->truncate();
+        DB::table('model_has_permissions')->truncate();
+        DB::table('permissions')->truncate();
+        DB::table('roles')->truncate();
 
         // Daftar permission
         $permissions = [
@@ -43,12 +52,21 @@ class PermissionsSeeder extends Seeder
             'pekerjaan-pemilik.hapus',
         ];
 
-        // Buat permissions
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
+        foreach ($permissions as $permissionName) {
+    $permission = Permission::firstOrCreate(
+        ['name' => $permissionName, 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid()]
+    );
 
-        // Buat role
+    // Paksa id kalau masih numeric atau salah format
+    if (!$permission->id || strlen($permission->id) < 36) {
+        $permission->id = Str::uuid();
+        $permission->save();
+    }
+}
+
+
+        // Buat roles
         $roles = [
             'Super-Admin',
             'Pemilik Lisensi',
@@ -58,16 +76,23 @@ class PermissionsSeeder extends Seeder
         ];
 
         foreach ($roles as $roleName) {
-            Role::firstOrCreate(['name' => $roleName]);
-        }
+    $role = Role::firstOrCreate(
+        ['name' => $roleName, 'guard_name' => 'web'],
+        ['id' => (string) Str::uuid()]
+    );
 
-        // Assign permissions ke masing-masing role
+    // Kalau role ketemu tapi id nya bukan UUID → update!
+    if (!$role->id || strlen($role->id) < 36) {
+        $role->id = Str::uuid();
+        $role->save();
+    }
+}
 
-        // Super-Admin → semua permission (gunakan Gate::before di AuthServiceProvider)
+
+        // Assign permissions
         $superAdmin = Role::where('name', 'Super-Admin')->first();
         $superAdmin->syncPermissions(Permission::all());
 
-        // Pemilik Lisensi
         Role::where('name', 'Pemilik Lisensi')->first()->syncPermissions([
             'lisensi.ubah',
             'pemilik-lisensi.ubah',
@@ -85,16 +110,11 @@ class PermissionsSeeder extends Seeder
             'pekerjaan-pemilik.hapus',
         ]);
 
-        // HRD
         Role::where('name', 'HRD')->first()->syncPermissions([]);
-
-        // Akuntan
         Role::where('name', 'Akuntan')->first()->syncPermissions([]);
-
-        // Karyawan
         Role::where('name', 'Karyawan')->first()->syncPermissions([]);
 
-        // Buat contoh user dan assign role-nya
+        // Buat contoh user + role
         \App\Models\User::factory()->create([
             'name' => 'User Super Admin',
             'email' => 'superadmin@example.com',

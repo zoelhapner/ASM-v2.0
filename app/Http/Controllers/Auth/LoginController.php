@@ -25,7 +25,20 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+
+    protected function redirectTo()
+{
+    $user = auth()->user();
+
+    if ($user->hasRole('Super-Admin') || $user->hasRole('Pemilik Lisensi') || $user->hasRole('Karyawan')) {
+        return '/dashboard';
+    }
+
+    return '/home';  // fallback
+
+    
+}
+
 
     /**
      * Create a new controller instance.
@@ -38,3 +51,5 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 }
+
+

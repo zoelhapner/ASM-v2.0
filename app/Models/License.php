@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use App\Traits\HasUuid;
 
 class License extends Model
 {
@@ -43,11 +43,16 @@ public function employees()
     return $this->belongsToMany(Employee::class, 'employee_license', 'license_id', 'employee_id');
 }
 
+public function students()
+{
+    return $this->hasMany(Student::class);
+}
+
 
 
     // Di model License
 
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuid;
 
     protected $keyType = 'string';
     public $incrementing = false;

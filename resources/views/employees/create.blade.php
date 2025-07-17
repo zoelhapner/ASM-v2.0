@@ -221,13 +221,15 @@
                                             @enderror
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label>Status Karyawan *</label>
-                                            <input type="text" class="form-control @error('employment_status') is-invalid @enderror" id="employment_status" name="employment_status" value="{{ old('employment_status') }}" required>
-                                            @error('employment_status')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                                         <div class="col-md-6 mb-3">
+                                            <label for="employment_status" class="form-label">Status Karywan <code>*</code></label>
+                                            <select name="employment_status" class="form-select" required>
+                                                <option value="">-- Pilih Status --</option>
+                                                <option value="Tetap">Tetap</option>
+                                                <option value="Kontrak">Kontrak</option>
+                                                <option value="Magang">Magang</option>
+                                            </select>
+                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Tanggal Mulai Kerja *</label>

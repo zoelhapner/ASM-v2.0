@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AccountingController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LicensesController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\EmployeeEducationController;
 use App\Http\Controllers\EmployeeWorkExperienceController;
 use App\Http\Controllers\EmployeeFamilyMemberController;
+use App\Http\Controllers\StudentsController;
 
 
 
@@ -21,9 +24,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -39,7 +42,7 @@ Route::middleware(['auth', 'permission:lisensi.ubah'])->group(function () {
     Route::resource('/licenses', LicensesController::class)->only(['edit', 'update']);
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {
     Route::resource('/licenses', LicensesController::class)->only(['index', 'show', 'destroy']);
 });
 
@@ -51,12 +54,16 @@ Route::middleware(['auth', 'permission:pemilik-lisensi.ubah'])->group(function (
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['edit', 'update']);
 });
 
-Route::resource('employees', EmployeeController::class);
-
-
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['index', 'show', 'destroy']);
 });
+
+Route::resource('employees', EmployeeController::class);
+
+Route::resource('students', StudentsController::class);
+
+Route::get('/accounting', [AccountingController::class, 'index'])->name('accounting.index');
+
 
 Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
     Route::resource('roles', RoleController::class);
@@ -65,11 +72,6 @@ Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
 require __DIR__.'/auth.php';
 Auth::routes();
 
-Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Auth::routes();
-
-Route::get('/home', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {
     route::resource('/users', UsersController::class);

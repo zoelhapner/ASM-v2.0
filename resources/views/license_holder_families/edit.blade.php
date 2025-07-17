@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('license_holder_families.update', $families->id) }}" method="POST">
+                            <form action="{{ route('license_holder_families.update', $families->id) }}" method="POST"  style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
                                 @csrf
                                 @method('PUT')
 

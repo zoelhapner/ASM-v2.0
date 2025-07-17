@@ -133,13 +133,7 @@ class LicensesController extends Controller
         ]);
 
         $license = License::create($validated);
-
-            // Kalau Admin → bisa pilih owner manual lewat form (contoh)
-            if ($request->filled('owners')) {
-                $license->owners()->sync($request->owners);
-            }
         
-
         return redirect()->route('licenses.index')->with('success', 'Data berhasil ditambahkan.');
     }
 

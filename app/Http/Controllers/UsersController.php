@@ -100,7 +100,8 @@ class UsersController extends Controller
 
     } 
 
-    public function destroy(User $user) {
+    public function destroy(User $user) 
+    {
     
         if ($user) {
             $user->delete();

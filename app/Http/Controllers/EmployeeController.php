@@ -29,13 +29,17 @@ class EmployeeController extends Controller
             $employees = $this->getJoinedEmployees();
 
             return DataTables::of($employees)
-                ->addColumn('birth_date', fn($row) => $row->birth_date ? \Carbon\Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
-                ->addColumn('start_date', fn($row) => $row->start_date ? \Carbon\Carbon::parse($row->start_date)->format('d/m/Y') : '-')
+                ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
+                ->addColumn('start_date', fn($row) => $row->start_date ? Carbon::parse($row->start_date)->format('d/m/Y') : '-')
                 ->addColumn('marital_status', fn($row) => $this->readableMaritalStatus($row->marital_status))
                 ->addColumn('gender', fn($row) => $this->readableGender($row->gender))
-                ->editColumn('employee_name', function ($row) {
-                    $url = route('employees.show', $row->employee_id); // Ganti dengan route detailmu
-                    return '<a href="'.$url.'">'.e($row->employee_name).'</a>';
+                ->editColumn('birth_place', fn($row) => Str::title($row->birth_place))
+                ->editColumn('address', fn($row) => Str::title($row->address))
+                ->editColumn('nickname', fn($row) => Str::title($row->nickname))
+                ->editColumn('fullname', function ($row) {
+                    $url = route('employees.show', $row->employee_id);
+                    $name = Str::title($row->fullname);
+                    return '<a href="'.$url.'">'.e($name).'</a>'; // Ganti dengan route detailmu
                 })
                 ->addColumn('action', function ($employees) {
                     $buttons = '';
@@ -45,7 +49,7 @@ class EmployeeController extends Controller
                     return $buttons;
                 })
 
-                ->rawColumns(['employee_name', 'action'])
+                ->rawColumns(['fullname', 'action'])
                 ->make(true);
         }
 
@@ -73,7 +77,7 @@ class EmployeeController extends Controller
         'employees.nik',
         'licenses.license_type as license_type',
         'licenses.name as license_name',
-        'employees.fullname as employee_name',
+        'employees.fullname',
         'employees.nickname',
         'employees.gender',
         'employees.birth_place',
@@ -104,7 +108,7 @@ class EmployeeController extends Controller
     );
 
     if ($auth->hasRole('Karyawan')) {
-        $query->where('emloyees.user_id', $auth->id);
+        $query->where('employees.user_id', $auth->id);
     }
 
     return $query;
@@ -140,7 +144,8 @@ class EmployeeController extends Controller
         $religions = Religion::all();
         $licenses = License::all(); 
         $provinces = Province::all();
-        return view('employees.create', compact('religions', 'licenses', 'provinces'));
+        $employees = \App\Models\User::role('Karyawan')->get();
+        return view('employees.create', compact('religions', 'licenses', 'provinces', 'employees'));
     }
 
     /**
@@ -151,7 +156,7 @@ class EmployeeController extends Controller
         $validated = $request->validate([ 
             'licenses' => 'required|array',
             'licenses.*' => 'exists:licenses,id',
-            'nik' => 'required',
+            'nik' => 'required|unique:employees,nik',
             'fullname' => 'required',
             'nickname' => 'required',
             'gender' => 'required|in:1,2',
@@ -291,6 +296,10 @@ class EmployeeController extends Controller
         'licenses' => 'required|array',
         'licenses.*' => 'exists:licenses,id',
         'fullname' => 'required',
+        'nik' => [
+            'required',
+            Rule::unique('employees', 'nik')->ignore($employee->id),
+            ],
         'nik' => 'required',
         'nickname' => 'required',
         'gender' => 'required|in:1,2',
