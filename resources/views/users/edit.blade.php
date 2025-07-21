@@ -84,7 +84,10 @@
                                         <select name="role" class="form-select" required>
                                             <option value="">-- Pilih Role --</option>
                                             @foreach (\Spatie\Permission\Models\Role::all() as $role)
-                                                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                                <option value="{{ $role->name }}"
+                                                    {{ $user->roles->first() && $user->roles->first()->name == $role->name ? 'selected' : '' }}>
+                                                    {{ ucfirst($role->name) }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>

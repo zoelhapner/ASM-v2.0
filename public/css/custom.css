@@ -6,6 +6,15 @@ textarea::placeholder {
   font-style: italic;
 }
 
+body {
+  font-family: 'Poppins', sans-serif;
+}
 
+.table td,
+.table th {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500 !important; /* normal */
+  font-size: 0.9rem;
+}
 
 

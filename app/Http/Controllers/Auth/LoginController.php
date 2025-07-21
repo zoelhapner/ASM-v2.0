@@ -34,7 +34,7 @@ class LoginController extends Controller
         return '/dashboard';
     }
 
-    return '/home';  // fallback
+    return '/employees';  // fallback
 
     
 }

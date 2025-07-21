@@ -48,6 +48,16 @@ public function students()
     return $this->hasMany(Student::class);
 }
 
+  public function accounts()
+    {
+        return $this->hasMany(AccountingAccount::class);
+    }
+
+ public function journals()
+    {
+        return $this->hasMany(AccountingJournal::class);
+    }
+
 
 
     // Di model License

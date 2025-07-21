@@ -15,10 +15,12 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('license_id');
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
-            $table->string('period', 8);
-            $table->string('status');
+            $table->string('period_name');
+            $table->date('start_date');
+            $table->date('end_date');
+            $table->boolean('is_closed')->default(false);
             $table->uuid('closed_by')->nullable();
-            $table->foreign('closed_by')->references('id')->on('users')->cascadeOnDelete();
+            $table->foreign('closed_by')->references('id')->on('users')->nullOnDelete();
             $table->timestamp('closed_at')->nullable();
         });
     }

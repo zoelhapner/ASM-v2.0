@@ -17,6 +17,7 @@ use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -111,6 +112,15 @@ class EmployeeController extends Controller
         $query->where('employees.user_id', $auth->id);
     }
 
+    if ($auth->hasRole('Akuntan')) {
+        $query->where('employees.user_id', $auth->id);
+    }
+
+     if ($auth->hasRole('Pemilik Lisensi')) {
+        $licenseIds = $auth->licenses()->pluck('id'); // RELASI licenses di User
+        $query->whereIn('licenses.id', $licenseIds);
+    }
+
     return $query;
 }
 
@@ -144,8 +154,7 @@ class EmployeeController extends Controller
         $religions = Religion::all();
         $licenses = License::all(); 
         $provinces = Province::all();
-        $employees = \App\Models\User::role('Karyawan')->get();
-        return view('employees.create', compact('religions', 'licenses', 'provinces', 'employees'));
+        return view('employees.create', compact('religions', 'licenses', 'provinces'));
     }
 
     /**
@@ -163,6 +172,7 @@ class EmployeeController extends Controller
             'birth_place' => 'required',
             'birth_date' => ['required', 'date_format:Y-m-d'],
             'email' => 'required|email|unique:users,email',
+            'role' => 'required|string|exists:roles,name',
             'marital_status' => 'required|in:1,2,3',
             'religion_id' => 'required|exists:religions,id',
             'identity_number' => 'required|digits:16',
@@ -184,19 +194,19 @@ class EmployeeController extends Controller
             'bonus' => ['required', 'numeric', 'min:0'],
             'thr' => ['required', 'numeric', 'min:0'], 
             'contract_letter_file' => ['required', 'file', 'mimes:pdf', 'max:2048'],
-            'photo' => ['nullable|image|mimes:jpeg,png,jpg,gif|max:2048'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
         if ($request->hasFile('photo')) {
             $file = $request->file('photo');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('photos', $filename, 'public');
             $validated['photo'] = $filename;
         }
 
         if ($request->hasFile('contract_letter_file')) {
             $file = $request->file('contract_letter_file');
-            $filename = time().'_'.$file->getClientOriginalName();
+            $filename = Str::uuid().'_'.$file->getClientOriginalName();
             $file->storeAs('contracts', $filename, 'public');
             $validated['contract_letter_file'] = $filename;
         }
@@ -207,7 +217,7 @@ class EmployeeController extends Controller
         'password' => bcrypt('password123'), // atau gunakan password generator
         ]);
 
-        $user->assignRole('Karyawan');
+        $user->assignRole($validated['role']);
 
         $validated['user_id'] = $user->id;
 
@@ -330,7 +340,7 @@ class EmployeeController extends Controller
         'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
     ]);
 
-    // 📌 Replace foto baru
+    //  Replace foto baru
     if ($request->hasFile('photo')) {
         if ($employee->photo && Storage::disk('public')->exists('photos/' . $employee->photo)) {
             Storage::disk('public')->delete('photos/' . $employee->photo);
@@ -342,7 +352,7 @@ class EmployeeController extends Controller
         $validated['photo'] = $filename;
     }
 
-    // 📌 Replace Surat Perjanjian Kerja
+    //  Replace Surat Perjanjian Kerja
     if ($request->hasFile('contract_letter_file')) {
         if ($employee->contract_letter_file && Storage::disk('public')->exists('contracts/' . $employee->contract_letter_file)) {
             Storage::disk('public')->delete('contracts/' . $employee->contract_letter_file);
@@ -354,10 +364,10 @@ class EmployeeController extends Controller
         $validated['contract_letter_file'] = $filename;
     }
 
-    // 📌 Update Employee
+    //  Update Employee
     $employee->update(collect($validated)->except(['licenses', 'email'])->toArray());
 
-    // 📌 Update User
+    //  Update User
     if ($employee->user) {
         $employee->user->update([
             'name' => $validated['fullname'],
@@ -377,7 +387,7 @@ class EmployeeController extends Controller
     {
             if ($employee) {
             $employee->delete();
-            return response()->json(['status' => 'success', 'message' => 'License deleted successfully']);
+            return response()->json(['status' => 'success', 'message' => 'Employee deleted successfully']);
         }
 
         return response()->json(['status' => 'failed', 'message' => 'Unable to delete']);

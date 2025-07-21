@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AccountingController;
+use App\Http\Controllers\AccountingAccountController;
+use App\Http\Controllers\AccountingJournalController;
+use App\Http\Controllers\AccountingClosingController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LicensesController;
@@ -20,9 +22,13 @@ use App\Http\Controllers\StudentsController;
 
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
+
+require __DIR__.'/auth.php';
+Auth::routes();
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
@@ -62,15 +68,27 @@ Route::resource('employees', EmployeeController::class);
 
 Route::resource('students', StudentsController::class);
 
-Route::get('/accounting', [AccountingController::class, 'index'])->name('accounting.index');
+Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
+        ->resource('accounting', AccountingAccountController::class)
+         ->parameters(['accounting' => 'account']);
+
+Route::get('/journals/report', [AccountingJournalController::class, 'report'])
+    ->name('journals.report')
+    ->middleware(['role:Super-Admin|Akuntan']);
+
+Route::middleware(['role:Super-Admin|Akuntan'])->group(function () {
+    Route::resource('journals', AccountingJournalController::class);
+});
+
+Route::get('/periods/close', [AccountingClosingController::class, 'showCloseForm'])->name('periods.close.form');
+Route::post('/periods/close', [AccountingClosingController::class, 'close'])->name('periods.close');
 
 
 Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
     Route::resource('roles', RoleController::class);
 });
 
-require __DIR__.'/auth.php';
-Auth::routes();
+
 
 
 Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {

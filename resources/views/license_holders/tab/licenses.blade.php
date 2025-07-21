@@ -5,7 +5,7 @@
      <div class="card-body">
         @if ($license_holder->user && $license_holder->user->licenses->count())
             <div class="table-responsive">
-                <table class="table table-vcenter card-table table-striped" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                <table class="table table-vcenter card-table table-striped">
                     <thead>
                         <tr>
                             <th class="w-1">Id Lisensi</th>

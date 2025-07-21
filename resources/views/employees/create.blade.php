@@ -222,7 +222,7 @@
                                         </div>
 
                                          <div class="col-md-6 mb-3">
-                                            <label for="employment_status" class="form-label">Status Karywan <code>*</code></label>
+                                            <label for="employment_status" class="form-label">Status Karyawan <code>*</code></label>
                                             <select name="employment_status" class="form-select" required>
                                                 <option value="">-- Pilih Status --</option>
                                                 <option value="Tetap">Tetap</option>
@@ -230,6 +230,16 @@
                                                 <option value="Magang">Magang</option>
                                             </select>
                                          </div>
+
+                                         <div class="col-md-6 mb-3">
+                                            <label for="role">Role: *</label>
+                                            <select name="role" class="form-select" required>
+                                                <option value="">-- Pilih Role --</option>
+                                                @foreach (\Spatie\Permission\Models\Role::all() as $role)
+                                                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label>Tanggal Mulai Kerja *</label>

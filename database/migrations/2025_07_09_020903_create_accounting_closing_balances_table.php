@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('accounting_closing_balances', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('journal_id');
-            $table->foreign('journal_id')->references('id')->on('accounting_journals')->onDelete('cascade');
+            $table->uuid('license_id');
+            $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
             $table->uuid('account_id');
             $table->foreign('account_id')->references('id')->on('accounting_accounts')->onDelete('cascade');
-            $table->string('period', 8);
+            $table->uuid('period_id');
+            $table->foreign('period_id')->references('id')->on('accounting_periods')->onDelete('cascade');
             $table->decimal('closing_balance', 15, 2);
         });
     }

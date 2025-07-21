@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('accounting_journal_details', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('journal_id');
-            $table->foreign('journal_id')->references('id')->on('accounting_journals')->onDelete('cascade');
             $table->uuid('account_id');
+            $table->float('debit')->default(0);
+            $table->float('credit')->default(0);
+            $table->text('description')->nullable();
+
+            $table->foreign('journal_id')->references('id')->on('accounting_journals')->onDelete('cascade');
             $table->foreign('account_id')->references('id')->on('accounting_accounts')->onDelete('cascade');
-            $table->decimal('debit', 15, 2)->default(0);
-            $table->decimal('credit', 15, 2)->default(0);
-            $table->text('description');
         });
     }
 

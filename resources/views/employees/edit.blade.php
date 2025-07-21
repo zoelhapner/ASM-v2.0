@@ -49,22 +49,14 @@
                                     <h2 class="mt-4 mb-3">Data Pemilik</h2>
                                     <div class="row mb-4">
 
-                                        <div class="col-md-6 mb-3">
-                                            <label>NIK *</label>
-                                            <input type="number" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" value="{{ old('nik', $employee->nik) }}" required>
-                                            @error('nik')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
+                                           <div class="col-md-6 mb-3">
                                             <label for="licenses">Pilih Lisensi <code>*</code></label>
                                             <select name="licenses[]" class="form-control" multiple required
                                                 @role('Pemilik Lisensi') disabled @endrole>
                                                 @foreach($allLicenses as $license)
                                                     <option value="{{ $license->id }}"
-                                                        {{ in_array($license->id, $employee->user->licenses->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                                        {{ $license->name }}
+                                                         {{ collect(old('licenses', $employee->user->licenses->pluck('id')->toArray()))->contains($license->id) ? 'selected' : '' }}>
+                                                         {{ $license->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -75,6 +67,16 @@
                                                 @endforeach
                                             @endrole
                                         </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>NIK *</label>
+                                            <input type="number" class="form-control @error('nik') is-invalid @enderror" id="nik" name="nik" value="{{ old('nik', $employee->nik) }}" required>
+                                            @error('nik')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                     
 
                                         <div class="col-md-6 mb-3">
                                             <label>Nama Karyawan *</label>

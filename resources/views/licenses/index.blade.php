@@ -51,7 +51,7 @@
                             </p>
                         </div>
                         <div class="table-responsive">
-                            <table id="tableLicenses" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                            <table id="tableLicenses" class="table card-table table-vcenter text-nowrap" >
                                 <thead>
                                     <tr>
                                         <th class="w-1">Id Lisensi</th>

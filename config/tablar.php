@@ -182,7 +182,7 @@ return [
             'text' => 'Data Siswa',
             'icon' => 'ti ti-users-group',
             'url' => 'students',
-            'role' => 'Super-Admin',
+            'role' => ['Super-Admin', 'Pemilik Lisensi'],
         ],
 
         [
@@ -190,7 +190,7 @@ return [
             'url' => '#',
             'icon' => 'ti ti-user-cog',
             'active' => ['support1'],
-            'role' => 'Super-Admin',
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Akuntan'],
             'submenu' => [
                 [
                     'text' => 'Input Keuangan',
@@ -202,6 +202,31 @@ return [
                     'url' => '#',
                     'icon' => 'ti ti-report-analytics',
                 ]
+            ],
+        ],
+
+         [
+            'text' => 'Akuntasi',
+            'url' => '#',
+            'icon' => 'ti ti-user-cog',
+            'active' => ['support1'],
+            'role' => ['Super-Admin', 'Akuntan'],
+            'submenu' => [
+                [
+                    'text' => 'Akun',
+                    'url' => 'accounting',
+                    'icon' => 'ti ti-currency-dollar',
+                ],
+                [
+                    'text' => 'Input Jurnal',
+                    'url' => 'journals',
+                    'icon' => 'ti ti-report-analytics',
+                ],
+                 [
+                    'text' => 'Laporan',
+                    'url' => 'journals/report',
+                    'icon' => 'ti ti-report-analytics',
+                ],
             ],
         ],
 

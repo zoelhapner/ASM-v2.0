@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('accounting_journals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('license_id');
-            $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
-            $table->string('journal_code', 20)->unique();
+            $table->string('journal_code');
             $table->date('transaction_date');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->uuid('created_by');
-            $table->foreign('created_by')->references('id')->on('users')->cascadeOnDelete();
+
+            $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

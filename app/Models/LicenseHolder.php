@@ -4,8 +4,6 @@ namespace App\Models;
 
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Support\Carbon;
 
 class LicenseHolder extends Model
@@ -101,7 +99,7 @@ public function getReadableLanguagesAttribute()
     return $this->hasMany(LicenseHolderFamilyMembers::class);
 }
 
-    use HasFactory, HasUuid;
+    use HasUuid;
 
     protected $keyType = 'string';
     public $incrementing = false;

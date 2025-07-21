@@ -55,14 +55,14 @@
                                                 @role('Pemilik Lisensi') disabled @endrole>
                                                 @foreach($allLicenses as $license)
                                                     <option value="{{ $license->id }}"
-                                                        {{ in_array($license->id, $license_holder->user->licenses->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                         {{ collect(old('licenses', $license_holder->user->licenses->pluck('id')->toArray()))->contains($license->id) ? 'selected' : '' }}>
                                                         {{ $license->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
 
                                             @role('Pemilik Lisensi')
-                                                @foreach($license_holder->user->licenses as $license)
+                                                @foreach($employee->user->licenses as $license)
                                                     <input type="hidden" name="licenses[]" value="{{ $license->id }}">
                                                 @endforeach
                                             @endrole
