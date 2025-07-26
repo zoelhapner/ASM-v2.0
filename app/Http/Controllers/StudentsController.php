@@ -10,10 +10,14 @@ use App\Models\District;
 use App\Models\SubDistrict;
 use App\Models\PostalCode;
 use App\Models\Religion;
+use App\Models\Role;
+use App\Models\User;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class StudentsController extends Controller
 {
@@ -50,6 +54,10 @@ class StudentsController extends Controller
             'religions.name as religion_name'
         );
 
+         if (Auth::user()->hasRole('Siswa')) {
+            $students->where('students.user_id', Auth::id());
+        }
+
 
         return DataTables::of($students)
         ->addColumn('license_type', fn ($s) => $s->license_type ?? '-')
@@ -72,13 +80,9 @@ class StudentsController extends Controller
         ->make(true);
 
 
-            }
+    }
+
         return view('students.index');
-
-        
-
-
-
     }
 
     /**
@@ -137,10 +141,24 @@ class StudentsController extends Controller
             $validated['photo'] = $filename;
         }
 
-    Student::create($validated);
+        // Buat akun user
+    $user = User::create([
+        'name' => $validated['fullname'],
+        'email' => $validated['email'] ?: Str::slug($validated['fullname']).'@example.com',
+        'password' => Hash::make('password123'), // default password
+    ]);
+
+    // Assign role Student (jika pakai Spatie)
+    $user->syncRoles('Student');
+
+    // Buat student & hubungkan ke user
+    $student = Student::create(array_merge(
+        $validated,
+        ['user_id' => $user->id]
+    ));
 
     return redirect()->route('students.index')->with('success', 'Data siswa berhasil ditambahkan');
-    }
+}
 
     /**
      * Display the specified resource.

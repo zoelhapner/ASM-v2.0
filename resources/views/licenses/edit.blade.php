@@ -312,32 +312,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- Hanya Admin yang bisa lihat dropdown Owner --}}
-                                    @can('lisensi.ubah')
-                                        @unless(auth()->user()->hasRole('Pemilik Lisensi'))
-                                            <div class="col-md-6 mb-3">
-                                                <label for="owner">Pemilik Lisensi <span class="text-danger">*</span></label>
-                                                <select name="owner" id="owner" class="form-control @error('owner') is-invalid @enderror" required>
-                                                    <option value="">-- Pilih Pemilik Lisensi --</option>
-                                                    @foreach ($owners as $owner)
-                                                        <option value="{{ $owner->id }}"
-                                                            {{ (old('owner') ?? ($license->owners->first()->id ?? null)) == $owner->id ? 'selected' : '' }}>
-                                                            {{ $owner->name }} ({{ $owner->email }})
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('owner')
-                                                    <div class="invalid-feedback">{{ $message }}</div>
-                                                @enderror
-                                            </div>
-                                        @endunless
-                                    @endcan
-
-                                    {{-- Kalau Owner login → kirim hidden input Owner ID --}}
-                                    @if(auth()->user()->hasRole('Pemilik Lisensi'))
-                                        <input type="hidden" name="owner" value="{{ auth()->id() }}">
-                                    @endif
-
 
                                 <button type="submit" class="btn btn-primary mt-4">Update</button>
                              </form>

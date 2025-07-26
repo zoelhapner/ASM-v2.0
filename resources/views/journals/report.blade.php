@@ -3,7 +3,6 @@
 @section('content')
 <div class="container">
     <h3 class="text-center">LAPORAN KAS</h3>
-    <h5 class="text-center">PERIODE SD </h5>
 
    {{-- Filter --}}
     <form action="{{ route('journals.report') }}" method="GET" class="card p-4 mb-4">
@@ -11,7 +10,7 @@
             @if (auth()->user()->hasRole('Super-Admin') || auth()->user()->hasRole('Pemilik Lisensi'))
                 <div class="col-md-4">
                     <label for="license_id" class="form-label">Lisensi</label>
-                    <select name="license_id" id="license_id" class="form-control">
+                    <select name="license_id" id="license_id" class="form-select">
                         <option value="">-- Semua Lisensi --</option>
                         @foreach ($licenses as $license)
                             <option value="{{ $license->id }}" {{ request('license_id') == $license->id ? 'selected' : '' }}>
@@ -24,7 +23,7 @@
 
             <div class="col-md-4">
                 <label for="account_id" class="form-label">Akun</label>
-                <select name="account_id" class="form-control">
+                <select name="account_id" class="form-select">
                     <option value="">-- Semua Akun --</option>
                     @foreach ($accounts as $account)
                         <option value="{{ $account->id }}" {{ request('account_id') == $account->id ? 'selected' : '' }}>

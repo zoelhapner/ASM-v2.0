@@ -173,7 +173,7 @@ class EmployeeController extends Controller
             'birth_date' => ['required', 'date_format:Y-m-d'],
             'email' => 'required|email|unique:users,email',
             'role' => 'required|string|exists:roles,name',
-            'marital_status' => 'required|in:1,2,3',
+            'marital_status' => 'required|in:1,2,3,4',
             'religion_id' => 'required|exists:religions,id',
             'identity_number' => 'required|digits:16',
             'address' => 'required',

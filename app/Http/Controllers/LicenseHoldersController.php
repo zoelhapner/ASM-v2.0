@@ -119,9 +119,8 @@ class LicenseHoldersController extends Controller
     private function readableLanguage($value)
     {
         return match ((int) $value) {
-            1 => 'Kurang',
-            2 => 'Cukup',
-            3 => 'Baik',
+            1 => 'Lancar',
+            2 => 'Tidak Lancar',
             default => '-',
         };
     }
@@ -185,12 +184,12 @@ class LicenseHoldersController extends Controller
             'hobby' => 'required',
             'marital_status' => 'required|in:1,2,3',
             'married_date' => ['nullable', 'date_format:Y-m-d'],
-            'indonesian_literacy' => 'nullable|in:1,2,3',
-            'indonesian_proficiency' => 'nullable|in:1,2,3',
-            'arabic_literacy' => 'nullable|in:1,2,3',
-            'arabic_proficiency' => 'nullable|in:1,2,3',
-            'english_literacy' => 'nullable|in:1,2,3',
-            'english_proficiency' => 'nullable|in:1,2,3',
+            'indonesian_literacy' => 'nullable|in:1,2',
+            'indonesian_proficiency' => 'nullable|in:1,2',
+            'arabic_literacy' => 'nullable|in:1,2',
+            'arabic_proficiency' => 'nullable|in:1,2',
+            'english_literacy' => 'nullable|in:1,2',
+            'english_proficiency' => 'nullable|in:1,2',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

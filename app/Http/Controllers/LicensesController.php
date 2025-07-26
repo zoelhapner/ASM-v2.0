@@ -166,7 +166,10 @@ class LicensesController extends Controller
             Rule::unique('licenses', 'license_id')->ignore($license->id),
             ],
             'license_type' => 'required|in:FO,SO,LO,LC', 
-            'name' => 'required|unique:licenses,name',
+            'name' => [
+            'required',
+             Rule::unique('licenses', 'name')->ignore($license->id),
+            ], 
             'email' => [
             'required',
             'email',

@@ -182,7 +182,7 @@ return [
             'text' => 'Data Siswa',
             'icon' => 'ti ti-users-group',
             'url' => 'students',
-            'role' => ['Super-Admin', 'Pemilik Lisensi'],
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Siswa'],
         ],
 
         [

@@ -18,6 +18,9 @@ use App\Http\Controllers\EmployeeEducationController;
 use App\Http\Controllers\EmployeeWorkExperienceController;
 use App\Http\Controllers\EmployeeFamilyMemberController;
 use App\Http\Controllers\StudentsController;
+use App\Http\Controllers\LicenseImportController;
+use App\Http\Controllers\UserImportController;
+
 
 
 
@@ -64,7 +67,9 @@ Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function 
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['index', 'show', 'destroy']);
 });
 
-Route::resource('employees', EmployeeController::class);
+Route::middleware(['auth', 'role:Super-Admin|Karyawan'])->group(function () {
+    route::resource('/employees', EmployeeController::class);
+});
 
 Route::resource('students', StudentsController::class);
 
@@ -132,3 +137,13 @@ Route::get('/api/sub_districts/{district_id}', function ($district_id) {
 Route::get('/api/postal_codes/{sub_district_id}', function ($sub_district_id) {
     return \App\Models\PostalCode::where('sub_district_id', $sub_district_id)->select('id', 'postal_code')->get();
 });
+
+
+
+Route::get('/import-licenses', [LicenseImportController::class, 'showForm'])->name('licenses.import.form');
+Route::post('/import-licenses', [LicenseImportController::class, 'import'])->name('licenses.import');
+
+Route::get('/import-users', [UserImportController::class, 'showForm'])->name('users.import.form');
+Route::post('/import-users', [UserImportController::class, 'import'])->name('users.import');
+
+

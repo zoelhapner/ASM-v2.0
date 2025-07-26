@@ -30,7 +30,7 @@
                             </svg>
                             Tambah Data Pemilik
                         </a>
-                 </span>
+                    </span>
                  @endcan
                         
                     </div>

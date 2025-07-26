@@ -212,9 +212,18 @@ class AccountingJournalController extends Controller
         ->where('is_active', true);
 
     $licenses = [];
-    if ($user->hasRole('Super-Admin') || $user->hasRole('Pemilik Lisensi')) {
-        // Bebas akses license apa pun
+    if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
+    } elseif ($user->hasRole('Pemilik Lisensi')) {
+        $licenses = $user->licenses;
+
+        if (!$licenses || $licenses->count() === 0) {
+            abort(403, 'Lisensi tidak ditemukan.');
+        }
+
+        $accountsQuery->whereIn('license_id', $licenses->pluck('id'));
+
+
     } elseif ($user->hasRole('Akuntan')) {
         $licenses = $user->employee?->licenses;
 
@@ -226,6 +235,7 @@ class AccountingJournalController extends Controller
     } else {
         abort(403, 'Role tidak diizinkan.');
     }
+
 
     $accounts = $accountsQuery->orderBy('account_code')->get();
 

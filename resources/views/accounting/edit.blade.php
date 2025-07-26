@@ -11,6 +11,13 @@
         @method('PUT')
 
         <div class="mb-3">
+                @include('components.select-license', [
+                    'licenses' => $licenses,
+                    'selectedLicenseId' => $account->license_id
+                ])
+        </div>
+
+        <div class="mb-3">
             <label>Kode Akun</label>
             <input type="text" name="account_code" value="{{ $account->account_code }}" class="form-control" required>
         </div>

@@ -88,11 +88,23 @@ class AccountingAccountController extends Controller
 
     public function edit(AccountingAccount $account)
     {
-        $parentAccounts = AccountingAccount::where('is_parent', true)
-            ->where('id', '!=', $account->id)
-            ->get();
+        $user = Auth::user();
 
-        return view('accounting.edit', compact('account', 'parentAccounts'));
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } elseif ($user->hasRole('Akuntan')) {
+        $licenses = $user->employee?->licenses;
+
+        if (!$licenses || $licenses->count() === 0) {
+            abort(403, 'Lisensi tidak ditemukan.');
+        }
+    } else {
+        abort(403, 'Role tidak diizinkan.');
+    }
+
+    $parentAccounts = AccountingAccount::where('is_parent', true)->get();
+
+        return view('accounting.edit', compact('account', 'licenses', 'parentAccounts'));
     }
 
     public function update(Request $request, AccountingAccount $account)

@@ -36,7 +36,7 @@ class EmployeeFamilyMemberController extends Controller
         $validated = $request->validate([
         'employee_id' => 'required|exists:employees,id',
         'name' => 'required|string|max:255',
-        'relationship' => 'required',
+        'relationship' => 'required|in:1,2,3,4,5',
         'gender' => 'required|in:1,2',
         'birth_date' => ['required', 'date_format:Y-m-d'],
         'job' => 'nullable',

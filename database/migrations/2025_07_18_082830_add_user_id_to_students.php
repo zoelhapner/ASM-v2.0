@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('accounting_journal_details', function (Blueprint $table) {
-            $table->string('pic')->nullable()->after('description');
+        Schema::table('students', function (Blueprint $table) {
+            $table->uuid('user_id')->after('license_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -21,8 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('accounting_journal_details', function (Blueprint $table) {
-            $table->dropColumn('pic');
+        Schema::table('students', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);
+            $table->dropColumn('user_id');
         });
     }
 };

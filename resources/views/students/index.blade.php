@@ -100,7 +100,7 @@
                 ajax: '{{ route("students.index") }}',
                 columns: [
                 { data: 'nis', name: 'nis' },
-                { data: 'license_type', name: 'licenses.type' },
+                { data: 'license_type', name: 'licenses.license_type' },
                 { data: 'license_name', name: 'licenses.name' },
                 { data: 'fullname', name: 'fullname' },
                 { data: 'nickname', name: 'nickname' },
