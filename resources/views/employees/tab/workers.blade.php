@@ -31,13 +31,19 @@
                                 <td>{{ $work->last_salary }}</td>
                                 <td>{{ $work->reason_for_leaving }}</td>
                                 <td>
-                                <a href="{{ route('employee_workers.edit', $work->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('employee_workers.destroy', $work->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
-                                    @csrf
-                                    @method('DELETE')
-                                     <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                             </td>
+                                    @if (auth()->user()->can('pekerjaan-karyawan.ubah')) 
+                                        <a href="{{ route('employee_workers.edit', $work->id) }}" class="btn btn-sm btn-warning" title="Ubah">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                    @endif
+                                    <form action="{{ route('employee_workers.destroy', $work->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" title="Hapus">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -46,14 +52,16 @@
         @else
             <p class="text-muted">Belum ada data pekerjaan.</p>
         @endif
-    </div>
 
-    <div class="mt-4">
-            <a href="{{ route('employee_workers.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary">
-                Tambah Data
-            </a>
-            <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
-                Back to List
-            </a>
+        <div class="mt-4">
+            @if (auth()->user()->can('pekerjaan-karyawan.tambah')) 
+                <a href="{{ route('employee_workers.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary">
+                    Tambah Data
+                </a>
+            @endif
+                <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
+                    Back to List
+                </a>
+        </div>
     </div>
 </div>

@@ -52,18 +52,18 @@ class PermissionsSeeder extends Seeder
             'pekerjaan-pemilik.hapus',
         ];
 
-        foreach ($permissions as $permissionName) {
-    $permission = Permission::firstOrCreate(
-        ['name' => $permissionName, 'guard_name' => 'web'],
-        ['id' => (string) Str::uuid()]
-    );
+            foreach ($permissions as $permissionName) {
+        $permission = Permission::firstOrCreate(
+            ['name' => $permissionName, 'guard_name' => 'web'],
+            ['id' => (string) Str::uuid()]
+        );
 
-    // Paksa id kalau masih numeric atau salah format
-    if (!$permission->id || strlen($permission->id) < 36) {
-        $permission->id = Str::uuid();
-        $permission->save();
+        // Paksa id kalau masih numeric atau salah format
+        if (!$permission->id || strlen($permission->id) < 36) {
+            $permission->id = Str::uuid();
+            $permission->save();
+        }
     }
-}
 
 
         // Buat roles

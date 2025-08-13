@@ -29,11 +29,15 @@
 
 @if ($shouldRender)
         @if ($navbarItemHelper->isSubmenu($item))
-            <li class="nav-item dropdown {{ $item['class'] }} {{ $isActive ? 'active' : '' }}"
+            <li class="nav-item dropdown {{ $item['class'] }} {{ $isActive ? 'active show' : '' }}"
                 @isset($item['id']) id="{{ $item['id'] }}" @endisset>
 
-                <a class="nav-link dropdown-toggle {{ $item['class'] }} {{ $isActive ? 'active' : '' }}" href="#" data-bs-toggle="dropdown"
-                data-bs-auto-close="outside" role="button" aria-expanded="false">
+                <a class="nav-link dropdown-toggle {{ $item['class'] }} {{ $isActive ? 'active' : '' }}" 
+                href="#" 
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="outside" 
+                role="button" 
+                aria-expanded="{{ $isActive ? 'true' : 'false' }}">
                     <span class="nav-link-icon d-md-none d-lg-inline-block">
                         @if(isset($item['icon']))
                             <i class="{{ $item['icon'] ?? '' }} {{ isset($item['icon_color']) ? 'text-' . $item['icon_color'] : '' }}"></i>
@@ -46,7 +50,7 @@
                     </span>
                 </a>
 
-                <div class="dropdown-menu">
+                <div class="dropdown-menu {{ $isActive ? 'show' : '' }}">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
                             @if ($navbarItemHelper->isSubmenu($item))

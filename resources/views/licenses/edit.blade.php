@@ -42,31 +42,42 @@
                         </div>
 
                         <div class="card-body">
-                            <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('licenses.update', $license->id) }}" method="POST">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
+                            <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('licenses.update', $license->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
-                                        @method('put')
+                                        @method('PUT')
                                         @php
                                             $disabled = auth()->user()->hasRole('Pemilik Lisensi') ? 'disabled' : '';
                                         @endphp
+
 
                                     {{-- SECTION 1: Informasi Lead --}}
                                     <h5 class="mt-4 mb-3">Data Lisensi</h5>
                                     <div class="row mb-4">
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="license_id">ID Lisensi <code>*</code></label>
-                                            <input type="text" class="form-control @error('license_id') is-invalid @enderror" id="license_id" name="license_id" value="{{ old('license_id', $license->license_id) }}" required {{ $disabled }}>
+                                        {{-- <div class="col-md-6 mb-3">
+                                            <label class="required" for="license_id">ID Lisensi</label>
+                                            <input type="text" class="form-control" value="{{ $license->license_id }}" {{ $disabled }}>
                                             @error('license_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         @if(auth()->user()->hasRole('Pemilik Lisensi'))
                                             <input type="hidden" name="license_id" value="{{ $license->license_id }}">
-                                        @endif
+                                        @endif --}}
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="license_type">Tipe Lisensi *:</label>
-                                                <select name="license_type" class="form-select" required {{ $disabled }}>
+                                            <label class="required" for="license_type">Tipe Lisensi:</label>
+                                                <select name="license_type" id="license_type" class="form-select" required {{ $disabled }}>
                                                 <option value="">Pilih Data</option>
                                                 <option value="FO" {{ $license->license_type == 'FO' ? 'selected' : '' }}>FO</option>
                                                 <option value="SO" {{ $license->license_type == 'SO' ? 'selected' : '' }}>SO</option>
@@ -79,7 +90,7 @@
                                         @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nama *</label>
+                                            <label class="required">Nama</label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $license->name) }}" required {{ $disabled }}>
                                             @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -90,7 +101,7 @@
                                         @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Email *</label>
+                                            <label class="required">Email</label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $license->email) }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -98,17 +109,20 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Alamat *</label>
-                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address', $license->address) }}" required>
+                                            <label class="required">Alamat</label>
+                                            <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address', $license->address) }}" required {{ $disabled }}>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="address" value="{{ $license->address }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Provinsi *</label>
-                                            <select name="province_id" id="province" class="form-select select2" required>
-                                                <option value="">-- Pilih Provinsi --</option>
+                                            <label class="required">Provinsi</label>
+                                            <select name="province_id" id="province" class="form-select select2" required {{ $disabled }}>
+                                                <option value="province">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}"
                                                         {{ $license->province_id == $province->id ? 'selected' : '' }}>
@@ -117,10 +131,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="province_id" value="{{ $license->province_id }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kabupaten/Kota *</label>
-                                            <select name="city_id" id="city" class="form-select select2" required>
+                                            <label class="required">Kabupaten/Kota</label>
+                                            <select name="city_id" id="city" class="form-select select2" required {{ $disabled }}>
                                                 <option value="city">-- Pilih Kota --</option>
                                                 @foreach($cities as $city)
                                                     <option value="{{ $city->id }}"
@@ -130,10 +147,13 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="city_id" value="{{ $license->city_id }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kecamatan *</label>
-                                            <select name="district_id" id="district" class="form-select select2" required>
+                                            <label class="required">Kecamatan</label>
+                                            <select name="district_id" id="district" class="form-select select2 @error('district_id') is-invalid @enderror" required {{ $disabled }}>
                                                 <option value="district">-- Pilih Kecamatan --</option>
                                                 @foreach($districts as $district)
                                                     <option value="{{ $district->id }}"
@@ -142,11 +162,21 @@
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('district_id')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="district_id" value="{{ $license->district_id }}">
+                                        @endif
+
+
+                       
+
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Desa *</label>
-                                            <select name="sub_district_id" id="sub_district" class="form-select select2" required>
+                                            <label class="required">Desa</label>
+                                            <select name="sub_district_id" id="sub_district" class="form-select select2" required {{ $disabled }}>
                                                 <option value="sub_district">-- Pilih Desa --</option>
                                                 @foreach($subDistricts as $subdistrict)
                                                     <option value="{{ $subdistrict->id }}"
@@ -156,11 +186,14 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="sub_district_id" value="{{ $license->sub_district_id }}">
+                                        @endif
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kode Pos *</label>
-                                            <select name="postal_code_id" id="postal_code" class="form-select select2" required>
-                                                <option value="postal_code">-- Pilih Desa --</option>
+                                            <label class="required">Kode Pos</label>
+                                            <select name="postal_code_id" id="postal_code" class="form-select select2" required {{ $disabled }}>
+                                                <option value="postal_code">-- Pilih Kode Pos --</option>
                                                 @foreach($postalCodes as $postal_code)
                                                     <option value="{{ $postal_code->id }}"
                                                         {{ $license->postal_code_id == $postal_code->id ? 'selected' : '' }}>
@@ -169,9 +202,12 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            <input type="hidden" name="postal_code_id" value="{{ $license->postal_code_id }}">
+                                        @endif
                                                                             
                                         <div class="col-md-6 mb-3">
-                                            <label>Telepon *</label>
+                                            <label class="required">Telepon</label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $license->phone) }}" required>
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -179,8 +215,8 @@
                                         </div>
                                     
                                         <div class="col-md-6 mb-3">
-                                            <label>Tanggal Bergabung *</label>
-                                            <input type="date" name="join_date" class="form-control" required
+                                            <label class="required">Tanggal Bergabung</label>
+                                            <input type="date" id="join_date" name="join_date" class="form-control" required
                                                 value="{{ old('join_date', $license->join_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
@@ -190,8 +226,8 @@
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Tanggal Expired *</label>
-                                            <input type="date" name="expired_date" class="form-control" required
+                                            <label class="required">Tanggal Expired</label>
+                                            <input type="date" id="expired_date" name="expired_date" class="form-control" required
                                                 value="{{ old('expired_date', $license->expired_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
@@ -201,7 +237,7 @@
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nomor Aqad *</label>
+                                            <label class="required">Nomor Aqad</label>
                                             <input type="text" class="form-control @error('contract_agreement_number') is-invalid @enderror" id="contract_agreement_number" name="contract_agreement_number" value="{{ old('contract_agreement_number', $license->contract_agreement_number) }}" required {{ $disabled }}>
                                             @error('contract_agreement_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -211,18 +247,48 @@
                                             <input type="hidden" name="contract_agreement_number" value="{{ $license->contract_agreement_number }}">
                                         @endif
 
+                                        {{-- Tampilkan PDF Saat Ini --}}
                                         <div class="col-md-6 mb-3">
-                                            <label>Status Lisensi *</label>
-                                            <select name="status" class="form-select" required {{ $disabled }}>
-                                                <option value="">-- Pilih Status --</option>
-                                                <option value="active" {{ $license->status == 'active' ? 'selected' : '' }}>Active</option>
-                                                <option value="inactive" {{ $license->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                                <option value="expired" {{ $license->status == 'expired' ? 'selected' : '' }}>Expired</option>
-                                            </select>
+                                            <label>PDF Aqad Saat Ini:</label><br>
+                                            @if ($license->contract_document)
+                                                <embed src="{{ asset('storage/' . $license->contract_document) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                            @else
+                                                <div class="me-3">
+                                                    <p class="text-muted mb-0">Belum ada dokumen</p>
+                                                </div>
+                                            @endif
                                         </div>
-                                        @if(auth()->user()->hasRole('Pemilik Lisensi'))
-                                            <input type="hidden" name="status" value="{{ $license->status }}">
-                                        @endif
+
+                                        {{-- Upload dokumen baru --}}
+                                        <div class="col-md-6 mb-3">
+                                            <label for="contract_document" class="form-label">Upload Dokumen Aqad (PDF)</label>
+                                            <input type="file" name="contract_document" class="form-control" accept="application/pdf" {{ $disabled }}>
+                                            <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
+                                        </div>
+
+                                        {{-- Tampilkan PDF Form Lisensi --}}
+                                        <div class="col-md-6 mb-3">
+                                            <label>PDF Form Lisensi Saat Ini:</label><br>
+                                            @if ($license->document_form)
+                                                <embed src="{{ asset('storage/' . $license->document_form) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                            @else
+                                                <div class="me-3">
+                                                    <p class="text-muted mb-0">Belum ada dokumen</p>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        {{-- Upload dokumen form --}}
+                                        <div class="col-md-6 mb-3">
+                                            <label for="document_form" class="form-label">Upload Dokumen Form Lisensi (PDF)</label>
+                                            <input type="file" name="document_form" class="form-control" accept="application/pdf" {{ $disabled }}>
+                                            <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Status Lisensi :</label>
+                                            <input type="text" class="form-control" value="{{ ucfirst($license->status) }}" readonly>
+                                        </div>
 
                                     </div>
 
@@ -230,7 +296,7 @@
                                     <h5 class="mt-4 mb-3">Data Lokasi</h5>
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
-                                            <label>Tipe Bangunan *</label>
+                                            <label>Tipe Bangunan </label>
                                             <select name="building_type" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license->building_type == '1' ? 'selected' : '' }}>Rukan</option>
@@ -240,7 +306,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Status Bangunan *</label>
+                                            <label>Status Bangunan </label>
                                             <select name="building_status" class="form-select">
                                                 <option value="">-- Pilih Status --</option>
                                                 <option value="1" {{ $license->building_status == '1' ? 'selected' : '' }}>Milik</option>
@@ -250,21 +316,21 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Sisa masa Sewa *</label>
+                                            <label>Sisa masa Sewa </label>
                                             <input type="date" name="building_rent_expired_date" class="form-control"
                                                 value="{{ old('building_rent_expired_date', $license->building_rent_expired_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
                                         
                                         <div class="col-md-6 mb-3">
-                                            <label>Luas Bangunan *</label>
+                                            <label>Luas Bangunan </label>
                                             <input type="text" name="building_area" id="building_area" class="form-control @error('building_area') is-invalid @enderror" value="{{old('building_area', $license->building_area)}}">
                                                 @error('building_area')<div class="invalid-feedback"> {{$message}}</div>
                                                 @enderror
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kondisi Bangunan *</label>
+                                            <label>Kondisi Bangunan </label>
                                             <select name="building_condition" class="form-select">
                                                 <option value="">-- Pilih Kondisi --</option>
                                                 <option value="1" {{ $license->building_condition == '1' ? 'selected' : '' }}>Baik</option>
@@ -274,11 +340,11 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>AC *</label>
+                                            <label>AC </label>
                                             <select name="building_has_ac" class="form-select">
                                                 <option value="">-- Pilih ac --</option>
-                                                <option value="1">Ya</option>
-                                                <option value="0">Tidak</option>
+                                                <option value="1" {{ $license->building_has_ac == '1' ? 'selected' : '' }}>Ya</option>
+                                                <option value="0" {{ $license->building_has_ac == '0' ? 'selected' : '' }}>Tidak</option>
                                             </select>
                                         </div>
                                     </div>
@@ -325,16 +391,44 @@
 @endsection
 
 @push('js')
-                                    <script>
+                                    {{-- <script>
                                             $(document).ready(function() {
                                                 $('.select2').select2({
                                                     placeholder: "-- Pilih --",
                                                     width: '100%'
                                                 });
                                             });
-                                    </script>
+                                    </script> --}}
 
                                     <script>
+    
+document.addEventListener('DOMContentLoaded', function () {
+    const licenseTypeSelect = document.getElementById('license_type');
+    
+    // ID field sesuai di form edit kamu
+    const provinceSelect = $('#province_id');
+    const citySelect     = $('#city_id');
+    const districtSelect = $('#district_id');
+    const sub_districtSelect  = $('#sub_district_id');
+    const postal_codeSelect = $('#postal_code_id');
+
+    function setFieldStatus(isFO) {
+        // Untuk Select2
+        provinceSelect.prop('disabled', isFO).trigger('change');
+        citySelect.prop('disabled', isFO).trigger('change');
+        districtSelect.prop('disabled', isFO).trigger('change');
+        sub_districtSelect.prop('disabled', isFO).trigger('change');
+        postal_codeSelect.prop('disabled', isFO).trigger('change');
+    }
+
+    // Pas halaman load
+    setFieldStatus(licenseTypeSelect.value === 'FO');
+
+    // Kalau user ganti type lisensi di form edit/create
+    licenseTypeSelect.addEventListener('change', function () {
+        setFieldStatus(this.value === 'FO');
+    });
+});
                                         $('#province').change(function () {
                                         var id = $(this).val();
                                         $('#city').html('<option>Loading...</option>');
@@ -393,5 +487,19 @@
                                                     });
                                                 }
                                             });
+
+                                        
+
                                     </script>
+                                     @if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: '{{ session('success') }}',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    @endif
 @endpush

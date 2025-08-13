@@ -13,8 +13,8 @@ return [
     'title' => 'SIM AHA Right Brain',
     'title_prefix' => '',
     'title_postfix' => '',
-    'bottom_title' => 'Tablar',
-    'current_version' => 'v11.11',
+    'bottom_title' => 'AHA Sistem Management',
+    'current_version' => 'v2.0',
 
 
     /*
@@ -147,24 +147,26 @@ return [
             'text' => 'Beranda',
             'icon' => 'ti ti-layout-dashboard',
             'url' => 'dashboard',
-            'active' => ['dashboard'],
         ],
 
         [
             'text' => 'Lisensi',
             'icon' => 'ti ti-license',
-            'url' => '#',
             'role' => ['Super-Admin', 'Pemilik Lisensi'],
-            'active' => ['licenses'],
             'submenu' => [
                 [
                     'text' => 'Data Lisensi',
-                    'url' => 'licenses',
+                    'url' => '/licenses',
                     'icon' => 'ti ti-license',
                 ],
                 [
                     'text' => 'Data Pemilik',
-                    'url' => 'license_holders',
+                    'url' => '/license_holders',
+                    'icon' => 'ti ti-users',
+                ],
+                [
+                    'text' => 'Starter Pack',
+                    'url' => '/starters',
                     'icon' => 'ti ti-users',
                 ],
             ],
@@ -173,58 +175,36 @@ return [
         [
             'text' => 'Data Karyawan',
             'icon' => 'ti ti-id-badge',
-            'url' => 'employees',
-            'role' => ['Super-Admin', 'Karyawan'],
-               'active' => ['employees'],
+            'url' => '/employees',
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Karyawan', 'Akuntan'],
         ],
 
         [
             'text' => 'Data Siswa',
             'icon' => 'ti ti-users-group',
-            'url' => 'students',
-            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Siswa'],
-        ],
-
-        [
-            'text' => 'Keuangan',
-            'url' => '#',
-            'icon' => 'ti ti-user-cog',
-            'active' => ['support1'],
-            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Akuntan'],
-            'submenu' => [
-                [
-                    'text' => 'Input Keuangan',
-                    'url' => '#',
-                    'icon' => 'ti ti-currency-dollar',
-                ],
-                [
-                    'text' => 'Laporan Keuangan',
-                    'url' => '#',
-                    'icon' => 'ti ti-report-analytics',
-                ]
-            ],
+            'url' => '/students',
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Siswa', 'Akuntan'],
         ],
 
          [
             'text' => 'Akuntasi',
             'url' => '#',
             'icon' => 'ti ti-user-cog',
-            'active' => ['support1'],
-            'role' => ['Super-Admin', 'Akuntan'],
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Akuntan'],
             'submenu' => [
                 [
                     'text' => 'Akun',
-                    'url' => 'accounting',
+                    'url' => '/accounting',
                     'icon' => 'ti ti-currency-dollar',
                 ],
                 [
                     'text' => 'Input Jurnal',
-                    'url' => 'journals',
+                    'url' => '/journals',
                     'icon' => 'ti ti-report-analytics',
                 ],
                  [
-                    'text' => 'Laporan',
-                    'url' => 'journals/report',
+                    'text' => 'Kas',
+                    'url' => '/journals/report',
                     'icon' => 'ti ti-report-analytics',
                 ],
             ],
@@ -232,20 +212,18 @@ return [
 
         [
             'text' => 'Manajemen User',
-            'url' => 'users',
+            'url' => '/users',
             'icon' => 'ti ti-users',
             'active' => ['users*'],
-            'role' => 'Super-Admin',
-            
+            'role' => 'Super-Admin',    
         ],
 
         [
             'text' => 'Manajemen Role',
-            'url' => 'roles',
+            'url' => '/roles',
             'icon' => 'ti ti-users',
             'active' => ['roles'],
-            'role' => 'Super-Admin',
-            
+            'role' => 'Super-Admin', 
         ],
     ],
 

@@ -4,7 +4,7 @@
             {{-- Foto & Nama --}}
             <div class="d-flex align-items-center mb-4">
                 @if ($employee->photo)
-                    <span class="avatar avatar-xl me-3 rounded" style="background-image: url('{{ asset('storage/photos/' . $employee->photo) }}')"></span>
+                    <span class="avatar avatar-xl me-3 rounded" style="background-image: url('{{ asset('storage/' . $employee->photo) }}')"></span>
                 @else
                     <span class="avatar avatar-xl me-3 avatar-rounded bg-secondary-lt">?</span>
                 @endif
@@ -45,6 +45,17 @@
                         </div>
                         <div class="list-group-item">
                             <span class="text-secondary fw-normal">Tanggal Lahir:</span> {{ $employee->birth_date_formatted ?? '-' }}
+                        </div>
+                        <div class="list-group-item">
+                            @if ($employee->identity_photo)
+                                <div class="mt-3">
+                                    <label class="text-secondary fw-normal">Foto KTP  :</label><br>
+                                    <img src="{{ asset('storage/' . $employee->identity_photo) }}" 
+                                        alt="Foto KTP" 
+                                        style="max-width: 100%; height: auto;" 
+                                        class="img-thumbnail">
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -88,7 +99,7 @@
                 <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary">
                     Edit Profile
                 </a>
-                <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('employees.index') }}" class="btn btn-secondary">
                     Back to List
                 </a>
             </div>

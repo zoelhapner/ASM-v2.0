@@ -52,11 +52,21 @@
                         <div class="list-group-item">
                             <span class="text-secondary fw-normal">Hobi:</span> {{ $license_holder->hobby ?? '-' }}
                         </div>
+                        <div class="list-group-item">
+                            @if ($license_holder->identity_photo)
+                                <div class="mt-3">
+                                    <label class="text-secondary fw-normal">Foto KTP  :</label><br>
+                                    <img src="{{ asset('storage/photos/' . $license_holder->identity_photo) }}" 
+                                        alt="Foto KTP" 
+                                        style="max-width: 100%; height: auto;" 
+                                        class="img-thumbnail">
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-
-
+            
             {{-- Pernikahan --}}
             <h4 class="subheader">💍 Pernikahan</h4>
             <div class="row mb-3">
@@ -91,10 +101,10 @@
 
             {{-- Aksi --}}
             <div class="mt-4">
-                <a href="{{ route('license_holders.edit', $license_holder->id) }}" class="btn btn-primary">
+                <a href="{{ route('license_holders.edit', $license_holder->id) }}" class="btn btn-primary text-white">
                     Edit Profile
                 </a>
-                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
                     Back to List
                 </a>
             </div>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('license_id');
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
             
-            $table->string('account_code', 20)->unique();
+            $table->string('account_code', 20);
             $table->string('account_name');
             $table->string('account_type');
             $table->boolean('is_parent')->default(false);

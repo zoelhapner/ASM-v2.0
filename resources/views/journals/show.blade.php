@@ -10,7 +10,13 @@
             <p>Nama Lisensi: {{ $journal->license->name ?? '-' }}</p>
             <p>Tanggal Transaksi: {{ $journal->transaction_date }}</p>
             <p>Deskripsi Umum: {{ $journal->description }}</p>          
-            <p>Dibuat Oleh: {{ $journal->creator->name ?? '-' }}</p>
+            <p>PIC :
+                @if($journal->creator)
+                    {{ $journal->creator->name }}
+                @else
+                    <small class="fst-italic text-muted">dibuat oleh sistem</small>
+                @endif
+            </p>
         </div>
     </div>
 
@@ -21,6 +27,7 @@
                 <th>Akun</th>
                 <th>Debit</th>
                 <th>Kredit</th>
+                <th>User</th>
                 <th>Keterangan</th>
             </tr>
         </thead>
@@ -39,6 +46,7 @@
                     <td>{{ $detail->account->account_name ?? '-' }}</td>
                     <td>{{ number_format($detail->debit, 2) }}</td>
                     <td>{{ number_format($detail->credit, 2) }}</td>
+                    <td>{{ $detail->person_name ?? '-' }}</td>
                     <td>{{ $detail->description ?? '-' }}</td>
                 </tr>
             @endforeach

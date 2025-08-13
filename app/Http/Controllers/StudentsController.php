@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class StudentsController extends Controller
 {
@@ -27,6 +28,22 @@ class StudentsController extends Controller
         return match ((int) $value) {
             1 => 'Laki - Laki',
             2 => 'Perempuan',
+            default => '-',
+        };
+    }
+
+    private function readableInfo($value)
+    {
+        return match ((int) $value) {
+            1 => 'Teman/Keluarga',
+            2 => 'Website AHA',
+            3 => 'Instagram',
+            4 => 'Tiktok',
+            5 => 'Facebook',
+            6 => 'Youtube',
+            7 => 'Whatsapp',
+            8 => 'Banner',
+            9 => 'Kantor AHA',
             default => '-',
         };
     }
@@ -54,40 +71,66 @@ class StudentsController extends Controller
             'religions.name as religion_name'
         );
 
-         if (Auth::user()->hasRole('Siswa')) {
+        if (Auth::user()->hasRole('Siswa')) {
             $students->where('students.user_id', Auth::id());
+        }
+
+        // if (Auth::user()->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
+        //     $licenseIds = Auth::user()->licenses()->pluck('id');
+        //     $students->whereIn('students.license_id', $licenseIds);
+        // }
+
+        if (Auth::user()->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
+            $activeLicenseId = session('active_license_id');
+            if ($activeLicenseId) {
+                $students->where('students.license_id', $activeLicenseId);
+            }
         }
 
 
         return DataTables::of($students)
-        ->addColumn('license_type', fn ($s) => $s->license_type ?? '-')
-        ->addColumn('license_name', fn ($s) => $s->license_name ?? '-')
-        ->addColumn('religion_name', fn ($s) => $s->religion_name ?? '-')
-        ->addColumn('provinsi', fn ($s) => $s->province_name ?? '-')
-        ->addColumn('kabupaten_kota', fn ($s) => $s->city_name ?? '-')
-        ->addColumn('kecamatan', fn ($s) => $s->district_name ?? '-')
-        ->addColumn('kelurahan', fn ($s) => $s->sub_district_name ?? '-')
-        ->addColumn('kode_pos', fn ($s) => $s->postal_code ?? '-')
-        ->addColumn('gender', fn($row) => $this->readableGender($row->gender))
-        ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
-        ->addColumn('action', function ($s) {
-            return '
-                <a href="'.route('students.edit', $s->id).'" class="btn btn-sm btn-primary">Edit</a>
-                <button data-id="'.$s->id.'" class="btn btn-danger btn-sm delete-student">Delete</button>
-            ';
-        })
-        ->rawColumns(['action'])
-        ->make(true);
+            ->addColumn('license_type', fn ($s) => $s->license_type ?? '-')
+            ->addColumn('license_name', fn ($s) => $s->license_name ?? '-')
+            ->addColumn('religion_name', fn ($s) => $s->religion_name ?? '-')
+            ->addColumn('provinsi', fn ($s) => $s->province_name ?? '-')
+            ->addColumn('kabupaten_kota', fn ($s) => $s->city_name ?? '-')
+            ->addColumn('kecamatan', fn ($s) => $s->district_name ?? '-')
+            ->addColumn('kelurahan', fn ($s) => $s->sub_district_name ?? '-')
+            ->addColumn('kode_pos', fn ($s) => $s->postal_code ?? '-')
+            ->addColumn('gender', fn($row) => $this->readableGender($row->gender))
+            ->addColumn('where_know', fn($row) => $this->readableInfo($row->where_know))
+            ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
+            ->addColumn('registered_date', fn($row) => $row->registered_date ? Carbon::parse($row->registered_date)->format('d/m/Y') : '-')
+            ->editColumn('fullname', function ($row) {
+                    $url = route('students.show', $row->id); // Ganti dengan route detailmu
+                    return '<a href="'.$url.'">'.e($row->fullname).'</a>';
+                })
+            ->addColumn('action', function ($s) {
+                        $buttons = '';
+                        if (auth()->user()->can('siswa.ubah')) {
+                            $buttons .= '<a href="' . route('students.edit', $s->id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
+                                            <i class="ti ti-edit"></i>
+                                        </a>';
+                        }
+                        if (auth()->user()->can('siswa.lihat')) {
+                            $buttons .= '<a href="' . route('students.show', $s->id) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
+                                            <i class="ti ti-eye"></i>
+                                        </a>';
+                        }
+                        if (auth()->user()->can('siswa.hapus')) {
+                            $buttons .= '<button data-id="' . $s->id . '" class="btn btn-icon btn-sm btn-danger delete-student" title="Hapus">
+                                            <i class="ti ti-trash"></i>
+                                        </button>';
+                        }
+                        return $buttons;
+            })
+            ->rawColumns(['action', 'fullname'])
+            ->make(true);
+        }
 
-
+            return view('students.index');
     }
 
-        return view('students.index');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         $religions = Religion::all();
@@ -97,9 +140,6 @@ class StudentsController extends Controller
         return view('students.create', compact('religions', 'licenses', 'provinces'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -127,11 +167,18 @@ class StudentsController extends Controller
         'previous_school' => 'nullable|string',
         'grade' => 'nullable|string',
         'status' => 'nullable|string',
-        'photo' => ['nullable|image|mimes:jpeg,png,jpg,gif|max:2048'],
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'registered_date' => ['required', 'date_format:Y-m-d'],
+        'where_know' => 'nullable|in:1,2,3,4,5,6,7,8,9',
     ]);
 
      if ($request->birth_date) {
         $validated['age'] = Carbon::parse($request->birth_date)->age;
+    }
+
+    // Generate NIS jika belum tersedia atau AJAX gagal
+    if (empty($validated['nis']) || $validated['nis'] === 'AUTO') {
+        $validated['nis'] = $this->generateNis($validated['license_id']);
     }
 
     if ($request->hasFile('photo')) {
@@ -149,7 +196,7 @@ class StudentsController extends Controller
     ]);
 
     // Assign role Student (jika pakai Spatie)
-    $user->syncRoles('Student');
+    $user->syncRoles('Siswa');
 
     // Buat student & hubungkan ke user
     $student = Student::create(array_merge(
@@ -160,17 +207,54 @@ class StudentsController extends Controller
     return redirect()->route('students.index')->with('success', 'Data siswa berhasil ditambahkan');
 }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Students $students)
-    {
-        //
+    public function generateNisAjax($licenseId)
+{
+    $nis = $this->generateNis($licenseId); // pakai helper internal
+    return response()->json(['nis' => $nis]);
+}
+
+private function generateNis($licenseId)
+{
+    $license = License::findOrFail($licenseId);
+
+    // Asumsikan id lisensi kamu itu angka seperti: 3379
+    $prefix = str_pad($license->license_id, 4, '0', STR_PAD_LEFT); // jadi 4 digit
+
+    $prefix .= '02'; // tambahkan 01 setelah id lisensi
+
+    // Ambil NIK terakhir yang sesuai prefix ini
+    $lastNis = Student::where('nis', 'like', $prefix . '%')
+        ->orderByDesc('nis')
+        ->first();
+
+    $nextNumber = 1;
+    if ($lastNis) {
+        $lastNumber = (int)substr($lastNis->nis, strlen($prefix)); // ambil 4 digit akhir
+        $nextNumber = $lastNumber + 1;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+    return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT); // ex: 3379010001
+}
+
+    public function show(Student $student)
+    {
+
+        $student->load(['religion', 'user.licenses', 'province', 'city', 'district', 'subDistrict', 'postalCode']);
+        return view('students.show', compact('student'));
+    }
+
+    public function showProfile($id)
+    {
+    $student = Student::with(['user.licenses', 'religion'])->findOrFail($id);
+    return view('students.tab.profile', compact('student'));
+    }
+
+    public function showTab($id)
+{
+    $student = Student::with('educations')->findOrFail($id);
+    return view('students.tab.educations', compact('student'));
+}
+
     public function edit(Student $student)
     {
         $licenses = License::all();
@@ -193,7 +277,6 @@ class StudentsController extends Controller
         'nis' => [
             'required',
             'string',
-            'digits:5',
             Rule::unique('students')->ignore($student->id),
         ],
         'license_id' => 'required|exists:licenses,id',
@@ -224,6 +307,8 @@ class StudentsController extends Controller
         'grade' => 'nullable|string',
         'status' => 'nullable|string',
         'photo' => ['nullable|image|mimes:jpeg,png,jpg,gif|max:2048'],
+        'registered_date' => ['required', 'date_format:Y-m-d'],
+        'where_know' => 'nullable|in:1,2,3,4,5,6,7,8,9',
     ]);
 
     if ($request->birth_date) {

@@ -7,13 +7,17 @@ use App\Models\City;
 use App\Models\District;
 use App\Models\SubDistrict;
 use App\Models\PostalCode;
+use App\Models\AccountingAccount;
+use App\Models\LicenseNotification;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\License;
-use App\Models\AccountingAccount;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 
  
 class LicensesController extends Controller
@@ -28,6 +32,7 @@ class LicensesController extends Controller
             $buildingTypes = [1 => 'Ruko', 2 => 'Gedung', 3 => 'Rumah'];
             $buildingStatuses = [1 => 'Milik Sendiri', 2 => 'Sewa'];
             $buildingConditions = [1 => 'Baik', 2 => 'Perlu Renovasi', 3 => 'Rusak Berat'];
+            $status = ['active' => 'Aktif', 'inactive' => 'Masa Tenggang', 'expired' => 'Sudah Habis'];
 
             return DataTables::of($licenses)
                 ->addColumn('province_name', fn($row) => $row->province->name ?? '-')
@@ -38,6 +43,26 @@ class LicensesController extends Controller
                 ->editColumn('building_type', fn($row) => $buildingTypes[$row->building_type] ?? 'Tidak Diketahui')
                 ->editColumn('building_status', fn($row) => $buildingStatuses[$row->building_status] ?? 'Tidak Diketahui')
                 ->editColumn('building_condition', fn($row) => $buildingConditions[$row->building_condition] ?? 'Tidak Diketahui')
+                ->editColumn('contract_document', function ($row) {
+                    if ($row->contract_document) {
+                        $url = asset('storage/' . $row->contract_document);
+                        return '<a href="' . $url . '" target="_blank">
+                                    <i class="ti ti-file-text"></i> Lihat Dokumen
+                                </a>';
+                    }
+                    return '<span class="text-muted">Belum ada</span>';
+                })
+
+                ->editColumn('document_form', function ($row) {
+                    if ($row->document_form) {
+                        $url = asset('storage/' . $row->document_form);
+                        return '<a href="' . $url . '" target="_blank">
+                                    <i class="ti ti-file-text"></i> Lihat Dokumen
+                                </a>';
+                    }
+                    return '<span class="text-muted">Belum ada</span>';
+                })
+
                 ->addColumn('instagram', fn($row) => $this->linkOrDash($row->instagram))
                 ->addColumn('facebook_page', fn($row) => $this->linkOrDash($row->facebook_page))
                 ->addColumn('tiktok', fn($row) => $this->linkOrDash($row->tiktok))
@@ -47,29 +72,39 @@ class LicensesController extends Controller
                 ->addColumn('join_date', fn($row) => Carbon::parse($row->join_date)->format('d/m/Y'))
                 ->addColumn('expired_date', fn($row) => $row->expired_date ? Carbon::parse($row->expired_date)->format('d/m/Y') : '-')
                 ->addColumn('building_rent_expired_date', fn($row) => $row->building_rent_expired_date ? Carbon::parse($row->building_rent_expired_date)->format('d/m/Y') : '-')
-                ->addColumn('status', function ($row) {
-                    $color = match (strtolower($row->status)) {
-                        'active' => 'success', 'inactive' => 'warning', 'expired' => 'danger',
+                ->addColumn('status', function ($row) use ($status) {
+                    $label = $status[$row->status] ?? 'Tidak Diketahui';
+
+                    $color = match ($label) {
+                        'Aktif' => 'success',
+                        'Masa Tenggang' => 'warning',
+                        'Sudah Habis' => 'danger',
                         default => 'secondary',
                     };
-                    return '<span class="badge bg-' . $color . '">' . ucfirst($row->status) . '</span>';
+
+                    return '<span class="badge bg-' . $color . '">' . $label . '</span>';
                 })
+
                 ->addColumn('action', function ($license) {
                     $buttons = '';
                     if (auth()->user()->can('lisensi.ubah')) {
-                        $buttons .= '<a href="' . route('licenses.edit', $license->id) . '" class="btn btn-success btn-sm">Edit</a> ';
+                        $buttons .= '<a href="' . route('licenses.edit', $license->id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
+                                        <i class="ti ti-edit"></i>
+                                    </a>';
                     }
                     if (auth()->user()->can('lisensi.hapus')) {
-                        $buttons .= '<button data-id="' . $license->id . '" class="btn btn-danger btn-sm delete-license">Delete</button>';
+                        $buttons .= '<button data-id="' . $license->id . '" class="btn btn-icon btn-sm btn-danger delete-license" title="Hapus">
+                                        <i class="ti ti-trash"></i>
+                                    </button>';
                     }
                     return $buttons;
                 })
-                ->rawColumns(['action', 'status', 'instagram', 'facebook_page', 'tiktok', 'youtube', 'google_maps', 'landing_page_student_registration'])
+                ->rawColumns(['action', 'status', 'instagram', 'facebook_page', 'tiktok', 'youtube', 'google_maps', 'landing_page_student_registration', 'contract_document', 'document_form'])
                 ->make(true);
         }
 
         return view('licenses.index');
-    
+  
     }
 
         private function getFilteredLicenses()
@@ -78,11 +113,28 @@ class LicensesController extends Controller
 
         $query = License::query()
         ->with(['province', 'city', 'district', 'subDistrict', 'postalCode'])
-         ->when($auth->hasRole('Pemilik Lisensi'), function ($query) use ($auth) {
-            $query->whereHas('owners', function ($query) use ($auth) {
-                $query->where('users.id', $auth->id);
-            });
+        ->when(!$auth->hasRole('Super-Admin'), function ($query) use ($auth) {
+            $activeLicenseId = session('active_license_id');
+
+            if (!$activeLicenseId) {
+                if ($auth->hasRole('Pemilik Lisensi')) {
+                    $first = License::whereHas('owners', fn($q) => $q->where('users.id', $auth->id))->first();
+                } elseif ($auth->hasRole('Karyawan') && $auth->employee) {
+                    $first = $auth->employee->licenses->first();
+                }
+
+                if (!empty($first)) {
+                    session([
+                        'active_license_id' => $first->id,
+                        'active_license_name' => $first->name,
+                    ]);
+                    $activeLicenseId = $first->id;
+                }
+            }
+
+            $query->where('id', $activeLicenseId);
         })
+
         ->orderBy('id', 'desc');
 
 
@@ -101,121 +153,297 @@ class LicensesController extends Controller
         return view('licenses.create', compact('provinces', 'owners'));
     }
 
-    public function store(Request $request) {
-    
-        $validated = $request->validate([
-            'license_id' => 'required|unique:licenses,license_id',
-            'license_type' => 'required|in:FO,SO,LO,LC', 
-            'name' => 'required|unique:licenses,name',
-            'email' => 'required|email|unique:licenses,email',
-            'address' => 'required',
+    public function store(Request $request) 
+{
+    // Aturan validasi dasar
+    $rules = [
+        'license_type' => 'required|in:FO,SO,LO,LC', 
+        'name' => 'required|unique:licenses,name',
+        'email' => 'required|email|unique:licenses,email',
+        'address' => 'required',
+        'phone' => 'required',
+        'building_type' => 'nullable|in:1,2,3',
+        'building_status' => 'nullable|in:1,2,3',
+        'building_rent_expired_date' => ['nullable', 'date_format:Y-m-d'],
+        'building_area' => 'nullable|numeric|min:0',
+        'building_condition' => 'nullable|in:1,2,3',
+        'building_has_ac' => 'nullable|boolean',
+        'instagram' => 'nullable|url',
+        'facebook_page' => 'nullable|url',
+        'tiktok' => 'nullable|url',
+        'youtube' => 'nullable|url',
+        'google_maps' => 'nullable|url',
+        'landing_page_student_registration' => 'nullable|url',
+    ];
+
+    // Kalau bukan FO (pusat) → wilayah wajib diisi
+    if ($request->license_type !== 'FO') {
+        $rules = array_merge($rules, [
             'province_id' => 'required|exists:provinces,id',
             'city_id' => 'required|exists:cities,id',
             'district_id' => 'required|exists:districts,id',
             'sub_district_id' => 'required|exists:sub_districts,id',
             'postal_code_id' => 'required|exists:postal_codes,id',
-            'phone' => 'required',
             'join_date' => ['required', 'date_format:Y-m-d'],
             'expired_date' => ['required', 'date_format:Y-m-d'],
             'contract_agreement_number' => 'required',
-            'status' => 'required|in:active,inactive,expired',
-            'building_type' => 'nullable|in:1,2,3',
-            'building_status' => 'nullable|in:1,2,3',
-            'building_rent_expired_date' => ['nullable', 'date_format:Y-m-d'],
-            'building_area' => 'nullable|numeric|min:0',
-            'building_condition' => 'nullable|in:1,2,3',
-            'building_has_ac' => 'nullable|boolean',
-            'instagram' => 'nullable|url',
-            'facebook_page' => 'nullable|url',
-            'tiktok' => 'nullable|url',
-            'youtube' => 'nullable|url',
-            'google_maps' => 'nullable|url',
-            'landing_page_student_registration' => 'nullable|url',
+            'contract_document' => ['required', 'file', 'mimes:pdf', 'max:2048'],
+            'document_form' => ['required', 'file', 'mimes:pdf', 'max:2048'],
         ]);
-
-        $license = License::create($validated);
-        
-        return redirect()->route('licenses.index')->with('success', 'Data berhasil ditambahkan.');
+    } else {
+        // FO → wilayah boleh kosong
+        $rules = array_merge($rules, [
+            'province_id' => 'nullable|exists:provinces,id',
+            'city_id' => 'nullable|exists:cities,id',
+            'district_id' => 'nullable|exists:districts,id',
+            'sub_district_id' => 'nullable|exists:sub_districts,id',
+            'postal_code_id' => 'nullable|exists:postal_codes,id',
+            'join_date' => ['nullable', 'date_format:Y-m-d'],
+            'expired_date' => ['nullable', 'date_format:Y-m-d'],
+            'contract_agreement_number' => 'nullable',
+            'contract_document' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+            'document_form' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
+        ]);
     }
 
-     public function edit(License $license) {
-         $owners = User::role('Pemilik Lisensi')->get();
+    $validated = $request->validate($rules);
 
-        // Jika yang login Owner, pastikan dia hanya boleh buka lisensi miliknya.
+    // Cegah duplikat district, hanya untuk non-FO
+    if ($request->license_type !== 'FO' && License::where('district_id', $validated['district_id'])->exists()) {
+        return back()->withErrors(['district_id' => 'Sudah ada lisensi di kecamatan ini.'])->withInput();
+    }
+
+    // Set license_id
+    $validated['license_id'] = $request->license_type !== 'FO' 
+        ? $validated['district_id'] 
+        : '0000'; // pusat tidak punya district
+
+    // Upload file kontrak
+    if ($request->hasFile('contract_document')) {
+        $validated['contract_document'] = $request->file('contract_document')
+            ->store('contracts', 'public');
+    }
+
+    // Upload file form
+    if ($request->hasFile('document_form')) {
+        $validated['document_form'] = $request->file('document_form')
+            ->store('contracts', 'public');
+    }
+
+    if ($validated['license_type'] === 'FO') {
+        // Pusat → status aktif terus
+        $validated['status'] = 'active';
+    } else {
+
+        // Cabang → cek expired_date
+        $expiredDate = Carbon::parse($validated['expired_date']);
+        $today = now();
+        $fiveMonthsLater = $today->copy()->addMonths(5);
+
+        if ($expiredDate->lt($today)) {
+            $validated['status'] = 'expired';
+        } elseif ($expiredDate->lte($fiveMonthsLater)) {
+            $validated['status'] = 'inactive';
+        } else {
+            $validated['status'] = 'active';
+        }
+    }
+
+    // Simpan lisensi
+    $license = License::create($validated);
+
+    // Kirim notifikasi kalau expired atau akan expired
+    if ($validated['status'] === 'expired') {
+        LicenseNotification::create([
+            'license_id' => $license->id,
+            'message' => "⚠️ Lisensi {$license->license_id} ({$license->license_type}) {$license->name} telah *expired* pada {$expiredDate->format('d-m-Y')}.",
+            'read' => false,
+        ]);
+    } elseif ($validated['status'] === 'inactive') {
+        LicenseNotification::create([
+            'license_id' => $license->id,
+            'message' => "📢 Lisensi {$license->license_id} ({$license->license_type}) {$license->name} akan *expired* pada {$expiredDate->format('d-m-Y')}.",
+            'read' => false,
+        ]);
+    }
+
+    return redirect()->route('licenses.index')->with('success', 'Data berhasil ditambahkan.');
+}
+
+
+     public function edit(License $license) 
+     {
+        $owners = User::role('Pemilik Lisensi')
+        ->whereHas('licenses', function ($q) {
+            $q->where('licenses.id', session('active_license_id'));
+        })->get();
+
         if (auth()->user()->hasRole('Pemilik Lisensi')) {
+            // Cek apakah lisensi ini milik dia
             if (!$license->owners->contains(auth()->id())) {
                 abort(403, 'Anda tidak memiliki izin mengedit lisensi ini.');
             }
+
+            // Cek apakah ini lisensi yang aktif
+            if (session('active_license_id') != $license->id) {
+                return redirect()
+                    ->route('licenses.index')
+                    ->with('error', 'Lisensi yang sedang dibuka bukan lisensi aktif.');
+            }
         }
+
 
         $provinces = Province::all();
         $cities = City::where('province_id', $license->province_id)->get();
         $districts = District::where('city_id', $license->city_id)->get();
         $subDistricts = SubDistrict::where('district_id', $license->district_id)->get();
         $postalCodes = PostalCode::where('sub_district_id', $license->sub_district_id)->get();
-        $owners = \App\Models\User::role('Pemilik Lisensi')->get();
 
         return view('licenses.edit', compact('license', 'provinces', 'cities', 'districts', 'subDistricts', 'postalCodes', 'owners'));
     }
 
-    public function update(Request $request, License $license) {
-        
-       $validated = $request->validate([
-            'license_id' => [
-            'required',
-            Rule::unique('licenses', 'license_id')->ignore($license->id),
-            ],
-            'license_type' => 'required|in:FO,SO,LO,LC', 
-            'name' => [
-            'required',
-             Rule::unique('licenses', 'name')->ignore($license->id),
-            ], 
-            'email' => [
-            'required',
-            'email',
-             Rule::unique('licenses')->ignore($license->id),
-            ], 
-            'address' => 'required',
-            'province_id' => 'required|exists:provinces,id',
-            'city_id' => 'required|exists:cities,id',
-            'district_id' => 'required|exists:districts,id',
-            'sub_district_id' => 'required|exists:sub_districts,id',
-            'postal_code_id' => 'required|exists:postal_codes,id',
-            'phone' => 'required',
-            'join_date' => ['required', 'date_format:Y-m-d'],
-            'expired_date' => ['required', 'date_format:Y-m-d'],
-            'contract_agreement_number' => 'required',
-            'status' => 'required|in:active,inactive,expired',
-            'building_type' => 'nullable|in:1,2,3',
-            'building_status' => 'nullable|in:1,2,3',
-            'building_rent_expired_date' => ['nullable', 'date_format:Y-m-d'],
-            'building_area' => 'nullable|numeric|min:0',
-            'building_condition' => 'nullable|in:1,2,3',
-            'building_has_ac' => 'nullable|boolean',
-            'instagram' => 'nullable|url',
-            'facebook_page' => 'nullable|url',
-            'tiktok' => 'nullable|url',
-            'youtube' => 'nullable|url',
-            'google_maps' => 'nullable|url',
-            'landing_page_student_registration' => 'nullable|url',
-            'owner' => 'required|exists:users,id',
-    ]);
+    public function update(Request $request, License $license) 
+{
+    $user = auth()->user();
+    $activeLicenseId = session('active_license_id');
 
-        $license->update($validated);
+    if (!$user->hasRole('Super-Admin') && $license->id != $activeLicenseId) {
+        abort(403, 'Anda hanya bisa mengedit lisensi yang aktif.');
+    }
 
-         if (auth()->user()->hasRole('Pemilik Lisensi')) {
-            // Kalau Owner → pastikan tetap dia sendiri
-            $license->owners()->sync([auth()->id()]);
-        } else {
-            // Kalau Admin → bisa update owners
-            if ($request->filled('owners')) {
-                $license->owners()->sync($request->owners);
-            }
+    $isOwner = $user->hasRole('Pemilik Lisensi');
+
+    $rules = [
+        'license_type' => 'required|in:FO,SO,LO,LC',
+        'name' => ['required', Rule::unique('licenses', 'name')->ignore($license->id)],
+        'email' => ['required', 'email', Rule::unique('licenses')->ignore($license->id)],
+        'address' => 'required',
+        'province_id' => 'required|exists:provinces,id',
+        'city_id' => 'required|exists:cities,id',
+        'district_id' => [
+            'required',
+            'exists:districts,id',
+            Rule::unique('licenses', 'district_id')->ignore($license->id),
+        ],
+        'sub_district_id' => 'required|exists:sub_districts,id',
+        'postal_code_id' => 'required|exists:postal_codes,id',
+        'phone' => 'required',
+        'join_date' => ['required', 'date_format:Y-m-d'],
+        'expired_date' => ['nullable', 'date_format:Y-m-d'],
+        'contract_agreement_number' => 'required',
+        'building_type' => 'nullable|in:1,2,3',
+        'building_status' => 'nullable|in:1,2,3',
+        'building_rent_expired_date' => ['nullable', 'date_format:Y-m-d'],
+        'building_area' => 'nullable|numeric|min:0',
+        'building_condition' => 'nullable|in:1,2,3',
+        'building_has_ac' => 'nullable|boolean',
+        'instagram' => 'nullable|url',
+        'facebook_page' => 'nullable|url',
+        'tiktok' => 'nullable|url',
+        'youtube' => 'nullable|url',
+        'google_maps' => 'nullable|url',
+        'landing_page_student_registration' => 'nullable|url',
+    ];
+
+    // Hanya validasi file kalau bukan Pemilik Lisensi
+    if (!$isOwner) {
+        $rules['contract_document'] = ['nullable', 'file', 'mimes:pdf', 'max:2048'];
+        $rules['document_form'] = ['nullable', 'file', 'mimes:pdf', 'max:2048'];
+    }
+
+    $validated = $request->validate($rules);
+
+    // Cek apakah district_id berubah dan sudah dipakai
+    if ($license->district_id != $validated['district_id']) {
+        $alreadyExists = License::where('district_id', $validated['district_id'])
+            ->where('id', '!=', $license->id)
+            ->exists();
+
+        if ($alreadyExists) {
+            return back()->withErrors(['district_id' => 'Sudah ada lisensi di kecamatan ini.'])->withInput();
         }
 
-        return redirect()->route('licenses.index')->with('success', 'Data berhasil diperbarui.');
-
+        $validated['license_id'] = $validated['district_id'];
     }
+
+    // Hanya proses upload file kalau bukan Pemilik Lisensi
+    if (!$isOwner) {
+        if ($request->hasFile('contract_document')) {
+            if ($license->contract_document) {
+                Storage::disk('public')->delete($license->contract_document);
+            }
+
+            $contractDocumentPath = $request->file('contract_document')->store('contracts_aqad', 'public');
+            $validated['contract_document'] = $contractDocumentPath;
+        }
+
+        if ($request->hasFile('document_form')) {
+            if ($license->document_form) {
+                Storage::disk('public')->delete($license->document_form);
+            }
+
+            $documentFormPath = $request->file('document_form')->store('contracts_aqad', 'public');
+            $validated['document_form'] = $documentFormPath;
+        }
+    }
+
+    // Setup default akun jika belum ada
+    if ($license->accounts()->count() == 0) {
+        foreach (Config::get('accounting_defaults.accounts') as $acc) {
+            AccountingAccount::create([
+                'id' => Str::uuid(),
+                'license_id' => $license->id,
+                'account_type' => $acc['account_type'] ?? null,
+                'account_code' => $acc['account_code'] ?? null,
+                'account_name' => $acc['account_name'] ?? null,
+                'person_type' => $acc['person_type'] ?? null,
+                'is_active' => true,
+                'is_parent' => false,
+                'initial_balance' => 0,
+                'balance_type' => $acc['balance_type'] ?? null,
+            ]);
+        }
+    }
+
+    if ($validated['license_type'] === 'FO') {
+        // Pusat → status aktif terus
+        $validated['status'] = 'active';
+        $validated['expired_date'] = null; // pastiin kosong
+    } else {
+            // Cabang → wajib ada expired_date
+            if (empty($validated['expired_date'])) {
+                return back()->withErrors(['expired_date' => 'Tanggal expired wajib diisi untuk cabang.']);
+            }
+        $expiredDate = Carbon::parse($validated['expired_date']);
+        $today = now();
+        $fiveMonthsLater = $today->copy()->addMonths(5);
+
+        if ($expiredDate->lt($today)) {
+            $validated['status'] = 'expired';
+
+            LicenseNotification::firstOrCreate([
+                'license_id' => $license->id,
+                'message' => "⚠️ Lisensi {$license->license_id} ({$license->license_type}) {$license->name} telah *expired* pada {$expiredDate->format('d-m-Y')}.",
+            ], ['read' => false]);
+        } elseif ($expiredDate->lte($fiveMonthsLater)) {
+            $validated['status'] = 'inactive';
+
+            LicenseNotification::firstOrCreate([
+                'license_id' => $license->id,
+                'message' => "📢 Lisensi {$license->license_id} ({$license->license_type}) {$license->name} akan *expired* pada {$expiredDate->format('d-m-Y')}.",
+            ], ['read' => false]);
+        } else {
+            $validated['status'] = 'active';
+        }
+    }
+    // Update data
+    $license->update($validated);
+
+    return redirect()->route('licenses.index')->with('success', 'Data berhasil diperbarui.');
+}
+
+
+
 
     public function destroy(License $license) 
     {
@@ -230,6 +458,5 @@ class LicensesController extends Controller
 
         return response()->json(['status' => 'failed', 'message' => 'Unable to delete']);
     }
-
 
 }

@@ -1,6 +1,6 @@
 <!-- Sidebar -->
 <aside class="{{$layoutData['cssClasses'] ?? 'navbar navbar-vertical navbar-expand-lg'}}"
-       @if(config('tablar.layout_light_sidebar') !== null)
+    @if(config('tablar.layout_light_sidebar') !== null)
            data-bs-theme="{{ config('tablar.layout_light_sidebar') ? 'light' : 'dark' }}"
     @endif
 >

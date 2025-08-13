@@ -17,6 +17,7 @@ use Spatie\Permission\Models\Role;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 
 class LicenseHoldersController extends Controller
@@ -42,16 +43,23 @@ class LicenseHoldersController extends Controller
                 ->addColumn('arabic_proficiency', fn($row) => $this->readableLanguage($row->arabic_proficiency))
                 ->addColumn('english_literacy', fn($row) => $this->readableLanguage($row->english_literacy))
                 ->addColumn('english_proficiency', fn($row) => $this->readableLanguage($row->english_proficiency))
+        
                 ->addColumn('action', function ($license_holder) {
                     $buttons = '';
                     if (auth()->user()->can('pemilik-lisensi.ubah')) {
-                        $buttons .= '<a href="' . route('license_holders.edit', $license_holder->license_holder_id) . '" class="btn btn-success btn-sm">Edit</a> ';
+                        $buttons .= '<a href="' . route('license_holders.edit', $license_holder->license_holder_id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
+                                        <i class="ti ti-edit"></i>
+                                    </a>';
                     }
                     if (auth()->user()->can('pemilik-lisensi.lihat')) {
-                        $buttons .= '<a href="' . route('license_holders.show', $license_holder->license_holder_id) . '" class="btn btn-secondary btn-sm">Show</a> ';
+                        $buttons .= '<a href="' . route('license_holders.show', $license_holder->license_holder_id) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
+                                        <i class="ti ti-eye"></i>
+                                    </a>';
                     }
                     if (auth()->user()->can('pemilik-lisensi.hapus')) {
-                        $buttons .= '<button data-id="' . $license_holder->license_holder_id . '" class="btn btn-danger btn-sm delete-license_holder">Delete</button>';
+                        $buttons .= '<button data-id="' . $license_holder->license_holder_id . '" class="btn btn-icon btn-sm btn-danger delete-license_holder" title="Hapus">
+                                        <i class="ti ti-trash"></i>
+                                    </button>';
                     }
                     return $buttons;
                 })
@@ -108,12 +116,32 @@ class LicenseHoldersController extends Controller
             'license_holders.english_proficiency'
         );
 
-    if ($auth->hasRole('Pemilik Lisensi')) {
+     // Filtering berdasarkan role
+    if ($auth->hasRole('Super-Admin')) {
+        // Tidak ada filter, tampilkan semua
+    } elseif ($auth->hasRole('Pemilik Lisensi')) {
+        // Pemilik Lisensi → filter berdasarkan user_id
         $query->where('license_holders.user_id', $auth->id);
+
+        // Jika ada lisensi aktif, filter juga berdasarkan itu
+        if (session()->has('active_license_id')) {
+            $query->where('licenses.id', session('active_license_id'));
+        }
+    } elseif ($auth->hasRole(['Karyawan', 'Akuntan'])) {
+        // Karyawan atau Akuntan → hanya data dari lisensi aktif
+        if (session()->has('active_license_id')) {
+            $query->where('licenses.id', session('active_license_id'));
+        } else {
+            // Kalau tidak ada session lisensi, pastikan tidak menampilkan apa pun
+            $query->whereNull('licenses.id'); // Tidak akan menemukan data
+        }
     }
 
     return $query;
 }
+
+
+
 
 
     private function readableLanguage($value)
@@ -153,8 +181,7 @@ class LicenseHoldersController extends Controller
         $religions = Religion::all();
         $licenses = License::all(); 
         $provinces = Province::all();
-        $owners = \App\Models\User::role('Pemilik Lisensi')->get();
-        return view('license_holders.create', compact('religions', 'licenses', 'provinces', 'owners'));
+        return view('license_holders.create', compact('religions', 'licenses', 'provinces'));
     }
 
     /**
@@ -191,6 +218,7 @@ class LicenseHoldersController extends Controller
             'english_literacy' => 'nullable|in:1,2',
             'english_proficiency' => 'nullable|in:1,2',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'identity_photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -200,7 +228,14 @@ class LicenseHoldersController extends Controller
             $validated['photo'] = $filename;
         }
 
-        $user = \App\Models\User::create([
+        if ($request->hasFile('identity_photo')) {
+            $file = $request->file('identity_photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('photos', $filename, 'public');
+            $validated['identity_photo'] = $filename;
+        }
+
+        $user = User::create([
         'name' => $validated['fullname'],
         'email' => $validated['email'],
         'password' => bcrypt('password123'), // atau gunakan password generator
@@ -266,7 +301,14 @@ class LicenseHoldersController extends Controller
 
         $religions = Religion::all();
         $provinces = Province::all();
-        $allLicenses = License::all(); 
+
+        $license_holder->load('user.licenses');
+
+        if ($auth->hasRole('Pemilik Lisensi')) {
+            $licenses = $license_holder->user->licenses ?? collect();
+        } else {
+            $licenses = License::all();
+        }
 
          // Ambil salah satu license kalau mau load data wilayah
         $license = $license_holder;
@@ -283,7 +325,7 @@ class LicenseHoldersController extends Controller
         $postalCodes = PostalCode::where('sub_district_id', $license->sub_district_id)->get();
         }
 
-        return view('license_holders.edit', compact('license_holder','religions', 'license', 'provinces', 'allLicenses', 'cities', 'districts', 'subDistricts', 'postalCodes'));
+        return view('license_holders.edit', compact('license_holder','religions', 'license', 'provinces', 'licenses', 'cities', 'districts', 'subDistricts', 'postalCodes'));
     }
 
     /**
@@ -326,6 +368,7 @@ class LicenseHoldersController extends Controller
             'english_literacy' => 'nullable|in:1,2,3',
             'english_proficiency' => 'nullable|in:1,2,3',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'identity_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
             // Jika ada file baru
@@ -340,6 +383,20 @@ class LicenseHoldersController extends Controller
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('photos', $filename, 'public');
             $validated['photo'] = $filename;
+        }
+
+        // Jika ada file baru
+            if ($request->hasFile('identity_photo')) {
+            // Hapus foto lama jika ada
+                if ($license_holder->identity_photo && Storage::disk('public')->exists('photos/' . $license_holder->identity_photo)) {
+                Storage::disk('public')->delete('photos/' . $license_holder->identity_photo);
+                }
+
+            // Simpan file baru
+            $file = $request->file('identity_photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('photos', $filename, 'public');
+            $validated['identity_photo'] = $filename;
         }
 
             $license_holder->update(collect($validated)->except(['licenses'])->toArray());

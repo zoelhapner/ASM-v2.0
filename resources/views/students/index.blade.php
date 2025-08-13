@@ -17,7 +17,7 @@
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
-                 @can('pemilik-lisensi.tambah')       
+                 @can('siswa.tambah')       
                   <span class="d-none d-sm-inline">
                         <a href="{{ route("students.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
@@ -79,6 +79,8 @@
                                         <th>Asal Sekolah</th>
                                         <th>Kelas</th>
                                         <th>Status</th>
+                                        <th>Tau Darimana</th>
+                                        <th>Tanggal Pendaftaran</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -95,6 +97,12 @@
     <script>
         $(function() {
             const table = $('#tableStudents').DataTable({
+                scrollY: '500px',
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {
+                    leftColumns: 4
+                },
                 serverSide: true,
                 processing: true,
                 ajax: '{{ route("students.index") }}',
@@ -124,6 +132,8 @@
                 { data: 'previous_school', name: 'previous_school' },
                 { data: 'grade', name: 'grade' },
                 { data: 'status', name: 'status' },
+                { data: 'where_know', name: 'where_know' },
+                { data: 'registered_date', name: 'registered_date' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
 order: [[2, 'asc']], // misal urutkan nama license_holder
@@ -191,16 +201,4 @@ columnDefs: [
            
         });
     </script>
-
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Sukses!',
-            text: '{{ session('success') }}',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    </script>
-    @endif
 @endpush

@@ -2,7 +2,7 @@
     <div class="container-xl">
         <div class="row text-center align-items-center flex-row-reverse">
             <div class="col-lg-auto ms-lg-auto">
-                <ul class="list-inline list-inline-dots mb-0">
+                {{-- <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item"><a href="https://github.com/takielias/tablar" target="_blank"
                                                     class="link-secondary" rel="noopener">Source code</a></li>
                     <li class="list-inline-item">
@@ -20,20 +20,20 @@
                             Sponsor
                         </a>
                     </li>
-                </ul>
+                </ul> --}}
             </div>
             <div class="col-12 col-lg-auto mt-3 mt-lg-0">
                 <ul class="list-inline list-inline-dots mb-0">
                     <li class="list-inline-item">
-                        Copyright &copy; 2025
-                        <a href="https://ebuz.xyz"
-                           class="link-secondary">{{config('tablar.bottom_title', 'TabLar')}}</a>.
-                        All rights reserved.
+                        Copyright &copy; 2025 AHA System Management v2.0
+                        {{-- <a 
+                           class="link-secondary">{{config('tablar.bottom_title', 'TabLar')}}
+                        </a> --}}
                     </li>
                     <li class="list-inline-item">
-                        <a href="https://ebuz.xyz" class="link-secondary" rel="noopener">
+                        {{-- <a class="link-secondary" rel="noopener">
                             {{config('tablar.current_version', '1.0')}}
-                        </a>
+                        </a> --}}
                     </li>
                 </ul>
             </div>

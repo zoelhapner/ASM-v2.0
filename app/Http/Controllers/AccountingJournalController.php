@@ -9,107 +9,319 @@ use App\Models\AccountingJournalDetail;
 use App\Models\AccountingAccount;
 use App\Models\AccountingPeriod;
 use App\Models\License;
+use App\Models\Student;
+use App\Models\Employee;
+use App\Models\LicenseHolder;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class AccountingJournalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
-    {
-         $journals = AccountingJournal::with(['license'])
-            ->when(Auth::user()->hasRole('Akuntan'), function ($q) {
-                $licenses = Auth::user()->employee?->licenses;
+{
+    $user = Auth::user();
 
-                if ($licenses && $licenses->count() > 0) {
-                $q->whereIn('license_id', $licenses->pluck('id'));
-            } else {
-                abort(403, 'Lisensi tidak ditemukan.');
-            }
-            })
-            ->orderByDesc('transaction_date')
-            ->get();
+    $journals = AccountingJournal::with('license')
+        ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
+            // Untuk Pemilik Lisensi atau Akuntan
+            $licenses = $user->hasRole('Pemilik Lisensi')
+                ? $user->licenses
+                : $user->employee?->licenses;
 
-        return view('journals.index', compact('journals'));
-    }
+            abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $user = Auth::user();
+            $query->whereIn('license_id', $licenses->pluck('id'));
+        })
+        ->when(session()->has('active_license_id'), function ($query) {
+            // Filter berdasarkan lisensi aktif di navbar
+            $query->where('license_id', session('active_license_id'));
+        })
+        ->orderByDesc('transaction_date')
+        ->get();
 
-        if ($user->hasRole('Super-Admin')) {
-        // Super Admin bisa lihat semua akun
-        $accounts = AccountingAccount::where('is_parent', false)
-            ->where('is_active', true)
-            ->orderBy('account_code')
-            ->get();
+    return view('journals.index', compact('journals'));
+}
 
+    public function create(Request $request)
+{
+    $user = Auth::user();
+
+    if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
-        return view('journals.create', compact('accounts', 'licenses'));
+        $activeLicenseId = $request->get('license_id'); // Ambil dari filter form
+    } else {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
+
+        if (!$licenses || $licenses->isEmpty()) {
+            abort(403, 'License tidak ditemukan untuk user ini.');
+        }
+
+        $activeLicenseId = session('active_license_id');
     }
 
-    $licenses = $user->employee?->licenses;
+    // Tentukan daftar license_id untuk query
+    $licenseIds = $activeLicenseId
+        ? [(string) $activeLicenseId]
+        : $licenses->pluck('id')->toArray();
 
-    if (!$licenses || $licenses->count() === 0) {
-        abort(403, 'License tidak ditemukan untuk user ini.');
+    // Ambil akun yang disembunyikan sesuai role user
+    $hiddenAccounts = [];
+    foreach ($user->getRoleNames() as $role) {
+        if (isset(config('accounting.hidden_accounts')[$role])) {
+            $hiddenAccounts = array_merge(
+                $hiddenAccounts,
+                config('accounting.hidden_accounts')[$role]
+            );
+        }
     }
 
+    // Accounts
     $accounts = AccountingAccount::where('is_parent', false)
         ->where('is_active', true)
-        ->whereIn('license_id', $licenses->pluck('id'))
+        ->when($activeLicenseId, fn ($q) => $q->where('license_id', $activeLicenseId))
+        ->when(!$user->hasRole('Super-Admin'), fn($q) => $q->whereIn('license_id', $licenseIds))
+        ->when(!empty($hiddenAccounts), function ($q) use ($hiddenAccounts) {
+            $q->whereNotIn('account_code', $hiddenAccounts);
+        })
         ->orderBy('account_code')
         ->get();
 
-    return view('journals.create', compact('accounts', 'licenses'));
-    }
+    // Students
+    $students = Student::whereIn('license_id', $licenseIds)
+        ->select('id', 'fullname as name')
+        ->get();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAccountingJournalRequest $request)
-    {
+    // Employees
+    $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('employee_license.license_id', $licenseIds);
+        })
+        ->select('id', 'fullname as name')
+        ->get();
 
-        $user = Auth::user();
-        $licenseId = $request->license_id;
+    $licenseList = License::whereIn('license_id', $licenseIds)
+        ->select('id', 'name')
+        ->get();
 
-        $totalDebit = 0;
-        $totalCredit = 0;
+    // $pusatLicense = License::where('name', 'AHA Right Brain')->first();
 
-        foreach ($request->details as $row) {
-            $totalDebit += $row['debit'] ?? 0;
-            $totalCredit += $row['credit'] ?? 0;
-        }
+    // $pusatUserId = null;
+    // $pusatUserName = null;
 
-        $journal = AccountingJournal::create([
-            'license_id' => $licenseId,
-            'journal_code' => 'JRN-' . strtoupper(Str::random(5)),
-            'transaction_date' => $request->transaction_date,
-            'description' => $request->description,
-            'created_by' => Auth::id(),
+    // if ($pusatLicense) {
+    //     // Ambil salah satu user yang punya license ini
+    //     $pusatUser = $pusatLicense->owners()->first(); // pastikan relasi users() ada di model License
+    //     if ($pusatUser) {
+    //         $pusatUserId = $pusatUser->id;
+    //         $pusatUserName = $pusatUser->name;
+    //     }
+    // }
+
+    $pusatLicense = License::where('name', 'AHA Right Brain')->first();
+
+    $pusatUserId   = $pusatLicense?->pusatUser()?->id;
+    $pusatUserName = $pusatLicense?->pusatUser()?->name;
+
+    return view('journals.create', compact(
+        'accounts', 'licenses', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
+
+    ));
+}
+
+public function store(StoreAccountingJournalRequest $request)
+{
+    $user = Auth::user();
+    $licenseId = $request->license_id;
+
+    $cabangLicense = License::find($licenseId);
+
+    // Hitung total debit/credit (kalau mau validasi balance)
+    $totalDebit = collect($request->details)->sum('debit');
+    $totalCredit = collect($request->details)->sum('credit');
+
+    // 1. Simpan jurnal di CABANG
+    $journal = AccountingJournal::create([
+        'license_id' => $licenseId,
+        'journal_code' => 'JRN-' . strtoupper(Str::random(5)),
+        'transaction_date' => $request->transaction_date,
+        'description' => $request->description,
+        'created_by' => $user->id,
+    ]);
+
+    foreach ($request->details as $detail) {
+        AccountingJournalDetail::create([
+            'journal_id' => $journal->id,
+            'account_id' => $detail['account_id'],
+            'person' => $detail['person'] ?? null,
+            'debit' => $detail['debit'] ?? 0,
+            'credit' => $detail['credit'] ?? 0,
+            'description' => $detail['description'] ?? null,
         ]);
-
-        foreach ($request->details as $detail) {
-            AccountingJournalDetail::create([
-                'journal_id' => $journal->id,
-                'account_id' => $detail['account_id'],
-                'debit' => $detail['debit'] ?? 0,
-                'credit' => $detail['credit'] ?? 0,
-                'description' => $detail['description'] ?? null,
-            ]);
-        }
-
-        return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
     }
 
-    /**
-     * Display the specified resource.
-     */
+    // // 2. Kalau role Pemilik Lisensi, buat jurnal otomatis di PUSAT
+    // if ($user->hasRole('Pemilik Lisensi', 'Akuntan') && $cabangLicense) {
+    //     $pusatLicense = License::where('name', 'AHA Right Brain')->first();
+
+    //     if ($pusatLicense) {
+
+    //         /**
+    //          * Mapping akun dari Cabang -> Pusat
+    //          * Key = kode akun cabang
+    //          * Value = kode akun pusat
+    //          */
+    //         $mappingAkun = [
+    //             'K 0001' => 'D 0001', // contoh: Beban Perpanjangan Lisensi -> Pendapatan Perpanjangan Lisensi
+    //             'K 0002' => 'D 0002',
+    //             'K 0003' => 'D 0003',
+    //             'K 0004' => 'D 0004',
+    //         ];
+
+    //         // Ambil detail yang akunnya termasuk dalam mapping
+    //         $detailUntukPusat = collect($request->details)->filter(function ($detail) use ($mappingAkun) {
+    //             $akunCabang = AccountingAccount::find($detail['account_id']);
+    //             return $akunCabang && isset($mappingAkun[$akunCabang->account_code]);
+    //         });
+
+    //         if ($detailUntukPusat->isNotEmpty()) {
+    //             // Buat jurnal di PUSAT
+                
+
+    //             $pusatJournal = AccountingJournal::create([
+    //                 'license_id' => $pusatLicense->id,
+    //                 'journal_code' => 'JRN-' . strtoupper(Str::random(5)),
+    //                 'transaction_date' => $request->transaction_date,
+    //                 'description' => 'Pendapatan dari cabang ' . ($cabangLicense->name ?? 'Tidak diketahui'),
+    //                 'created_by' => null,
+    //             ]);
+
+    //             foreach ($detailUntukPusat as $detail) {
+    //                 $akunCabang = AccountingAccount::find($detail['account_id']);
+    //                 $kodeAkunPusat = $mappingAkun[$akunCabang->account_code];
+
+    //                 // Cari akun pusat berdasarkan kode mapping
+    //                 $akunPusat = AccountingAccount::where('license_id', $pusatLicense->id)
+    //                     ->where('account_code', $kodeAkunPusat)
+    //                     ->first();
+
+    //                 if ($akunPusat) {
+    //                     AccountingJournalDetail::create([
+    //                         'journal_id' => $pusatJournal->id,
+    //                         'account_id' => $akunPusat->id,
+    //                         'person' => $cabangLicense->id,
+    //                         'debit' => $detail['credit'] ?? 0,
+    //                         'credit' => $detail['debit'] ?? 0, 
+    //                         'description' => $detail['description'] ?? null,
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
+
+    if ($user->hasRole(['Pemilik Lisensi', 'Akuntan']) && $cabangLicense) {
+    $pusatLicense = License::where('name', 'AHA Right Brain')->first();
+
+    if ($pusatLicense) {
+        // Mapping akun dari Cabang -> Pusat
+        $mappingAkun = [
+            'K 0001' => 'D 0001',
+            'K 0002' => 'D 0002',
+            'K 0003' => 'D 0003',
+            'K 0004' => 'D 0004',
+            'K 0005' => 'D 0005',
+            'K 0006' => 'D 0006',
+            'K 0007' => 'D 0007',
+            'K 0008' => 'D 0008',
+            'K 0013' => 'D 0009',
+            'K 0014' => 'D 0010',
+            'K 0015' => 'D 0011',
+            'K 0016' => 'D 0012',
+            'K 0021' => 'D 0013',
+            'K 0022' => 'D 0014',
+            'K 0023' => 'D 0015',
+            'K 0024' => 'D 0016',
+            'K 0029' => 'D 0017',
+            'K 0031' => 'D 0018',
+            'K 0034' => 'D 0022',
+        ];
+
+        // Ambil semua ID account_id dari request
+        $accountIds = collect($request->details)->pluck('account_id')->unique();
+
+        // Load semua akun cabang sekali
+        $akunCabangList = AccountingAccount::whereIn('id', $accountIds)->get()->keyBy('id');
+
+        // Filter detail yang masuk mapping
+        $detailUntukPusat = collect($request->details)->filter(function ($detail) use ($akunCabangList, $mappingAkun) {
+            $akunCabang = $akunCabangList->get($detail['account_id']);
+            return $akunCabang && isset($mappingAkun[$akunCabang->account_code]);
+        });
+
+        if ($detailUntukPusat->isNotEmpty()) {
+            // Load akun pusat sesuai mapping
+            $kodeAkunPusatList = collect($mappingAkun)->values()->unique();
+            $akunPusatList = AccountingAccount::where('license_id', $pusatLicense->id)
+                ->whereIn('account_code', $kodeAkunPusatList)
+                ->get()
+                ->keyBy('account_code');
+
+            // Buat jurnal pusat
+            $pusatJournal = AccountingJournal::create([
+                'license_id' => $pusatLicense->id,
+                'journal_code' => 'JRN-' . strtoupper(Str::random(5)),
+                'transaction_date' => $request->transaction_date,
+                'description' => 'Pendapatan dari cabang ' . ($cabangLicense->name ?? 'Tidak diketahui'),
+                'created_by' => null,
+            ]);
+
+            // Siapkan data untuk batch insert
+            $detailInsert = [];
+
+            foreach ($detailUntukPusat as $detail) {
+                $akunCabang = $akunCabangList->get($detail['account_id']);
+                $kodeAkunPusat = $mappingAkun[$akunCabang->account_code] ?? null;
+
+                if ($kodeAkunPusat && isset($akunPusatList[$kodeAkunPusat])) {
+                    $detailInsert[] = [
+                        'id' => Str::uuid()->toString(),
+                        'journal_id' => $pusatJournal->id,
+                        'account_id' => $akunPusatList[$kodeAkunPusat]->id,
+                        'person' => $cabangLicense->id,
+                        'debit' => $detail['credit'] ?? 0,
+                        'credit' => $detail['debit'] ?? 0,
+                        'description' => $detail['description'] ?? null,
+                    ];
+                }
+            }
+
+            // Batch insert ke database
+            if (!empty($detailInsert)) {
+                AccountingJournalDetail::insert($detailInsert);
+            }
+        }
+    }
+}
+
+
+    return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
+}
+
+
+/**
+ * Mengecek apakah account_id adalah akun perpanjangan lisensi.
+ */
+private function isPerpanjanganAccount($accountId)
+{
+    return AccountingAccount::where('id', $accountId)
+        ->where('account_name', 'LIKE', '%Perpanjangan Sub%')
+        ->exists();
+}
+
+
     public function show(AccountingJournal $journal)
     {
         $journal->load(['details.account', 'creator']);
@@ -120,13 +332,16 @@ class AccountingJournalController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(AccountingJournal $journal)
-{
+ {
     $user = Auth::user();
+    $activeLicenseId = null;
 
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
-    } elseif ($user->hasRole('Akuntan')) {
-        $licenses = $user->employee?->licenses;
+    } else {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
 
         if (!$licenses || $licenses->isEmpty()) {
             abort(403, 'Lisensi tidak ditemukan.');
@@ -136,19 +351,51 @@ class AccountingJournalController extends Controller
         if (!$licenses->pluck('id')->contains($journal->license_id)) {
             abort(403, 'Anda tidak punya akses ke jurnal ini.');
         }
-    } else {
-        abort(403, 'Role tidak diizinkan.');
-    }
 
-    $accounts = AccountingAccount::where('is_active', true)->get();
+        $activeLicenseId = session('active_license_id');
+    } 
+    
 
-    return view('journals.edit', compact('journal', 'licenses', 'accounts'));
+     // Tentukan daftar license_id untuk query
+    $licenseIds = $activeLicenseId
+        ? [(string) $activeLicenseId]
+        : $licenses->pluck('id')->toArray();
+
+    $accounts = AccountingAccount::where('is_active', true)
+        ->when($activeLicenseId, fn($q) => $q->where('license_id', $activeLicenseId))
+        ->when(!$user->hasRole('Super-Admin'), fn($q) => $q->whereIn('license_id', $licenseIds))
+        ->orderBy('account_code')
+        ->get();
+
+    $students = Student::whereIn('license_id', $licenseIds)
+        ->select('id', 'fullname')
+        ->orderBy('fullname')
+        ->get();
+    
+    $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('employee_license.license_id', $licenseIds);
+        })
+        ->select('id', 'fullname')
+        ->orderBy('fullname')
+        ->get();
+    $licenseHolders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('licenses.id', $licenseIds);
+        })
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
+
+    $licenseList = License::where(function ($q) use ($licenseIds, $journal) {
+            $q->whereIn('id', $licenseIds)
+              ->orWhere('id', $journal->license_id);
+        })
+        ->select('id', 'name')
+        ->get();
+
+    return view('journals.edit', compact('journal', 'activeLicenseId', 'licenses', 'accounts', 'students', 'employees', 'licenseHolders', 'licenseList'));
 }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateAccountingJournalRequest $request, AccountingJournal $journal)
 {
       $user = Auth::user();
@@ -156,8 +403,10 @@ class AccountingJournalController extends Controller
     if ($user->hasRole('Super-Admin')) {
         // Boleh ganti license_id
         $journal->license_id = $request->license_id;
-    } elseif ($user->hasRole('Akuntan')) {
-        $licenses = $user->employee?->licenses;
+    } else {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
 
         if (!$licenses || $licenses->isEmpty()) {
             abort(403, 'Lisensi tidak ditemukan.');
@@ -204,72 +453,59 @@ class AccountingJournalController extends Controller
         return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
 
+
     public function report(Request $request)
 {
     $user = Auth::user();
-
-    $accountsQuery = AccountingAccount::where('is_parent', false)
-        ->where('is_active', true);
-
-    $licenses = [];
-    if ($user->hasRole('Super-Admin')) {
-        $licenses = License::all();
-    } elseif ($user->hasRole('Pemilik Lisensi')) {
-        $licenses = $user->licenses;
-
-        if (!$licenses || $licenses->count() === 0) {
-            abort(403, 'Lisensi tidak ditemukan.');
-        }
-
-        $accountsQuery->whereIn('license_id', $licenses->pluck('id'));
-
-
-    } elseif ($user->hasRole('Akuntan')) {
-        $licenses = $user->employee?->licenses;
-
-        if (!$licenses || $licenses->count() === 0) {
-            abort(403, 'Lisensi tidak ditemukan.');
-        }
-
-        $accountsQuery->whereIn('license_id', $licenses->pluck('id'));
-    } else {
-        abort(403, 'Role tidak diizinkan.');
-    }
-
-
-    $accounts = $accountsQuery->orderBy('account_code')->get();
-
     $accountId = $request->input('account_id');
     $startDate = $request->input('start_date');
     $endDate = $request->input('end_date');
     $licenseFilterId = $request->input('license_id');
 
-    $journals = AccountingJournal::with(['details.account', 'creator'])
-        ->when($startDate, function ($q) use ($startDate) {
-            $q->whereDate('transaction_date', '>=', $startDate);
-        })
-        ->when($endDate, function ($q) use ($endDate) {
-            $q->whereDate('transaction_date', '<=', $endDate);
-        })
-        ->when($accountId, function ($q) use ($accountId) {
-            $q->whereHas('details', function ($q2) use ($accountId) {
-                $q2->where('account_id', $accountId);
-            });
-        });
-
-    if ($licenseFilterId) {
-        if ($user->hasRole('Super-Admin') || $user->hasRole('Pemilik Lisensi')) {
-            // Super admin / pemilik bisa filter license mana pun
-            $journals->where('license_id', $licenseFilterId);
-        } elseif ($user->hasRole('Akuntan')) {
-            // Akuntan hanya boleh filter license miliknya
-            if (!$licenses->pluck('id')->contains($licenseFilterId)) {
-                abort(403, 'Lisensi tidak valid.');
-            }
-            $journals->where('license_id', $licenseFilterId);
+    // Ambil lisensi sesuai role
+    $licenses = collect();
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } elseif ($user->hasRole('Pemilik Lisensi')) {
+        $licenses = $user->licenses ?? collect();
+        if ($licenses->isEmpty()) {
+            abort(403, 'Lisensi tidak ditemukan.');
         }
     } elseif ($user->hasRole('Akuntan')) {
-        // Kalau tidak ada filter license_id → limit ke license miliknya
+        $licenses = $user->employee?->licenses ?? collect();
+        if ($licenses->isEmpty()) {
+            abort(403, 'Lisensi tidak ditemukan.');
+        }
+    } else {
+        abort(403, 'Role tidak diizinkan.');
+    }
+
+    // Filter akun
+    $accountsQuery = AccountingAccount::where('is_parent', false)->where('is_active', true);
+    if ($licenseFilterId) {
+        $accountsQuery->where('license_id', $licenseFilterId);
+    } else {
+        $accountsQuery->whereIn('license_id', $licenses->pluck('id'));
+    }
+    $accounts = $accountsQuery->orderBy('account_code')->get();
+
+    // Filter jurnal
+    $journals = AccountingJournal::with(['details.account', 'creator'])
+        ->when($startDate, fn($q) => $q->whereDate('transaction_date', '>=', $startDate))
+        ->when($endDate, fn($q) => $q->whereDate('transaction_date', '<=', $endDate))
+        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)));
+
+    if ($licenseFilterId) {
+        if (
+            $user->hasRole('Super-Admin') ||
+            ($user->hasRole('Pemilik Lisensi') && $licenses->pluck('id')->contains($licenseFilterId)) ||
+            ($user->hasRole('Akuntan') && $licenses->pluck('id')->contains($licenseFilterId))
+        ) {
+            $journals->where('license_id', $licenseFilterId);
+        } else {
+            abort(403, 'Lisensi tidak valid.');
+        }
+    } else {
         $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
@@ -286,10 +522,7 @@ class AccountingJournalController extends Controller
     ));
 }
 
-
-
-
-
-
-
 }
+
+
+

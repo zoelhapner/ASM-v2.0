@@ -132,7 +132,7 @@ public function getReadableLanguagesAttribute()
         'english_literacy',
         'english_proficiency',
         'photo',
-        
+        'identity_photo',
     ];
 
 }

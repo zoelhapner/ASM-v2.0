@@ -48,18 +48,18 @@
                                     <h5 class="mt-4 mb-3">Data Lisensi</h5>
                                     <div class="row mb-4">
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="license_id">ID Lisensi <code>*</code></label>
+                                        {{-- <div class="col-md-6 mb-3">
+                                            <label class="required" for="license_id">ID Lisensi :</label>
                                             <input type="text" class="form-control @error('license_id') is-invalid @enderror" id="license_id" name="license_id" value="{{ old('license_id') }}" required>
                                             @error('license_id')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
-                                        </div>
+                                        </div> --}}
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="license_type">Tipe Lisensi *:</label>
-                                                <select name="license_type" class="form-select" required>
-                                                <option value="">Pilih Data</option>
+                                            <label class="required" for="license_type">Tipe Lisensi :</label>
+                                                <select name="license_type" id="license_type" class="form-select" required>
+                                                <option value="">-- Pilih Tipe --</option>
                                                 <option value="FO">FO</option>
                                                 <option value="SO">SO</option>
                                                 <option value="LO">LO</option>
@@ -68,7 +68,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nama *</label>
+                                            <label class="required">Nama</label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" required>
                                             @error('name')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -76,7 +76,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Email *</label>
+                                            <label class="required">Email</label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -84,7 +84,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Alamat *</label>
+                                            <label class="required">Alamat</label>
                                             <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address') }}" required>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -92,9 +92,9 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Provinsi *</label>
+                                            <label class="required">Provinsi</label>
                                             <select name="province_id" id="province" class="form-select select2" required>
-                                                <option value="">-- Pilih Provinsi --</option>
+                                                <option value="province">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}">{{ $province->name }}</option>
                                                 @endforeach
@@ -102,35 +102,39 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kabupaten/Kota *</label>
+                                            <label class="required">Kabupaten/Kota</label>
                                             <select name="city_id" id="city" class="form-select select2" required>
                                                 <option value="city">-- Pilih Kota --</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kecamatan *</label>
-                                            <select name="district_id" id="district" class="form-select select2" required>
+                                            <label class="required">Kecamatan</label>
+                                            <select name="district_id" id="district" class="form-select select2 @error('district_id') is-invalid @enderror" required>
                                                 <option value="district">-- Pilih Kecamatan --</option>
                                             </select>
+                                            @error('district_id')
+                                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                            @enderror
+
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Desa *</label>
+                                            <label class="required">Desa</label>
                                             <select name="sub_district_id" id="sub_district" class="form-select select2" required>
                                                 <option value="sub_district">-- Pilih Desa --</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kode Pos *</label>
+                                            <label class="required">Kode Pos</label>
                                             <select name="postal_code_id" id="postal_code" class="form-select select2" required>
                                                 <option value="postal_code">-- Pilih Kode Pos --</option>
                                             </select>
                                         </div>
                                     
                                         <div class="col-md-6 mb-3">
-                                            <label>Telepon *</label>
+                                            <label class="required">Telepon</label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -139,23 +143,23 @@
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Tanggal Bergabung *</label>
-                                            <input type="date" name="join_date" class="form-control" required
+                                            <label class="required">Tanggal Bergabung</label>
+                                            <input type="date" id= "join_date" name="join_date" class="form-control" required
                                                 value="{{ old('join_date') }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Tanggal Expired *</label>
-                                            <input type="date" name="expired_date" class="form-control" required
+                                            <label class="required">Tanggal Expired</label>
+                                            <input type="date" id="expired_date" name="expired_date" class="form-control" required
                                                 value="{{ old('expired_date') }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nomor Aqad *</label>
+                                            <label class="required">Nomor Aqad</label>
                                             <input type="text" class="form-control @error('contract_agreement_number') is-invalid @enderror" id="contract_agreement_number" name="contract_agreement_number" value="{{ old('contract_agreement_number') }}" required>
                                             @error('contract_agreement_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -163,14 +167,27 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Status Lisensi *</label>
-                                            <select name="status" class="form-select" required>
-                                                <option value="">-- Pilih Status --</option>
-                                                <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
-                                                <option value="expired">Expired</option>
-                                            </select>
+                                            <label class="required" for="contract_document" class="form-label">Upload Dokumen Aqad (PDF)</label>
+                                            <input type="file" id="contract_document" name="contract_document" class="form-control" accept="application/pdf" required>
+                                            @error('contract_document')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
                                         </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label class="required" for="document_form" class="form-label">Upload Dokumen Form Lisensi (PDF)</label>
+                                            <input type="file" id="document_form" name="document_form" class="form-control" accept="application/pdf" required>
+                                            @error('document_form')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Status Lisensi</label>
+                                            <input type="text" class="form-control" value="{{ old('status', 'akan ditentukan otomatis') }}" disabled>
+                                            <small class="text-muted">Status akan ditentukan otomatis berdasarkan tanggal expired.</small>
+                                        </div>
+
 
                                     </div>
 
@@ -267,7 +284,7 @@
 
                                     {{-- Submit Button --}}
                                         <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="submit" class="btn btn-primary">Simpan</button>
                                         </div>
                                 </form>
                             </div>
@@ -289,6 +306,51 @@
                                         </script>
 
                                         <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const licenseTypeSelect = document.getElementById('license_type');
+    const wilayahFields = ['province', 'city', 'district', 'sub_district', 'postal_code'];
+    const lainFields = ['join_date', 'expired_date', 'contract_agreement_number', 'contract_document', 'document_form'];
+
+    function toggleWilayah() {
+        const isFO = licenseTypeSelect.value === 'FO';
+        wilayahFields.forEach(id => {
+            const field = document.getElementById(id);
+            if (isFO) {
+                field.removeAttribute('required');
+                field.setAttribute('disabled', 'disabled');
+                $(field).val('').trigger('change');
+            } else {
+                field.removeAttribute('disabled');
+                field.setAttribute('required', 'required');
+            }
+        });
+    }
+
+    function toggleLain() {
+        const isFO = licenseTypeSelect.value === 'FO';
+        lainFields.forEach(id => {
+            const field = document.getElementById(id);
+            if (isFO) {
+                field.removeAttribute('required');
+                field.setAttribute('disabled', 'disabled');
+                $(field).val('').trigger('change');
+            } else {
+                field.removeAttribute('disabled');
+                field.setAttribute('required', 'required');
+            }
+        });
+    }
+
+    licenseTypeSelect.addEventListener('change', function () {
+        toggleWilayah();
+        toggleLain();
+    });
+
+    // Jalankan awal
+    toggleWilayah();
+    toggleLain();
+});
+
                                             $('#province').change(function () {
                                             var id = $(this).val();
                                             $('#city').html('<option>Loading...</option>');
@@ -347,6 +409,7 @@
                                                 });
                                               }
                                          });
+                                    
                                         </script>
                                     @endpush
 

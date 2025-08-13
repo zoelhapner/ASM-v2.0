@@ -6,7 +6,7 @@
 
     <a href="{{ route("accounting.create") }}" class="btn btn-primary mb-3">Tambah Akun</a>
 
-    <table class="table table-bordered">
+    <table id="tableAccounts" class="table card-table table-vcenter text-nowrap" >
         <thead>
             <tr>
                 <th>Tipe Lisensi</th>
@@ -33,7 +33,7 @@
                     <td>{{ number_format($account->initial_balance, 2) }}</td>
                     <td>
                         @if ($account->parent)
-                            {{ $account->parent->account_name }}
+                            {{ optional($account->parent)->account_name ?? '-' }}
                         @else
                             -
                         @endif
@@ -46,12 +46,16 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('accounting.edit', $account->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                        <form action="{{ route('accounting.destroy', $account->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
-                                    @csrf
-                                    @method('DELETE')
-                                     <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
+                        <a href="{{ route('accounting.edit', $account->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                            <i class="ti ti-edit"></i>
+                        </a>
+                        <form action="{{ route('accounting.destroy', $account->id) }}" method="POST" style="display:inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus jurnal ini?')" title="Hapus">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @empty
@@ -61,5 +65,34 @@
             @endforelse
         </tbody>
     </table>
+
+  
 </div>
 @endsection
+
+{{-- @push('js')
+<script>
+    $(function () {
+        $('#tableAccounts').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{{ route("accounting.index") }}',
+            columns: [
+                { data: 'license_type', name: 'license.license_type' },
+                { data: 'license_name', name: 'license.name' },
+                { data: 'account_code', name: 'account_code' },
+                { data: 'account_name', name: 'account_name' },
+                { data: 'account_type', name: 'account_type' },
+                { data: 'balance_type', name: 'balance_type' },
+                { data: 'initial_balance', name: 'initial_balance' },
+                { data: 'parent_name', name: 'parent.account_name', orderable: false, searchable: false },
+                { data: 'status', name: 'is_active', orderable: false, searchable: false },
+                { data: 'action', name: 'action', orderable: false, searchable: false },
+            ]
+        });
+    });
+</script> 
+@endpush --}}
+
+
+

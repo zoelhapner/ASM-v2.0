@@ -21,6 +21,12 @@ class User extends Authenticatable
     public $incrementing = false;
     protected $keyType = 'string';
 
+    public function licenses()
+{
+    return $this->belongsToMany(License::class, 'license_user', 'user_id', 'license_id');
+}
+
+
     public function licenseholder()
 {
     return $this->hasOne(LicenseHolder::class);
@@ -36,12 +42,25 @@ public function student()
     return $this->hasOne(Student::class);
 }
 
-
-
-public function licenses()
+public function getActiveLicenseName()
 {
-    return $this->belongsToMany(License::class, 'license_user', 'user_id', 'license_id');
+    return $this->licenses->first()?->name ?? 'AHA Right Brain';
 }
+
+public function getNameAttribute()
+{
+    if ($this->employee && is_string($this->employee->fullname ?? null)) {
+        return $this->employee->fullname;
+    }
+
+    return $this->attributes['name'] ?? 'User';
+}
+
+
+
+
+
+
 
     /**
      * The attributes that are mass assignable.

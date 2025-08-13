@@ -46,12 +46,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                  Pemilik Lisensi
                             </p>
                         </div>
                         <div class="table-responsive">
-                            <table id="tableLicenseHolders" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                            <table id="tableLicenseHolders" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>ID Lisensi</th>
@@ -97,6 +97,12 @@
     <script>
         $(function() {
             const table = $('#tableLicenseHolders').DataTable({
+                scrollY: '500px',
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
                 serverSide: true,
                 processing: true,
                 ajax: '{{ route("license_holders.index") }}',

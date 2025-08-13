@@ -18,7 +18,7 @@
                 <th>Kode</th>
                 <th>Tanggal</th>
                 <th>Deskripsi</th>
-                <th>Dibuat Oleh</th>
+                <th>PIC</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -30,16 +30,35 @@
                     <td>{{ $journal->journal_code }}</td>
                     <td>{{ $journal->transaction_date }}</td>
                     <td>{{ $journal->description }}</td>
-                    <td>{{ $journal->creator->name ?? '-' }}</td>
                     <td>
-                        <a href="{{ route('journals.show', $journal->id) }}" class="btn btn-info btn-sm">Detail</a>
-                        <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('journals.destroy', $journal->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus jurnal ini?')">Hapus</button>
-                        </form>
+                            @if($journal->creator)
+                                {{ $journal->creator->name }}
+                            @else
+                                <small class="fst-italic text-muted">dibuat oleh sistem</small>
+                            @endif
                     </td>
+                    <td>
+                        @can('jurnal.lihat')
+                            <a href="{{ route('journals.show', $journal->id) }}" class="btn btn-info btn-sm" title="Detail">
+                                <i class="ti ti-eye"></i>
+                            </a>
+                        @endcan
+                        @can('jurnal.ubah')
+                            <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                <i class="ti ti-edit"></i>
+                            </a>
+                        @endcan
+                        @can('jurnal.hapus')
+                            <form action="{{ route('journals.destroy', $journal->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus jurnal ini?')" title="Hapus">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </form>
+                        @endcan
+                    </td>
+
                 </tr>
             @empty
                 <tr><td colspan="5">Belum ada jurnal.</td></tr>

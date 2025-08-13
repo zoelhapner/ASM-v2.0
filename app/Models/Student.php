@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Carbon;
 
 class Student extends Model
 {
@@ -49,6 +50,51 @@ class Student extends Model
     return $this->belongsTo(Religion::class, 'religion_id');
 }
 
+    public function bills()
+{
+    return $this->hasMany(StudentBill::class);
+}
+
+    public function books()
+{
+    return $this->hasMany(StudentBook::class);
+}
+
+ public function getBirthDateFormattedAttribute()
+    {
+        return $this->birth_date ? Carbon::parse($this->birth_date)->format('d/m/Y') : '-';
+    }
+
+    public function getRegisteredDateFormattedAttribute()
+    {
+        return $this->registered_date ? Carbon::parse($this->registered_date)->format('d/m/Y') : '-';
+    }
+
+     public function getReadableGenderAttribute()
+    {
+    return [
+        1 => 'Laki - Laki',
+        2 => 'Perempuan',
+    ][$this->gender] ?? 'Tidak diketahui';
+    }
+
+       public function getReadableWhereKnowAttribute()
+    {
+    return [
+        1 => 'Teman/Keluarga',
+        2 => 'Website AHA',
+        3 => 'Instagram',
+        4 => 'Tiktok',
+        5 => 'Facebook',
+        6 => 'Youtube',
+        7 => 'Whatsapp',
+        8 => 'Banner',
+        9 => 'Kantor AHA',
+    ][$this->where_know] ?? 'Tidak diketahui';
+    }
+
+
+
     use HasFactory, HasUuids;
 
     protected $keyType = 'string';
@@ -82,6 +128,8 @@ class Student extends Model
         'grade',
         'status',
         'photo',
+        'registered_date',
+        'where_know',
     ];
 
 }

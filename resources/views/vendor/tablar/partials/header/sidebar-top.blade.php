@@ -9,8 +9,49 @@
 
         <div class="navbar-nav flex-row order-md-last">
             <div class="d-none d-md-flex">
+                @include('tablar::partials.header.notifications')
                 @include('tablar::partials.header.theme-mode')
-                @include('tablar::partials.header.top-right')
+                 {{-- Tambahkan dropdown switch license di sini --}}
+                @role('Pemilik Lisensi|Karyawan|Akuntan') {{-- selain Super Admin --}}
+                    @php
+                        $user = Auth::user();
+
+                        if ($user->hasRole('Pemilik Lisensi')) {
+                            $licenses = \App\Models\License::whereHas('owners', fn($q) => $q->where('users.id', $user->id))->get();
+                        } elseif ($user->hasRole(['Karyawan', 'Akuntan'])) {
+                            $licenses = $user->employee->licenses ?? collect();
+                        } else {
+                            $licenses = collect(); // Kosongkan untuk selain itu
+                        }
+
+                        $activeLicense = session('active_license_name', 'Pilih Lisensi');
+                    @endphp
+
+                    <div class="nav-item dropdown me-2">
+                        <a href="#" class="nav-link d-flex lh-1 text-reset p-2" data-bs-toggle="dropdown" aria-label="Switch License">
+                            <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                <i class="ti ti-building"></i>
+                            </span>
+                            <div class="d-none d-xl-block ps-2">
+                                <div>{{ $activeLicense }}</div>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            @forelse($licenses as $license)
+                                <a class="dropdown-item {{ session('active_license_id') == $license->id ? 'active fw-bold text-primary' : '' }}" 
+                                href="{{ route('switch.license', $license->id) }}">
+                                    @if(session('active_license_id') == $license->id)
+                                        <i class="ti ti-check me-1"></i>
+                                    @endif
+                                    {{ $license->name }}
+                                </a>
+                            @empty
+                                <span class="dropdown-item text-muted">Tidak ada lisensi</span>
+                            @endforelse
+                        </div>
+                    </div>
+                @endrole
+                @include('tablar::partials.header.top-right')      
             </div>
             
         </div>

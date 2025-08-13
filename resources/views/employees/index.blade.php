@@ -17,21 +17,22 @@
                 <!-- Page title actions -->
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
-                 @can('pemilik-lisensi.tambah')       
-                  <span class="d-none d-sm-inline">
-                        <a href="{{ route("employees.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                 stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <line x1="12" y1="5" x2="12" y2="19"/>
-                                <line x1="5" y1="12" x2="19" y2="12"/>
-                            </svg>
-                            Tambah Data Karyawan
-                        </a>
-                 </span>
-                 @endcan
+                    @can('karyawan.tambah')
+                        <span class="d-none d-sm-inline">
+                            <a href="{{ route("employees.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                    stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Tambah Data Karyawan
+                            </a>
+                        </span>
+                    @endcan
+                 
                         
                     </div>
                 </div>
@@ -84,6 +85,8 @@
                                         <th>Bonus</th>
                                         <th>THR</th>
                                         <th>Surat Perjanjian Kerja</th>
+                                        <th>Sertifikat Instruktur</th>
+                                        <th>Tanggal Expired Sertifikat</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -100,6 +103,12 @@
     <script>
         $(function() {
             const table = $('#tableEmployees').DataTable({
+                scrollY: '500px',
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
                 serverSide: true,
                 processing: true,
                 ajax: '{{ route("employees.index") }}',
@@ -133,17 +142,11 @@
                     { data: 'deduction', name: 'employees.deduction' },  
                     { data: 'bonus', name: 'employees.bonus' },  
                     { data: 'thr', name: 'employees.thr' },  
-                    { data: 'contract_letter_file', name: 'employees.contract_letter_file' },  
+                    { data: 'contract_letter_file', name: 'employees.contract_letter_file' },
+                    { data: 'instructure_certificate', name: 'employees.instructure_certificate' }, 
+                    { data: 'expired_date_certificate', name: 'employees.expired_date_certificate' },  
                     { data: 'action', name: 'action', orderable: false, searchable: false }  
                 ],
-
-order: [[2, 'asc']], // misal urutkan nama license_holder
-columnDefs: [
-    { width: '50px', targets: 0 },
-    { width: '150px', targets: 2 },
-],
-
-    
             });
 
             // Delete user functionally
@@ -197,21 +200,8 @@ columnDefs: [
                 }
             });
             });
-
-
-           
+            
         });
     </script>
 
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Sukses!',
-            text: '{{ session('success') }}',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    </script>
-    @endif
 @endpush

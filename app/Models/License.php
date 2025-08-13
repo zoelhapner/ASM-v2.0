@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Config;
 use App\Traits\HasUuid;
+use App\Models\AccountingAccount;
+use Illuminate\Support\Str;
 
 class License extends Model
 {
@@ -58,6 +61,32 @@ public function students()
         return $this->hasMany(AccountingJournal::class);
     }
 
+    public function notifications()
+{
+    return $this->hasMany(LicenseNotification::class);
+}
+
+public function pusatUser()
+{
+    // Misal ambil Super-Admin pertama
+    return \App\Models\License::where('name', 'AHA Right Brain')->first();
+    
+    // Kalau mau spesifik ke email tertentu, pakai ini:
+    // return \App\Models\User::where('email', 'admin@pusat.com')->first();
+    
+    // Kalau mau spesifik ke ID tertentu, pakai ini:
+    // return \App\Models\User::find(1);
+}
+
+
+    public function getDisplayNameAttribute()
+{
+    return is_array($this->name)
+        ? $this->name['id'] ?? reset($this->name)
+        : $this->name;
+}
+
+
 
 
     // Di model License
@@ -83,6 +112,8 @@ public function students()
         'join_date',
         'expired_date',
         'contract_agreement_number',
+        'contract_document',
+        'document_form',
         'status',
         'building_type',
         'building_status',
@@ -98,4 +129,25 @@ public function students()
         'landing_page_student_registration',
     ];
 
+    protected static function booted()
+{
+    static::created(function ($license) {
+        $defaultAccounts = Config::get('accounting_defaults.accounts');
+
+        foreach ($defaultAccounts as $acc) {
+            AccountingAccount::create([
+                'id' => Str::uuid(),
+                'license_id' => $license->id,
+                'account_type' => $acc['account_type'] ?? null,
+                'account_code' => $acc['account_code'] ?? null,
+                'account_name' => $acc['account_name'] ?? null,
+                'person_type' => $acc['person_type'] ?? null,           
+                'is_active' => true,
+                'is_parent' => false,
+                'initial_balance' => 0,
+                'balance_type' => $acc['balance_type'] ?? null,
+            ]);
+        }
+    });
+}
 }

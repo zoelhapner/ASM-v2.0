@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+     <link rel="icon" href="{{ asset('ahasquare.png') }}" type="image/png">
+   
 
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
@@ -17,10 +19,10 @@
 
     <!-- CSS/JS files -->
     @if(config('tablar','vite'))
-        @vite('resources/js/app.js')
+        @vite(['resources/scss/bootstrap-override.scss', 'resources/js/app.js'])
     @endif
     <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 
 
     {{-- Livewire Styles --}}
@@ -31,7 +33,8 @@
     {{-- Custom Stylesheets (post Tablar) --}}
     @yield('tablar_css')
 
-    <link href="https://cdn.datatables.net/v/bs5/dt-2.3.1/datatables.min.css" rel="stylesheet" integrity="sha384-rcK/Hw0a8czqNV8XiNNbA2kqXBypz/reTTu9ewJiCYQRES16Xpl47dKudYItkU7M" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.3.2/fc-5.0.4/fh-4.0.3/datatables.min.css"/>
     <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />

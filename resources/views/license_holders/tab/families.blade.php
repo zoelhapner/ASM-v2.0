@@ -33,11 +33,15 @@
                                 <td>{{ $fam->last_education_level }}</td>
                                 <td>{{ $fam->institution_name }}</td>
                                 <td>
-                                <a href="{{ route('license_holder_families.edit', $fam->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('license_holder_families.edit', $fam->id) }}" class="btn btn-sm btn-warning" title="Ubah">
+                                    <i class="ti ti-edit"></i>
+                                </a>
                                 <form action="{{ route('license_holder_families.destroy', $fam->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
                                     @csrf
                                     @method('DELETE')
-                                     <button class="btn btn-sm btn-danger">Hapus</button>
+                                     <button class="btn btn-sm btn-danger" title="Hapus">
+                                        <i class="ti ti-trash"></i>
+                                     </button>
                                 </form>
                              </td>
                             </tr>
@@ -48,14 +52,15 @@
         @else
             <p class="text-muted">Belum ada data keluarga.</p>
         @endif
-    </div>
+    
 
-    <div class="mt-4">
-            <a href="{{ route('license_holder_families.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
-                Tambah Data
-            </a>
-            <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                Back to List
-            </a>
+        <div class="mt-4">
+                <a href="{{ route('license_holder_families.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
+                    Tambah Data
+                </a>
+                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
+                    Back to List
+                </a>
+        </div>
     </div>
 </div>

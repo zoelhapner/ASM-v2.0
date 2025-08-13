@@ -16,6 +16,13 @@ class Employee extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $casts = [
+        'position' => 'array',
+        'department' => 'array',
+        'unit' => 'array',
+    ];
+
+
     protected $fillable = [
         'nik',
         'user_id',
@@ -45,7 +52,10 @@ class Employee extends Model
         'bonus',
         'thr',
         'contract_letter_file',
+        'instructure_certificate',
         'photo',
+        'identity_photo',
+        'expired_date_certificate',
     ];
 
     public function user()

@@ -63,7 +63,7 @@
 </div>
 @endsection
 
-@section('scripts')
+@section('js')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     $('.list-group-item').click(function (e) {
@@ -99,23 +99,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 </script>
-
-
-@if (session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: '{{ session('success') }}',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-        });
-    });
-</script>
-@endif
 
 <script>
 function confirmDelete(event) {

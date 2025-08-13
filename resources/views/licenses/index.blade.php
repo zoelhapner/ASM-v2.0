@@ -20,7 +20,7 @@
                 @can('lisensi.tambah')
                   <span class="d-none d-sm-inline">
                   
-                        <a href="{{ route("licenses.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href="{{ route("licenses.create") }}" class="btn btn-primary text-white d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -46,17 +46,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.4rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                  Lisensi
                             </p>
                         </div>
-                        <div class="table-responsive">
-                            <table id="tableLicenses" class="table card-table table-vcenter text-nowrap" >
+                        <div class="table-wrapper">
+                            <table id="tableLicenses" class="table nowrap w-100" >
                                 <thead>
                                     <tr>
-                                        <th class="w-1">Id Lisensi</th>
-                                        <th>Tipe Lisensi</th>
-                                        <th>Nama</th>
+                                        <th class="fixed-column">Id Lisensi</th>
+                                        <th class="fixed-column">Tipe Lisensi</th>
+                                        <th class="fixed-column">Nama</th>
                                         <th>Email</th>
                                         <th>Alamat</th>
                                         <th>Provinsi</th>
@@ -68,6 +68,8 @@
                                         <th>Tanggal Bergabung</th>
                                         <th>Expired date</th>
                                         <th>Nomor Aqad</th>
+                                        <th>Dokumen Aqad</th>
+                                        <th>Dokumen Form Lisensi</th>
                                         <th>Status</th>
                                         <th>Tipe Bangunan</th>
                                         <th>Status Bangunan</th>
@@ -99,8 +101,14 @@
     <script>
         $(function() {
             const table = $('#tableLicenses').DataTable({
-                serverSide: true,
+                scrollY: '500px',
+                scrollX: true,
+                scrollCollapse: true,
+                fixedColumns: {
+                    leftColumns: 3
+                },
                 processing: true,
+                serverSide: true, 
                 ajax: '{{ route("licenses.index") }}',
                 columns: [
                     { data: 'license_id', name: 'license_id' },
@@ -117,6 +125,8 @@
                     { data: 'join_date', name: 'join_date' },
                     { data: 'expired_date', name: 'expired_date' },
                     { data: 'contract_agreement_number', name: 'contract_agreement_number'},
+                    { data: 'contract_document', name: 'contract_document'},
+                    { data: 'document_form', name: 'document_form'},
                     { data: 'status', name: 'status' },
                     { data: 'building_type', name: 'building_type' },
                     { data: 'building_status', name: 'building_status'},
@@ -191,16 +201,4 @@
            
         });
     </script>
-
-    @if (session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Sukses!',
-            text: '{{ session('success') }}',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    </script>
-    @endif
 @endpush

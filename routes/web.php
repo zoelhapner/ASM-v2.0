@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AccountingAccountController;
@@ -20,14 +21,12 @@ use App\Http\Controllers\EmployeeFamilyMemberController;
 use App\Http\Controllers\StudentsController;
 use App\Http\Controllers\LicenseImportController;
 use App\Http\Controllers\UserImportController;
-
-
-
-
-
+use App\Http\Controllers\LicenseNotificationController;
+use App\Http\Controllers\KasController;
+use App\Models\License;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('tablar::auth.login');
 });
 
 require __DIR__.'/auth.php';
@@ -55,6 +54,29 @@ Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function 
     Route::resource('/licenses', LicensesController::class)->only(['index', 'show', 'destroy']);
 });
 
+Route::get('/switch-license/{license}', function ($licenseId) {
+    $license = License::findOrFail($licenseId);
+    $user = auth()->user();
+
+    $isAuthorized = match (true) {
+        $user->hasRole('Super-Admin') => true,
+        $user->hasRole('Pemilik Lisensi') => $license->owners()->where('users.id', $user->id)->exists(),
+        $user->hasRole(['Karyawan', 'Akuntan']) => $user->employee && $user->employee->licenses()->where('licenses.id', $license->id)->exists(),
+        default => false,
+    };
+
+    abort_unless($isAuthorized, 403);
+
+    session([
+        'active_license_id' => $license->id,
+        'active_license_name' => $license->name,
+    ]);
+
+    return back()->with('success', 'Lisensi aktif telah diganti ke ' . $license->name);
+})->name('switch.license')->middleware('auth');
+
+
+
 Route::middleware(['auth', 'permission:pemilik-lisensi.tambah'])->group(function () {
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['create', 'store']);
 });
@@ -67,23 +89,81 @@ Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function 
     Route::resource('/license_holders', LicenseHoldersController::class)->only(['index', 'show', 'destroy']);
 });
 
-Route::middleware(['auth', 'role:Super-Admin|Karyawan'])->group(function () {
-    route::resource('/employees', EmployeeController::class);
+Route::middleware(['auth', 'permission:karyawan.tambah'])->group(function () {
+    Route::resource('/employees', EmployeeController::class)->only(['create', 'store']);
 });
 
-Route::resource('students', StudentsController::class);
+Route::middleware(['auth', 'permission:karyawan.ubah'])->group(function () {
+    Route::resource('/employees', EmployeeController::class)->only(['edit', 'update']);
+});
 
-Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
+Route::middleware(['auth', 'role:Super-Admin|Karyawan|Pemilik Lisensi|Akuntan'])->group(function () {
+    route::resource('/employees', EmployeeController::class)->only(['index', 'show', 'destroy']);
+});
+
+Route::get('/employees/generate-nik/{licenseId}', [EmployeeController::class, 'generateNikAjax']);
+
+Route::get('/students/generate-nis/{licenseId}', [StudentsController::class, 'generateNisAjax']);
+
+
+
+Route::middleware(['auth', 'permission:siswa.tambah'])->group(function () {
+    Route::resource('/students', StudentsController::class)->only(['create', 'store']);
+});
+
+Route::middleware(['auth', 'permission:siswa.ubah'])->group(function () {
+    Route::resource('/students', StudentsController::class)->only(['edit', 'update']);
+});
+
+Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi|Akuntan|Siswa'])->group(function () {
+    Route::resource('/students', StudentsController::class)->only(['index', 'show', 'destroy']);
+});
+
+
+
+Route::middleware(['auth', 'role:Super-Admin|Akuntan|Pemilik Lisensi'])
         ->resource('accounting', AccountingAccountController::class)
          ->parameters(['accounting' => 'account']);
 
 Route::get('/journals/report', [AccountingJournalController::class, 'report'])
     ->name('journals.report')
-    ->middleware(['role:Super-Admin|Akuntan']);
+    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
 
-Route::middleware(['role:Super-Admin|Akuntan'])->group(function () {
+Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
     Route::resource('journals', AccountingJournalController::class);
 });
+
+Route::get('/accounts/by-license/{id}', function ($id) {
+    $user = Auth::user();
+
+    $licenseIds = $user->hasRole('Super-Admin')
+        ? License::pluck('id')
+        : ($user->licenses ?? $user->employee?->licenses ?? collect())->pluck('id');
+
+    // Ubah semua ke string agar perbandingan sukses
+    $licenseIds = $licenseIds->map(fn($i) => (string) $i);
+
+    if (! $licenseIds->contains((string) $id)) {
+        abort(403, 'Akses ditolak.');
+    }
+
+    $accounts = \App\Models\AccountingAccount::where('license_id', $id)
+        ->where('is_parent', false)
+        ->where('is_active', true)
+        ->orderBy('account_code')
+        ->get();
+
+    return response()->json($accounts);
+})->name('accounts.byLicense');
+
+
+Route::patch('/notifications/{notification}/read', [LicenseNotificationController::class, 'markAsRead'])->name('notifications.read');
+
+Route::post('/notifications/read-all', [LicenseNotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
+
+
+
+
 
 Route::get('/periods/close', [AccountingClosingController::class, 'showCloseForm'])->name('periods.close.form');
 Route::post('/periods/close', [AccountingClosingController::class, 'close'])->name('periods.close');
@@ -120,6 +200,11 @@ Route::get('/employees/{id}/families', [EmployeeController::class, 'showFams'])-
 route::resource('/employee_educations', EmployeeEducationController::class);
 route::resource('/employee_workers', EmployeeWorkExperienceController::class);
 route::resource('/employee_families', EmployeeFamilyMemberController::class);
+
+Route::get('/students/{id}/profile', [StudentsController::class, 'showProfile'])->name('students.profile');
+Route::get('/students/{id}/educations', [StudentsController::class, 'showTab'])->name('students.educations');
+
+Route::get('/kas/export/excel', [KasController::class, 'exportExcel'])->name('kas.export.excel');
 
 
 Route::get('/api/cities/{province_id}', function ($province_id) {

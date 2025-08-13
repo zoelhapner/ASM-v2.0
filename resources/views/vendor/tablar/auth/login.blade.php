@@ -12,11 +12,11 @@
 
         <div class="card card-md">
             <div class="card-body">
-                <p class="text-center mb-4" style="font-size: 1.4rem; font-weight: 400; font-family: 'Figtree', sans-serif;">
+                <p class="text-center mb-4">
                     Selamat datang di AHA Right Brain
                 </p>
 
-                <form class="font-normal" style="font-weight: 400; font-family: 'Figtree', sans-serif;" action="{{route('login')}}" method="post" autocomplete="off" novalidate>
+                <form class="font-normal" action="{{route('login')}}" method="post" autocomplete="off" novalidate>
                     @csrf
 
                     <div class="mb-3">

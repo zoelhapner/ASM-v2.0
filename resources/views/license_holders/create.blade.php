@@ -35,13 +35,13 @@
                 <div class="col-12">
                     <div class="card">
                                     <div class="card-header">
-                                        <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                                        <p class="text-center mb-4">
                                             Tambah Data Pemilik
                                         </p>
                                     </div>
 
                             <div class="card-body">
-                                <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('license_holders.store') }}" method="POST" enctype="multipart/form-data">
+                                <form class="font-normal" action="{{ route('license_holders.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     {{-- SECTION 1: Informasi Lead --}}
@@ -49,7 +49,7 @@
                                     <div class="row mb-4">
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nama Pemilik *</label>
+                                            <label class="required">Nama Pemilik</label>
                                             <input type="text" class="form-control @error('fullname') is-invalid @enderror" id="fullname" name="fullname" value="{{ old('fullname') }}" required>
                                             @error('fullname')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -57,7 +57,7 @@
                                         </div>
 
                                          <div class="col-md-6 mb-3">
-                                            <label>Nama Panggilan *</label>
+                                            <label class="required">Nama Panggilan</label>
                                             <input type="text" class="form-control @error('nickname') is-invalid @enderror" id="nickname" name="nickname" value="{{ old('nickname') }}" required>
                                             @error('nickname')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -65,7 +65,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Jenis Kelamin *</label>
+                                            <label class="required">Jenis Kelamin</label>
                                             <select name="gender" class="form-select" required>
                                                 <option value="">-- Pilih Jenis Kelamin --</option>
                                                 <option value="1">Laki - Laki</option>
@@ -74,7 +74,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="email">Email: *</label>
+                                            <label class="required" for="email">Email:</label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -82,7 +82,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Pilih Lisensi *</label>
+                                            <label class="required">Pilih Lisensi</label>
                                             <select name="licenses[]" class="form-control select2" multiple required>
                                                 @foreach($licenses as $license)
                                                     <option value="{{ $license->id }}">{{ $license->name }}</option>
@@ -91,7 +91,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label for="religion_id">Agama *</label>
+                                            <label class="required" for="religion_id">Agama</label>
                                             <select name="religion_id" class="form-control" required>
                                                 <option value="">-- Pilih Agama --</option>
                                                 @foreach($religions as $religion)
@@ -103,7 +103,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Nomor KTP *</label>
+                                            <label class="required">Nomor KTP</label>
                                             <input type="number" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number" name="identity_number" maxlength="16" value="{{ old('identity_number') }}" required>
                                             @error('identity_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -119,7 +119,7 @@
                                         </div>
                                     
                                         <div class="col-md-6 mb-3">
-                                            <label>Tempat Lahir *</label>
+                                            <label class="required">Tempat Lahir</label>
                                             <input type="text" class="form-control @error('birth_place') is-invalid @enderror" id="birth_place" name="birth_place" value="{{ old('birth_place') }}" required>
                                             @error('birth_place')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -128,14 +128,14 @@
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Tanggal Lahir *</label>
+                                            <label class="required">Tanggal Lahir</label>
                                             <input type="date" name="birth_date" class="form-control" required
                                                 value="{{ old('birth_date') }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Alamat *</label>
+                                            <label class="required">Alamat</label>
                                             <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address') }}" required>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -143,7 +143,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Provinsi *</label>
+                                            <label class="required">Provinsi</label>
                                             <select name="province_id" id="province" class="form-select select2" required>
                                                 <option value="">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
@@ -153,28 +153,28 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kabupaten/Kota *</label>
+                                            <label class="required">Kabupaten/Kota</label>
                                             <select name="city_id" id="city" class="form-select select2" required>
                                                 <option value="city">-- Pilih Kota --</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kecamatan *</label>
+                                            <label class="required">Kecamatan</label>
                                             <select name="district_id" id="district" class="form-select select2" required>
                                                 <option value="district">-- Pilih Kecamatan --</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Desa *</label>
+                                            <label class="required">Desa</label>
                                             <select name="sub_district_id" id="sub_district" class="form-select select2" required>
                                                 <option value="sub_district">-- Pilih Desa --</option>
                                             </select>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Kode Pos *</label>
+                                            <label class="required">Kode Pos</label>
                                             <select name="postal_code_id" id="postal_code" class="form-select select2" required>
                                                 <option value="postal_code">-- Pilih Desa --</option>
                                             </select>
@@ -184,7 +184,7 @@
                                        
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Telepon *</label>
+                                            <label class="required">Telepon</label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -192,17 +192,25 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Hobi *</label>
+                                            <label class="required">Hobi</label>
                                             <input type="text" class="form-control @error('hobby') is-invalid @enderror" id="hobby" name="hobby" value="{{ old('hobby') }}" required>
                                             @error('hobby')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                         <div class="col-md-6 mb-3">
-                                            <label for="photo" class="form-label">Upload Photo</label>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="photo" class="form-label">Upload Foto Diri</label>
                                             <input type="file" name="photo" class="form-control" accept="image/*">
                                             @error('photo')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label for="photo" class="form-label required">Upload KTP</label>
+                                            <input type="file" name="identity_photo" class="form-control" accept="image/*">
+                                            @error('identity_photo')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
@@ -213,8 +221,8 @@
                                     <h2 class="mt-4 mb-3">Data Pernikahan</h2>
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
-                                            <label>Status Pernikahan *</label>
-                                            <select name="marital_status" class="form-control">
+                                            <label class="required">Status Pernikahan :</label>
+                                            <select name="marital_status" class="form-select" required>
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lajang</option>
                                                 <option value="2">Menikah</option>

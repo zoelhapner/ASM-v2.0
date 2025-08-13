@@ -37,13 +37,17 @@
                                 <td>{{ $work->skills_used }}</td>
                                 <td>{{ $work->job_description }}</td>
                                 <td>
-                                <a href="{{ route('license_holder_workers.edit', $work->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('license_holder_workers.destroy', $work->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
-                                    @csrf
-                                    @method('DELETE')
-                                     <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                             </td>
+                                    <a href="{{ route('license_holder_workers.edit', $work->id) }}" class="btn btn-sm btn-warning" title="Ubah">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                    <form action="{{ route('license_holder_workers.destroy', $work->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" title="Hapus">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -52,14 +56,14 @@
         @else
             <p class="text-muted">Belum ada data pekerjaan.</p>
         @endif
-    </div>
 
-    <div class="mt-4">
-            <a href="{{ route('license_holder_workers.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
-                Tambah Data
-            </a>
-            <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                Back to List
-            </a>
+        <div class="mt-4">
+                <a href="{{ route('license_holder_workers.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
+                    Tambah Data
+                </a>
+                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
+                    Back to List
+                </a>
+        </div>
     </div>
 </div>

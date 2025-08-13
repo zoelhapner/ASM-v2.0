@@ -6,8 +6,13 @@
                 {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
             </span>
             <div class="d-none d-xl-block ps-2">
-                <div>{{Auth()->user()->name}}</div>
-                {{ optional(auth()->user()->employee)->position ?? auth()->user()->getRoleNames()->first() }}
+                @php
+                    $positions = optional(auth()->user()->employee)->position;
+                    $positionText = is_array($positions) ? implode(', ', $positions) : ($positions ?? auth()->user()->getRoleNames()->first());
+                @endphp
+
+                <div>{{ auth()->user()->name }}</div>
+                {{ $positionText }}
             </div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

@@ -12,7 +12,7 @@
                                         <th>Tipe Lisensi</th>
                                         <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Alamat</th>
+                                        <th class="address-column">Alamat</th>
                                         <th>Provinsi</th>
                                         <th>Kabupaten/Kota</th>
                                         <th>Kecamatan</th>
@@ -113,21 +113,23 @@
                                         <i class="ti ti-minus text-muted"></i>
                                     @endif
                                 </td>
-
-                                
                                 <td>
-                                @if (auth()->user()->can('pemilik-lisensi.ubah')) 
-                                <a href="{{ route('license_holder_educations.edit', $license->id) }}" class="btn btn-sm btn-warning">Edit</a> 
-                                @endif
-                                
-                                @unless (auth()->user()->hasRole('Pemilik Lisensi')) 
-                                <form action="{{ route('license_holder_educations.destroy', $license->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
-                                    @csrf
-                                    @method('DELETE')
-                                     <button class="btn btn-sm btn-danger">Hapus</button>
-                                </form>
-                                
-                                @endunless
+                                    @if (auth()->user()->can('pemilik-lisensi.ubah')) 
+                                    <a href="{{ route('license_holder_educations.edit', $license->id) }}" class="btn btn-sm btn-warning" title="Ubah">
+                                        <i class="ti ti-edit"></i> 
+                                    </a>
+                                    @endif
+                                    
+                                    @unless (auth()->user()->hasRole('Pemilik Lisensi')) 
+                                    <form action="{{ route('license_holder_educations.destroy', $license->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger" title="Hapus">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    @endunless
                                 </td>
                             </tr>
                         @endforeach
@@ -137,13 +139,11 @@
         @else
             <p class="text-muted">Belum ada data pendidikan.</p>
         @endif
-    </div>
-
-   
-
-    <div class="mt-4">
-            <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                Back to List
-            </a>
+    
+        <div class="mt-4">
+                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
+                    Back to List
+                </a>
+        </div>
     </div>
 </div>

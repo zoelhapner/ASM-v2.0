@@ -10,6 +10,15 @@ class AccountingAccount extends Model
     use HasUuid;
 
     protected $table = 'accounting_accounts';
+    protected $casts = [
+        'account_type' => 'string',
+        'balance_type' => 'string',
+        'is_active' => 'boolean',
+        'is_parent' => 'boolean',
+        'initial_balance' => 'decimal:2',
+        'person_type' => 'string',
+    ];
+
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false;
@@ -25,11 +34,12 @@ class AccountingAccount extends Model
         'balance_type',
         'initial_balance',
         'is_active',
+        'person_type',
     ];
 
           public function license()
     {
-        return $this->belongsTo(License::class);
+        return $this->belongsTo(License::class, 'license_id', 'id');
     }
 
       public function parent()

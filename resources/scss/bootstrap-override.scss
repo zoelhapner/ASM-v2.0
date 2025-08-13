@@ -1,0 +1,23 @@
+// 1. Variabel warna AHA
+$aha-red:    #db2827;
+$aha-yellow: #fed508;
+$aha-pink:   #ff6666;
+$aha-gold:   #ffc100;
+$aha-green:  #abcd52;
+$aha-blue:   #1cb9ff;
+$aha-white:  #ffffff;
+$aha-black:  #000000;
+$aha-grey:   #7b7b7b;
+
+// 2. Override variabel Bootstrap
+$primary:   $aha-blue;
+$secondary: $aha-grey;
+$success:   $aha-green;
+$info:      $aha-pink;
+$warning:   $aha-yellow;
+$danger:    $aha-red;
+$light:     $aha-white;
+$dark:      $aha-black;
+
+// 3. Import Bootstrap setelah override
+@import "bootstrap/scss/bootstrap";
