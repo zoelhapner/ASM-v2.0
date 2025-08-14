@@ -49,10 +49,9 @@ return new class extends Migration
             $table->decimal('thr', 15, 2);
             $table->string('contract_letter_file');
             $table->string('photo')->nullable();
-	    $table->string('identity_photo')->nullable();
-$table->string('contract_letter_file');
-$table->string('instructure_certificate');
-$table->string('expired_date_certificate', 10);            
+	        $table->string('identity_photo')->nullable();
+            $table->string('instructure_certificate');
+            $table->string('expired_date_certificate', 10);            
         });
     }
 
