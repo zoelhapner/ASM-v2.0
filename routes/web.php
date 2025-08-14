@@ -26,7 +26,7 @@ use App\Http\Controllers\KasController;
 use App\Models\License;
 
 Route::get('/', function () {
-    return view('tablar::auth.login');
+    return view('login');
 });
 
 require __DIR__.'/auth.php';
