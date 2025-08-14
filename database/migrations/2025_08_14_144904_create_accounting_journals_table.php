@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('journal_code');
             $table->date('transaction_date');
             $table->text('description')->nullable();
-            $table->uuid('created_by')-nullable();
+            $table->uuid('created_by');
 
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
