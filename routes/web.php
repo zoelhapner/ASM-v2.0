@@ -26,7 +26,7 @@ use App\Http\Controllers\KasController;
 use App\Models\License;
 
 Route::get('/', function () {
-    return view('login');
+    return view('loginn');
 });
 
 require __DIR__.'/auth.php';
