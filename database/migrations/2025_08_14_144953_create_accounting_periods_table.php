@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('is_closed')->default(false);
-            $table->uuid('closed_by')->nullable();
+            $table->uuid('closed_by');
             $table->foreign('closed_by')->references('id')->on('users')->nullOnDelete();
             $table->timestamp('closed_at')->nullable();
 

@@ -17,8 +17,7 @@ return new class extends Migration
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
             $table->uuid('account_id');
             $table->foreign('account_id')->references('id')->on('accounting_accounts')->onDelete('cascade');
-            $table->uuid('period_id');
-            $table->foreign('period_id')->references('id')->on('accounting_periods')->onDelete('cascade');
+            $table->string('period');
             $table->decimal('closing_balance', 15, 2);
         });
     }
