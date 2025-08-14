@@ -15,6 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('license_id');
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
+            $table->uuid('user_id')->after('license_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nis')->unique();
             $table->string('fullname');
             $table->string('nickname');
@@ -44,8 +46,9 @@ return new class extends Migration
             $table->string('previous_school');
             $table->string('grade');
             $table->string('status');
-            $table->string('photo')->nullable();  
-
+            $table->string('photo')->nullable();
+            $table->unsignedtinyInteger('where_know');
+            $table->date('registered_date');
         });
     }
 

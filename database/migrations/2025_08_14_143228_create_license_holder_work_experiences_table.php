@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('license_holders_work_experiences', function (Blueprint $table) {
+        Schema::create('license_holder_work_experiences', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('license_holder_id');
             $table->foreign('license_holder_id')->references('id')->on('license_holders')->onDelete('cascade');
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('license_holders_work_experiences');
+        Schema::dropIfExists('license_holder_work_experiences');
     }
 };

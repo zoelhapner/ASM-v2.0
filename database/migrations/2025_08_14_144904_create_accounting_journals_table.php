@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounting_closing_balances', function (Blueprint $table) {
+        Schema::create('accounting_journals', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('license_id');
+            $table->string('journal_code');
+            $table->date('transaction_date');
+            $table->text('description')->nullable();
+            $table->uuid('created_by')-nullable();
+
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
-            $table->uuid('account_id');
-            $table->foreign('account_id')->references('id')->on('accounting_accounts')->onDelete('cascade');
-            $table->uuid('period_id');
-            $table->foreign('period_id')->references('id')->on('accounting_periods')->onDelete('cascade');
-            $table->decimal('closing_balance', 15, 2);
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('accounting_closing_balances');
+        Schema::dropIfExists('accounting_journals');
     }
 };

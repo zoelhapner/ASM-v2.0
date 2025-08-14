@@ -12,14 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_license', function (Blueprint $table) {
-             $table->uuid('license_id'); // harus uuid, BUKAN bigIncrements/bigInteger
+           $table->uuid('license_id'); // harus uuid, BUKAN bigIncrements/bigInteger
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
 
             $table->uuid('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
 
             $table->primary(['license_id', 'employee_id']);
-            
         });
     }
 

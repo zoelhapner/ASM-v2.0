@@ -27,11 +27,6 @@ return new class extends Migration
             $table->decimal('initial_balance', 15, 2)->nullable();
             $table->boolean('is_active')->default(true);
         });
-
-        Schema::table('accounting_accounts', function (Blueprint $table) {
-            $table->foreign('parent_id')->references('id')->on('accounting_accounts')->nullOnDelete();
-        });
-
     }
 
     /**

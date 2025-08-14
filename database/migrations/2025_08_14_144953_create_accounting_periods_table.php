@@ -22,6 +22,7 @@ return new class extends Migration
             $table->uuid('closed_by')->nullable();
             $table->foreign('closed_by')->references('id')->on('users')->nullOnDelete();
             $table->timestamp('closed_at')->nullable();
+
         });
     }
 
