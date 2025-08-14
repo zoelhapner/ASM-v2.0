@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -36,13 +36,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                 Edit Data Pemilik Lisensi
                             </p>
                         </div>
 
                         <div class="card-body">
-                            <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('license_holders.update', $license_holder->id) }}" method="POST" enctype="multipart/form-data">
+                            <form  class="font-normal" action="{{ route('license_holders.update', $license_holder->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
 
@@ -94,7 +94,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required" for="email">Email :</label>
+                                            <label class="required" for="email">Email </label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $license_holder->user->email) }}"
                                             @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
                                             @error('email')
@@ -103,8 +103,8 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required" for="religion_id">Agama :</label>
-                                            <select name="religion_id" class="form-control" required>
+                                            <label class="required" for="religion_id">Agama </label>
+                                            <select name="religion_id" class="form-select" required>
                                                 <option value="">-- Pilih Agama --</option>
                                                 @foreach($religions as $religion)
                                                     <option value="{{ $religion->id }}" {{ old('religion_id', $license_holder->religion_id) == $religion->id ? 'selected' : '' }}>
@@ -115,7 +115,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Nomor KTP :</label>
+                                            <label class="required">Nomor KTP </label>
                                             <input type="number" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number" name="identity_number" maxlength="16" value="{{ old('identity_number', $license_holder->identity_number) }}" required>
                                             @error('identity_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -140,14 +140,14 @@
                                     
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Tanggal Lahir :</label>
+                                            <label class="required">Tanggal Lahir </label>
                                             <input type="date" name="birth_date" class="form-control" required
                                                 value="{{ old('birth_date', $license_holder->birth_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Alamat :</label>
+                                            <label class="required">Alamat </label>
                                             <input type="text" class="form-control @error('address') is-invalid @enderror" id="address" name="address" value="{{ old('address', $license_holder->address) }}" required>
                                             @error('address')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -155,7 +155,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Provinsi :</label>
+                                            <label class="required">Provinsi </label>
                                             <select name="province_id" id="province" class="form-select select2" required>
                                                 <option value="">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
@@ -168,7 +168,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Kabupaten/Kota :</label>
+                                            <label class="required">Kabupaten/Kota </label>
                                             <select name="city_id" id="city" class="form-select select2" required>
                                                 <option value="">-- Pilih Kota --</option>
                                                 @foreach($cities as $city)
@@ -181,7 +181,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Kecamatan :</label>
+                                            <label class="required">Kecamatan </label>
                                             <select name="district_id" id="district" class="form-select select2" required>
                                                 <option value="">-- Pilih Kecamatan --</option>
                                                 @foreach($districts as $district)
@@ -194,7 +194,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Desa :</label>
+                                            <label class="required">Desa </label>
                                             <select name="sub_district_id" id="sub_district" class="form-select select2" required>
                                                 <option value="">-- Pilih Desa --</option>
                                                 @foreach($subDistricts as $sub_district)
@@ -207,7 +207,9 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Kode Pos :</label>
+
+
+                                            <label class="required">Kode Pos </label>
                                             <select name="postal_code_id" id="postal_code" class="form-select select2" required>
                                                 <option value="">-- Pilih Kode Pos --</option>
                                                 @foreach($postalCodes as $postal_code)
@@ -220,7 +222,8 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Telepon :</label>
+
+                                            <label class="required">Telepon </label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone', $license_holder->phone) }}" required>
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -228,34 +231,37 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Hobi :</label>
+                                            <label class="required">Hobi </label>
                                             <input type="text" class="form-control @error('hobby') is-invalid @enderror" id="hobby" name="hobby" value="{{ old('hobby', $license_holder->hobby) }}" required>
                                             @error('hobby')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label>Foto Saat Ini:</label><br>
-                                            @if ($license_holder->photo)
-                                                <img src="{{ asset('storage/photos/' . $license_holder->photo) }}" class="rounded mb-2" width="150">
-                                            @else
-                                            <div class="me-3">
-                                                <p class="text-muted mb-0">Belum ada foto</p>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label>Foto Saat Ini</label><br>
+                                                @if ($license_holder->photo)
+                                                    <img src="{{ asset('storage/photos/' . $license_holder->photo) }}" class="rounded mb-2" width="150">
+                                                @else
+                                                <div class="me-3">
+                                                    <p class="text-muted mb-0">Belum ada foto</p>
+                                                </div>
+                                                @endif
                                             </div>
-                                            @endif
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="photo" class="form-label">Ganti Foto</label>
+                                                <input type="file" name="photo" class="form-control" accept="image/*">
+                                                @error('photo')
+                                                    <small class="text-danger">{{ $message }}</small>
+                                                @enderror
+                                            </div>
                                         </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <label for="photo" class="form-label">Ganti Foto</label>
-                                            <input type="file" name="photo" class="form-control" accept="image/*">
-                                            @error('photo')
-                                                <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <label>Foto KTP Saat Ini:</label><br>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                            <label>Foto KTP Saat Ini</label><br>
                                             @if ($license_holder->identity_photo)
                                                 <img src="{{ asset('storage/photos/' . $license_holder->identity_photo) }}" class="rounded mb-2" width="150">
                                             @else
@@ -263,16 +269,16 @@
                                                 <p class="text-muted mb-0">Belum ada foto</p>
                                             </div>
                                             @endif
-                                        </div>
+                                            </div>
 
-                                        <div class="col-md-6 mb-3">
+                                            <div class="col-md-6 mb-3">
                                             <label for="identity_photo" class="form-label">Ganti Foto KTP</label>
                                             <input type="file" name="identity_photo" class="form-control" accept="image/*">
                                             @error('identity_photo')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
+                                            </div>
                                         </div>
-
                                     </div>
 
                                     {{-- SECTION 2: Data Kontak --}}
@@ -280,7 +286,7 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Status Pernikahan</label>
-                                            <select name="marital_status" class="form-control" required>
+                                            <select name="marital_status" class="form-select" required>
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->marital_status == 1 ? 'selected' : '' }}>Lajang</option>
                                                 <option value="2" {{ $license_holder->marital_status == 2 ? 'selected' : '' }}>Menikah</option>
@@ -302,7 +308,7 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Indonesia (Baca/Tulis) </label>
-                                            <select name="indonesian_literacy" class="form-control">
+                                            <select name="indonesian_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->indonesian_literacy == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->indonesian_literacy == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -311,7 +317,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Indonesia (Bicara) </label>
-                                            <select name="indonesian_proficiency" class="form-control">
+                                            <select name="indonesian_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->indonesian_proficiency == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->indonesian_proficiency == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -320,7 +326,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Arab (Baca/Tulis)</label>
-                                            <select name="arabic_literacy" class="form-control">
+                                            <select name="arabic_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->arabic_literacy == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->arabic_literacy == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -329,7 +335,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Arab (Bicara)</label>
-                                            <select name="arabic_proficiency" class="form-control">
+                                            <select name="arabic_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->arabic_proficiency == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->arabic_proficiency == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -338,7 +344,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Inggris (Baca/Tulis)</label>
-                                            <select name="english_literacy" class="form-control">
+                                            <select name="english_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->english_literacy == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->english_literacy == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -347,7 +353,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Inngris (Bicara)</label>
-                                            <select name="english_proficiency" class="form-control">
+                                            <select name="english_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->english_proficiency == 1 ? 'selected' : '' }}>Lancar</option>
                                                 <option value="2" {{ $license_holder->english_proficiency == 2 ? 'selected' : '' }}>Tidak Lancar</option>
@@ -356,7 +362,9 @@
 
                                     </div>
 
-                                <button type="submit" class="btn btn-primary mt-4">Update</button>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary text-white mt-4">Update</button>
+                                    </div>
                              </form>
 
                         </div>

@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("licenses.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("licenses.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -170,10 +170,6 @@
                                             <input type="hidden" name="district_id" value="{{ $license->district_id }}">
                                         @endif
 
-
-                       
-
-
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Desa</label>
                                             <select name="sub_district_id" id="sub_district" class="form-select select2" required {{ $disabled }}>
@@ -247,42 +243,42 @@
                                             <input type="hidden" name="contract_agreement_number" value="{{ $license->contract_agreement_number }}">
                                         @endif
 
-                                        {{-- Tampilkan PDF Saat Ini --}}
-                                        <div class="col-md-6 mb-3">
-                                            <label>PDF Aqad Saat Ini:</label><br>
-                                            @if ($license->contract_document)
-                                                <embed src="{{ asset('storage/' . $license->contract_document) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
-                                            @else
-                                                <div class="me-3">
-                                                    <p class="text-muted mb-0">Belum ada dokumen</p>
-                                                </div>
-                                            @endif
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label>PDF Aqad Saat Ini:</label><br>
+                                                @if ($license->contract_document)
+                                                    <embed src="{{ asset('storage/' . $license->contract_document) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                                @else
+                                                    <div class="me-3">
+                                                        <p class="text-muted mb-0">Belum ada dokumen</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="contract_document" class="form-label">Upload Dokumen Aqad (PDF)</label>
+                                                <input type="file" name="contract_document" class="form-control" accept="application/pdf" {{ $disabled }}>
+                                                <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
+                                            </div>
                                         </div>
 
-                                        {{-- Upload dokumen baru --}}
-                                        <div class="col-md-6 mb-3">
-                                            <label for="contract_document" class="form-label">Upload Dokumen Aqad (PDF)</label>
-                                            <input type="file" name="contract_document" class="form-control" accept="application/pdf" {{ $disabled }}>
-                                            <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
-                                        </div>
+                                        <div class="row mb-3">
+                                            <div class="col-md-6 mb-3">
+                                                <label>PDF Form Lisensi Saat Ini:</label><br>
+                                                @if ($license->document_form)
+                                                    <embed src="{{ asset('storage/' . $license->document_form) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                                @else
+                                                    <div class="me-3">
+                                                        <p class="text-muted mb-0">Belum ada dokumen</p>
+                                                    </div>
+                                                @endif
+                                            </div>
 
-                                        {{-- Tampilkan PDF Form Lisensi --}}
-                                        <div class="col-md-6 mb-3">
-                                            <label>PDF Form Lisensi Saat Ini:</label><br>
-                                            @if ($license->document_form)
-                                                <embed src="{{ asset('storage/' . $license->document_form) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
-                                            @else
-                                                <div class="me-3">
-                                                    <p class="text-muted mb-0">Belum ada dokumen</p>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        {{-- Upload dokumen form --}}
-                                        <div class="col-md-6 mb-3">
-                                            <label for="document_form" class="form-label">Upload Dokumen Form Lisensi (PDF)</label>
-                                            <input type="file" name="document_form" class="form-control" accept="application/pdf" {{ $disabled }}>
-                                            <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="document_form" class="form-label">Upload Dokumen Form Lisensi (PDF)</label>
+                                                <input type="file" name="document_form" class="form-control" accept="application/pdf" {{ $disabled }}>
+                                                <small class="text-muted">Kosongkan jika tidak ingin mengubah file.</small>
+                                            </div>
                                         </div>
 
                                         <div class="col-md-6 mb-3">
@@ -378,8 +374,9 @@
                                         </div>
                                     </div>
 
-
-                                <button type="submit" class="btn btn-primary mt-4">Update</button>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn btn-primary text-white mt-4">Update</button>
+                                    </div>
                              </form>
 
                         </div>
@@ -391,14 +388,14 @@
 @endsection
 
 @push('js')
-                                    {{-- <script>
+                                    <script>
                                             $(document).ready(function() {
                                                 $('.select2').select2({
                                                     placeholder: "-- Pilih --",
                                                     width: '100%'
                                                 });
                                             });
-                                    </script> --}}
+                                    </script>
 
                                     <script>
     

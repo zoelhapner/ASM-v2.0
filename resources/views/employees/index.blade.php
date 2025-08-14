@@ -19,7 +19,7 @@
                     <div class="btn-list">
                     @can('karyawan.tambah')
                         <span class="d-none d-sm-inline">
-                            <a href="{{ route("employees.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                            <a href="{{ route("employees.create") }}" class="btn btn-primary text-white d-none d-sm-inline-block" >
                                 <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -47,7 +47,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                  Data Karyawan
                             </p>
                         </div>
@@ -103,11 +103,17 @@
     <script>
         $(function() {
             const table = $('#tableEmployees').DataTable({
+                columnDefs: [
+                    {
+                        targets: [0, 10, 17, 18],
+                        className: 'dt-left'
+                    },
+                ],
                 scrollY: '500px',
                 scrollX: true,
                 scrollCollapse: true,
                 fixedColumns: {
-                    leftColumns: 3
+                    leftColumns: 4
                 },
                 serverSide: true,
                 processing: true,

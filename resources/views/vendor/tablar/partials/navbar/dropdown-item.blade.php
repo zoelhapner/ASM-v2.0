@@ -29,7 +29,7 @@
 
 @if ($shouldRender)
         @if ($navbarItemHelper->isSubmenu($item))
-            <li class="nav-item dropdown {{ $item['class'] }} {{ $isActive ? 'active show' : '' }}"
+            <li class="app-sidebar nav-item dropdown {{ $item['class'] }} {{ $isActive ? 'active show' : '' }}"
                 @isset($item['id']) id="{{ $item['id'] }}" @endisset>
 
                 <a class="nav-link dropdown-toggle {{ $item['class'] }} {{ $isActive ? 'active' : '' }}" 
@@ -50,7 +50,7 @@
                     </span>
                 </a>
 
-                <div class="dropdown-menu {{ $isActive ? 'show' : '' }}">
+                <div class="app-sidebar dropdown-menu {{ $isActive ? 'show' : '' }}">
                     <div class="dropdown-menu-columns">
                         <div class="dropdown-menu-column">
                             @if ($navbarItemHelper->isSubmenu($item))

@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                  
-                        <a href=" {{ route("employees.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("employees.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -61,7 +61,7 @@
 
                                          <div class="col-md-6 mb-3">
                                             <label class="required">Pilih Lisensi</label>
-                                            <select name="licenses[]" class="form-control select2" multiple required>
+                                            <select name="licenses[]" class="form-select select2" multiple required>
                                                 @foreach($licenses as $license)
                                                     <option value="{{ $license->id }}">{{ $license->name }}</option>
                                                 @endforeach
@@ -377,7 +377,7 @@
 
                                     {{-- Submit Button --}}
                                         <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                        <button type="submit" class="btn btn-primary text-white">Simpan</button>
                                         </div>
                                 </form>
                             </div>

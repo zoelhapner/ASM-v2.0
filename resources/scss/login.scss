@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+// 1. Variabel warna AHA
+$aha-red:    #db2827;
+$aha-yellow: #fed508;
+$aha-pink:   #ff6666;
+$aha-gold:   #ffc100;
+$aha-green:  #abcd52;
+$aha-blue:   #1cb9ff;
+$aha-white:  #ffffff;
+$aha-black:  #000000;
+$aha-grey:   #7b7b7b;
+
+@import "bootstrap/scss/bootstrap";
+
+// 2. Styling dasar halaman login
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fb;
+    margin: 0;
+    padding: 0;
+}
+
+.page-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+// 3. Kotak form login
+.login-card {
+    background-color: $aha-white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba($aha-black, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+
+// 4. Judul login
+.login-title {
+    text-align: center;
+    font-weight: 600;
+    color: $aha-blue;
+    margin-bottom: 1.5rem;
+}
+
+// 5. Input
+.login-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid $aha-grey;
+    border-radius: 8px;
+    font-size: 1rem;
+    &:focus {
+        outline: none;
+        border-color: $aha-blue;
+        box-shadow: 0 0 0 3px rgba($aha-blue, 0.2);
+    }
+}
+
+// 6. Tombol login
+.login-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: $aha-blue;
+    border: none;
+    border-radius: 8px;
+    color: $aha-white;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    &:hover {
+        background-color: darken($aha-blue, 10%);
+    }
+}

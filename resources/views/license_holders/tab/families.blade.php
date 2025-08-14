@@ -55,11 +55,11 @@
     
 
         <div class="mt-4">
-                <a href="{{ route('license_holder_families.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
+                <a href="{{ route('license_holder_families.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary text-white">
                     Tambah Data
                 </a>
-                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                    Back to List
+                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke daftar
                 </a>
         </div>
     </div>

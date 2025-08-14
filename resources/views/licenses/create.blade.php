@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                  
-                        <a href=" {{ route("licenses.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("licenses.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -35,13 +35,13 @@
                 <div class="col-12">
                     <div class="card">
                                     <div class="card-header">
-                                        <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                                        <p class="text-center mb-4">
                                             Tambah Data Lisensi
                                         </p>
                                     </div>
 
                             <div class="card-body">
-                                <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('licenses.store') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('licenses.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
 
                                     {{-- SECTION 1: Informasi Lead --}}
@@ -284,7 +284,7 @@
 
                                     {{-- Submit Button --}}
                                         <div class="text-end">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <button type="submit" class="btn btn-primary text-white">Simpan</button>
                                         </div>
                                 </form>
                             </div>

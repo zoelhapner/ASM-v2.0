@@ -19,7 +19,7 @@
                     <div class="btn-list">
                  @can('siswa.tambah')       
                   <span class="d-none d-sm-inline">
-                        <a href="{{ route("students.create") }}" class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href="{{ route("students.create") }}" class="btn btn-primary text-white d-none d-sm-inline-block" >
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -46,12 +46,12 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                  Siswa
                             </p>
                         </div>
                         <div style="overflow-x: auto; position: relative;">
-                            <table id="tableStudents" class="table card-table table-vcenter text-nowrap" style="font-size: 0.9rem; font-weight: 500; font-family: 'Poppins', sans-serif;">
+                            <table id="tableStudents" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
                                         <th>NIS</th>
@@ -97,6 +97,12 @@
     <script>
         $(function() {
             const table = $('#tableStudents').DataTable({
+                columnDefs: [
+                    {
+                        targets: [0, 16, 18],
+                        className: 'dt-right'
+                    },
+                ],
                 scrollY: '500px',
                 scrollX: true,
                 scrollCollapse: true,
@@ -136,13 +142,7 @@
                 { data: 'registered_date', name: 'registered_date' },
                 { data: 'action', name: 'action', orderable: false, searchable: false }
             ],
-order: [[2, 'asc']], // misal urutkan nama license_holder
-columnDefs: [
-    { width: '50px', targets: 0 },
-    { width: '150px', targets: 2 },
-],
 
-    
             });
 
             // Delete user functionally

@@ -10,7 +10,7 @@
             @if (auth()->user()->hasRole('Super-Admin') || auth()->user()->hasRole('Pemilik Lisensi') || auth()->user()->hasRole('Akuntan'))
                 <div class="col-md-4">
                     <label for="license_id" class="form-label">Lisensi</label>
-                    <select name="license_id" id="license_id" class="form-select">
+                    <select name="license_id" id="license_id" class="form-select select2">
                         <option value="">-- Semua Lisensi --</option>
                         @foreach ($licenses as $license)
                             <option value="{{ $license->id }}" {{ request('license_id') == $license->id ? 'selected' : '' }}>
@@ -29,7 +29,7 @@
 
            <div class="col-md-4">
                 <label for="account_id" class="form-label">Akun</label>
-                <select name="account_id" id="account_id" class="form-select">
+                <select name="account_id" id="account_id" class="form-select select2">
                     <option value="">-- Semua Akun --</option>
                     @foreach ($accounts as $account)
                         <option value="{{ $account->id }}" {{ request('account_id') == $account->id ? 'selected' : '' }}>
@@ -51,9 +51,9 @@
         </div>
 
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary">Filter</button>
-            <a href="{{ route('journals.report') }}" class="btn btn-secondary">Reset</a>
-            <a href="{{ route('kas.export.excel', request()->all()) }}" class="btn btn-success">Export Excel</a>
+            <button type="submit" class="btn btn-primary text-white">Filter</button>
+            <a href="{{ route('journals.report') }}" class="btn btn-secondary text-white">Reset</a>
+            <a href="{{ route('kas.export.excel', request()->all()) }}" class="btn btn-success text-white">Export Excel</a>
         </div>
     </form>
 

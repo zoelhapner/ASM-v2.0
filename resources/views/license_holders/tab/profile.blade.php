@@ -105,7 +105,7 @@
                     Edit Profile
                 </a>
                 <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
-                    Back to List
+                    Kembali ke daftar
                 </a>
             </div>
         </div>

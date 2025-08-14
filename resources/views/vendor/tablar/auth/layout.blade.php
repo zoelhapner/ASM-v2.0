@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" href="{{ asset('ahasquare.png') }}" type="image/png" height="50px;">
     
 
     <title>@yield('title')</title>
 
     <!-- CSS/JS files -->
     @if(config('tablar','vite'))
-        @vite(['resources/scss/bootstrap-override.scss', 'resources/js/app.js'])
+        @vite(['resources/js/app.js', 'resources/scss/login.scss',])
     @endif
   
     {{-- Custom Stylesheets (post Tablar) --}}
@@ -20,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}?v={{ time() }}">
 
 </head>
-<body class=" border-top-wide border-primary d-flex flex-column">
+<body class="login-page border-top-wide border-primary d-flex flex-column">
 <div class="page page-center">
     @yield('content')
 </div>

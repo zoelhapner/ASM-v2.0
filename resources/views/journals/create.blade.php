@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="mb-3">
                     <label for="license_id" class="form-label">Filter Lisensi</label>
-                    <select name="license_id" id="license_id" class="form-select" onchange="this.form.submit()">
+                    <select name="license_id" id="license_id" class="form-select select2" onchange="this.form.submit()">
                         <option value="">-- Semua Lisensi --</option>
                         @foreach ($licenses as $license)
                             <option value="{{ $license->id }}" 
@@ -80,8 +80,8 @@
                 <tbody id="detail-rows">
                     <tr>
                         <td>
-                            <select name="details[0][account_id]" class="form-select account-select" data-row="0" required>
-                                <option value="">-- Pilih Akun --</option>
+                            <select name="details[0][account_id]" class="form-select select2 account-select" data-row="0" width="100px;" required>
+                                <option value="account">-- Pilih Akun --</option>
                                     @foreach ($accounts as $account)
                                         <option value="{{ $account->id }}"
                                             data-code="{{ $account->account_code }}"
@@ -93,7 +93,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="details[0][person]" class="form-control select2 user-select" data-row="0">
+                            <select name="details[0][person]" class="form-select select2 user-select" data-row="0" width="75px;">
                                 <option value="">-- Pilih User --</option>
                             </select>
                         </td>
@@ -132,7 +132,7 @@
     $(document).ready(function() {
     $('.select2').select2({
         placeholder: "-- Pilih User --",
-        width: '100%'
+        // width: '100%'
     });
     });
 </script>

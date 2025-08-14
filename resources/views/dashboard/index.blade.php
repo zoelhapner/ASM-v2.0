@@ -19,7 +19,7 @@
             @if (auth()->check() && auth()->user()->last_login_at)
                 {{ \Carbon\Carbon::parse(auth()->user()->last_login_at)
                     ->locale('id')
-                    ->translatedFormat('l, d F Y H:i') }}
+                    ->translatedFormat('l, H:i') }}
             @else
                 Belum pernah login
             @endif

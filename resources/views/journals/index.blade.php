@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Daftar Jurnal</h1>
 
-    <a href="{{ route('journals.create') }}" class="btn btn-primary mb-3">Tambah Jurnal</a>
+    <a href="{{ route('journals.create') }}" class="btn btn-primary text-white mb-3">Tambah Jurnal</a>
 
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>

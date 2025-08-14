@@ -50,12 +50,12 @@
         @endif
     
 
-        <div class="mt-4" padding-bottom="5px;" padding-left="5px;">
+        <div class="mt-4">
                 <a href="{{ route('license_holder_educations.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary text-white">
                     Tambah Data
                 </a>
-                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text white">
-                    Back to List
+                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke Daftar
                 </a>
         </div>
     </div>

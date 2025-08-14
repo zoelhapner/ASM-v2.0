@@ -4,7 +4,7 @@
 <div class="container">
     <h1 class="mb-4">Daftar Akun</h1>
 
-    <a href="{{ route("accounting.create") }}" class="btn btn-primary mb-3">Tambah Akun</a>
+    <a href="{{ route("accounting.create") }}" class="btn btn-primary text-white mb-3">Tambah Akun</a>
 
     <table id="tableAccounts" class="table card-table table-vcenter text-nowrap" >
         <thead>

@@ -16,7 +16,7 @@
                             <th>Status Karyawan</th>
                             <th>Tanggal Mulai Kerja</th>
                             <th>Tanggal Berakhir Kerja</th>
-                            <th>Masih Kerja</th>
+                            <th class="kerja-column">Masih Kerja</th>
                             <th>Kompetensi Utama</th>
                             <th>Deskripsi Tanggungjawab</th>
                             <th>Aksi</th>
@@ -58,11 +58,11 @@
         @endif
 
         <div class="mt-4">
-                <a href="{{ route('license_holder_workers.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary">
+                <a href="{{ route('license_holder_workers.create') }}?license_holder_id={{ $license_holder->id }}" class="btn btn-primary text-white">
                     Tambah Data
                 </a>
-                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                    Back to List
+                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke daftar
                 </a>
         </div>
     </div>

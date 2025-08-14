@@ -55,12 +55,12 @@
 
         <div class="mt-4">
             @if (auth()->user()->can('pekerjaan-karyawan.tambah')) 
-                <a href="{{ route('employee_workers.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary">
+                <a href="{{ route('employee_workers.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary text-white">
                     Tambah Data
                 </a>
             @endif
-                <a href="{{ route('employees.index') }}" class="btn btn-outline-secondary">
-                    Back to List
+                <a href="{{ route('employees.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke daftar
                 </a>
         </div>
     </div>

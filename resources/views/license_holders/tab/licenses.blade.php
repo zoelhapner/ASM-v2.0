@@ -10,18 +10,18 @@
                         <tr>
                             <th class="w-1">Id Lisensi</th>
                                         <th>Tipe Lisensi</th>
-                                        <th>Nama</th>
+                                        <th class="name-column">Nama</th>
                                         <th>Email</th>
                                         <th class="address-column">Alamat</th>
-                                        <th>Provinsi</th>
-                                        <th>Kabupaten/Kota</th>
-                                        <th>Kecamatan</th>
-                                        <th>Kelurahan</th>
+                                        <th class="province-column">Provinsi</th>
+                                        <th class="city-column">Kabupaten/Kota</th>
+                                        <th class="district-column">Kecamatan</th>
+                                        <th class='subdistrict-column'>Kelurahan</th>
                                         <th>Kode Pos</th>
                                         <th>Telepon</th>
                                         <th>Tanggal Bergabung</th>
                                         <th>Expired date</th>
-                                        <th>Nomor Aqad</th>
+                                        <th class="aqad-column">Nomor Aqad</th>
                                         <th>Status</th>
                                         <th>Tipe Bangunan</th>
                                         <th>Status Bangunan</th>
@@ -35,7 +35,7 @@
                                         <th>Youtube</th>
                                         <th>Google Maps</th>
                                         <th>Landing Page Pendaftaran Siswa</th>
-                                        <th>Aksi</th>
+                                        <th class="aksi-column">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,8 +141,8 @@
         @endif
     
         <div class="mt-4">
-                <a href="{{ route('license_holders.index') }}" class="btn btn-outline-secondary">
-                    Back to List
+                <a href="{{ route('license_holders.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke daftar
                 </a>
         </div>
     </div>
