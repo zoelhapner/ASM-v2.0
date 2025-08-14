@@ -37,9 +37,9 @@ return new class extends Migration
             $table->unsignedBigInteger('postal_code_id');
             $table->foreign('postal_code_id')->references('id')->on('postal_codes')->onDelete('cascade');
             $table->string('phone');
-            $table->string('position');
-            $table->string('department');
-            $table->string('unit');
+            $table->json('position');
+            $table->json('department');
+            $table->json('unit');
             $table->string('employment_status');
             $table->string('start_date', 10);
             $table->decimal('basic_salary', 15, 2);

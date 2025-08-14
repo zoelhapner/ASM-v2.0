@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('license_notifications', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->uuid('license_id');
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
             $table->text('message');
