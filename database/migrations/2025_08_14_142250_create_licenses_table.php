@@ -32,6 +32,8 @@ return new class extends Migration
             $table->string('join_date', 10);
             $table->string('expired_date', 10);
             $table->string('contract_agreement_number');
+            $table->string('contract_document');
+            $table->string('document_form');
             $table->string('status', 10);
             $table->unsignedTinyInteger('building_type')->nullable();
             $table->unsignedTinyInteger('building_status')->nullable();
