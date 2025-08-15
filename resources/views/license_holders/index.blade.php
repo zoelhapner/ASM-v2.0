@@ -105,7 +105,18 @@
                 },
                 serverSide: true,
                 processing: true,
-                ajax: '{{ route("license_holders.index") }}',
+                ajax: {
+                    url: 'https://asm.aharightbrain.com/license_holders', 
+                    type: 'GET',
+                    xhrFields: {
+                        withCredentials: true 
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("❌ AJAX Error:", error, thrown);
+                        console.log("📄 Response Text:", xhr.responseText);
+                        alert("Gagal memuat data! Cek console untuk detail error.");
+                    }
+                },
                 columns: [
                 { data: 'license_id', name: 'licenses.license_id' },
                 { data: 'license_type', name: 'licenses.license_type' },

@@ -27,7 +27,18 @@
         $('#roleTable').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('roles.index') }}",
+            ajax: {
+                    url: 'https://asm.aharightbrain.com/roles', 
+                    type: 'GET',
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("❌ AJAX Error:", error, thrown);
+                        console.log("📄 Response Text:", xhr.responseText);
+                        alert("Gagal memuat data! Cek console untuk detail error.");
+                    }
+                },
             columns: [
                 { data: 'name', name: 'name' },
                 { data: 'permissions_count', name: 'permissions_count' },
