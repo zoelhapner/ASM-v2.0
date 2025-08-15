@@ -2,7 +2,7 @@
 
 // config/cors.php
 return [
-    'paths' => ['api/*', 'licenses'], // tambahkan path yang dibutuhkan
+    'paths' => ['api/*', 'licenses', 'license_holders', 'employees', 'students', 'users', 'roles'], // tambahkan path yang dibutuhkan
     'allowed_methods' => ['*'],
     'allowed_origins' => ['https://asm.aharightbrain.com'], // domain frontend kamu
     'allowed_origins_patterns' => [],
