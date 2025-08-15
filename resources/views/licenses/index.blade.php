@@ -109,7 +109,18 @@
                 },
                 processing: true,
                 serverSide: true, 
-                ajax: '{{ route("licenses.index") }}',
+                ajax: {
+                    url: 'https://asm.aharightbrain.com/licenses', // ganti dengan URL API Laravel di Railway
+                    type: 'GET',
+                    xhrFields: {
+                        withCredentials: true // biar cookie session kebawa
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("❌ AJAX Error:", error, thrown);
+                        console.log("📄 Response Text:", xhr.responseText);
+                        alert("Gagal memuat data! Cek console untuk detail error.");
+                    }
+                },
                 columns: [
                     { data: 'license_id', name: 'license_id' },
                     { data: 'license_type', name: 'license_type' },

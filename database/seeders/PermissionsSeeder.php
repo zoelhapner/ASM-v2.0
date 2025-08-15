@@ -117,7 +117,7 @@ class PermissionsSeeder extends Seeder
         // Buat contoh user + role
         \App\Models\User::factory()->create([
             'name' => 'User Super Admin',
-            'email' => 'superadmin@example.com',
+            'email' => 'superadmin@gmail.com',
             'password' => Hash::make('12345678'),
         ])->assignRole('Super-Admin');
 
@@ -129,19 +129,19 @@ class PermissionsSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'User HRD',
-            'email' => 'hrd@example.com',
+            'email' => 'hrd@gmail.com',
             'password' => Hash::make('12345678'),
         ])->assignRole('HRD');
 
         \App\Models\User::factory()->create([
             'name' => 'User Akuntan',
-            'email' => 'akuntan@example.com',
+            'email' => 'akuntan@gmail.com',
             'password' => Hash::make('12345678'),
         ])->assignRole('Akuntan');
 
         \App\Models\User::factory()->create([
             'name' => 'User Karyawan',
-            'email' => 'karyawan@example.com',
+            'email' => 'karyawan@gmail.com',
             'password' => Hash::make('12345678'),
         ])->assignRole('Karyawan');
     }

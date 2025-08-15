@@ -5,7 +5,7 @@ import {viteStaticCopy} from 'vite-plugin-static-copy'
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/scss/bootstrap-override.scss', 'resources/js/login.js','resources/scss/login.scss'],
+            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/scss/bootstrap-override.scss', 'resources/js/login.js', 'resources/scss/login.scss'],
             refresh: true,
         }),
         viteStaticCopy({
