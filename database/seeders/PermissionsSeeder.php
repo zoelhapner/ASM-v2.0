@@ -50,6 +50,41 @@ class PermissionsSeeder extends Seeder
             'pekerjaan-pemilik.lihat',
             'pekerjaan-pemilik.ubah',
             'pekerjaan-pemilik.hapus',
+
+            'akun-akuntansi.tambah',
+            'akun-akuntansi.lihat',
+            'akun-akuntansi.ubah',
+            'akun-akuntansi.hapus',
+
+            'karyawan.tambah',
+            'karyawan.lihat',
+            'karyawan.ubah',
+            'karyawan.hapus',
+
+            'jurnal.tambah',
+            'jurnal.lihat',
+            'jurnal.ubah',
+            'jurnal.hapus',
+
+            'keluarga-karyawan.tambah',
+            'keluarga-karyawan.lihat',
+            'keluarga-karyawan.ubah',
+            'keluarga-karyawan.hapus',
+
+            'pendidikan-karyawan.tambah',
+            'pendidikan-karyawan.lihat',
+            'pendidikan-karyawan.ubah',
+            'pendidikan-karyawan.hapus',
+
+            'pekerjaan-karyawan.tambah',
+            'pekerjaan-karyawan.lihat',
+            'pekerjaan-karyawan.ubah',
+            'pekerjaan-karyawan.hapus',
+
+            'siswa.tambah',
+            'siswa.lihat',
+            'siswa.ubah',
+            'siswa.hapus',
         ];
 
             foreach ($permissions as $permissionName) {
@@ -73,6 +108,7 @@ class PermissionsSeeder extends Seeder
             'HRD',
             'Akuntan',
             'Karyawan',
+            'Siswa',
         ];
 
         foreach ($roles as $roleName) {

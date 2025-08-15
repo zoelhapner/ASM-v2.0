@@ -100,7 +100,8 @@ public function getReadableLanguagesAttribute()
 }
 
     use HasUuid;
-
+    
+    protected $table = 'license_holders';
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;

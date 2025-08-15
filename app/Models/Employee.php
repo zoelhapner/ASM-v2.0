@@ -12,6 +12,7 @@ class Employee extends Model
 {
     use HasFactory, HasUuid;
 
+    protected $table = 'employees';
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;
