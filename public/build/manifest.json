@@ -1,0 +1,30 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CZi_wkmS.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app2.css"
+    ]
+  },
+  "resources/js/login.js": {
+    "file": "assets/login-BiVQpRIw.js",
+    "name": "login",
+    "src": "resources/js/login.js",
+    "isEntry": true,
+    "css": [
+      "assets/login.css"
+    ]
+  },
+  "resources/scss/bootstrap-override.scss": {
+    "file": "assets/bootstrap-override.css",
+    "src": "resources/scss/bootstrap-override.scss",
+    "isEntry": true
+  }
+}
