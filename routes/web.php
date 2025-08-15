@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -231,4 +232,13 @@ Route::post('/import-licenses', [LicenseImportController::class, 'import'])->nam
 Route::get('/import-users', [UserImportController::class, 'showForm'])->name('users.import.form');
 Route::post('/import-users', [UserImportController::class, 'import'])->name('users.import');
 
+
+Route::get('/run-permissions-seeder', function () {
+    Artisan::call('db:seed', [
+        '--class' => 'PermissionsSeeder',
+        '--force' => true
+    ]);
+
+    return 'PermissionsSeeder berhasil dijalankan di Railway.';
+});
 
