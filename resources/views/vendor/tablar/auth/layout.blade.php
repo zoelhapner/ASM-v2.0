@@ -12,7 +12,7 @@
 
     <!-- CSS/JS files -->
     @if(config('tablar','vite'))
-        @vite(['resources/js/login.js', 'resources/scss/login.scss'])
+        @vite(['resources/js/app.js'])
     @endif
   
     {{-- Custom Stylesheets (post Tablar) --}}
@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}?v={{ time() }}">
 
 </head>
-<body class="border-top-wide border-primary d-flex flex-column">
+<body class="login-page border-top-wide border-primary d-flex flex-column">
 <div class="page page-center">
     @yield('content')
 </div>
