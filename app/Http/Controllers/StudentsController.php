@@ -133,8 +133,18 @@ class StudentsController extends Controller
 
     public function create()
     {
+        $user = auth()->user();
+        if ($user->hasRole('Super-Admin')) {
+            $licenses = License::all();
+        } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
+            // Hanya ambil lisensi yang dimiliki user ini
+            $licenses = $user->licenses; // pastikan relasi licenses sudah ada di model User
+        } else {
+            $licenses = collect(); // atau kosongkan kalau role lain tidak punya hak pilih lisensi
+        }
+
         $religions = Religion::all();
-        $licenses = License::all(); 
+         
         $provinces = Province::all();
         
         return view('students.create', compact('religions', 'licenses', 'provinces'));
@@ -257,7 +267,11 @@ private function generateNis($licenseId)
 
     public function edit(Student $student)
     {
-        $licenses = License::all();
+        if (auth()->user()->hasRole('Super-Admin')) {
+            $licenses = License::all();
+        } else {
+            $licenses = $employee->licenses; // Lisensi yang dimiliki oleh employee
+        }
         $religions = Religion::all();
         $provinces = Province::all();
         $cities = City::where('province_id', $student->province_id)->get();

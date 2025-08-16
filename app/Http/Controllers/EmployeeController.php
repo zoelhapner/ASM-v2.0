@@ -208,7 +208,7 @@ class EmployeeController extends Controller
         $user = auth()->user();
         if ($user->hasRole('Super-Admin')) {
             $licenses = License::all();
-        } elseif ($user->hasRole('Pemilik Lisensi')) {
+        } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
             // Hanya ambil lisensi yang dimiliki user ini
             $licenses = $user->licenses; // pastikan relasi licenses sudah ada di model User
         } else {

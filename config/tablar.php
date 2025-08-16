@@ -152,7 +152,7 @@ return [
         [
             'text' => 'Lisensi',
             'icon' => 'ti ti-license',
-            'role' => ['Super-Admin', 'Pemilik Lisensi'],
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Direktur'],
             'submenu' => [
                 [
                     'text' => 'Data Lisensi',
@@ -176,14 +176,14 @@ return [
             'text' => 'Data Karyawan',
             'icon' => 'ti ti-id-badge',
             'url' => '/employees',
-            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Karyawan', 'Akuntan'],
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Karyawan', 'Akuntan', 'Direktur'],
         ],
 
         [
             'text' => 'Data Siswa',
             'icon' => 'ti ti-users-group',
             'url' => '/students',
-            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Siswa', 'Akuntan'],
+            'role' => ['Super-Admin', 'Pemilik Lisensi', 'Siswa', 'Akuntan', 'Direktur'],
         ],
 
          [
