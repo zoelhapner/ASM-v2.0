@@ -45,8 +45,12 @@ class UsersController extends Controller
                 $editUrl = route('users.edit', $user->id);
 
                 return ' 
-                    <a href="'.$editUrl.'" class="btn btn-success btn-sm">Edit</a>
-                    <button data-id="'.$user->id.'" class="btn btn-danger btn-sm delete-user">Delete</button>
+                    <a href="'.$editUrl.'" class="btn btn-success btn-sm" title= "Ubah"
+                        <i class="ti ti-edit"></i>
+                    </a>
+                    <button data-id="'.$user->id.'" class="btn btn-danger btn-sm delete-user" title="Hapus"
+                        <i class="ti ti-trash"></i>
+                    </button>
                 '; 
             })
 

@@ -21,7 +21,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("users.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("users.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -38,13 +38,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.4rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                 Edit Data Pengguna
                             </p>
                         </div>
 
                         <div class="card-body">
-                            <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('users.update', $user) }}" method="POST" enctype="multipart/form-data">
+                            <form class="font-normal" action="{{ route('users.update', $user) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
 
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                                <button type="submit" class="btn btn-primary text-white mt-4">Simpan</button>
                             </form>
 
                         </div>

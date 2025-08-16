@@ -45,21 +45,26 @@ class LicensesController extends Controller
                 ->editColumn('building_condition', fn($row) => $buildingConditions[$row->building_condition] ?? 'Tidak Diketahui')
                 ->editColumn('contract_document', function ($row) {
                     if ($row->contract_document) {
-                        $url = asset('storage/public' . $row->contract_document);
+                        // Ambil URL file lewat Storage::url
+                        $url = Storage::url($row->contract_document);
+
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
                                 </a>';
                     }
+
                     return '<span class="text-muted">Belum ada</span>';
                 })
-
                 ->editColumn('document_form', function ($row) {
                     if ($row->document_form) {
-                        $url = asset('storage/public' . $row->document_form);
+                        // Ambil URL file lewat Storage::url
+                        $url = Storage::url($row->document_form);
+
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
                                 </a>';
                     }
+
                     return '<span class="text-muted">Belum ada</span>';
                 })
 
