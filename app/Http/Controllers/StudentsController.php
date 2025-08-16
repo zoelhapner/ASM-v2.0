@@ -138,9 +138,9 @@ class StudentsController extends Controller
             $licenses = License::all();
         } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
             // Hanya ambil lisensi yang dimiliki user ini
-            $licenses = $user->licenses; // pastikan relasi licenses sudah ada di model User
+            $licenses = $user->licenses;
         } else {
-            $licenses = collect(); // atau kosongkan kalau role lain tidak punya hak pilih lisensi
+            $licenses = $user->employee?->licenses;
         }
 
         $religions = Religion::all();
