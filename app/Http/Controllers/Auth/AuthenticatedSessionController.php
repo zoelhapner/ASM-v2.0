@@ -31,12 +31,21 @@ class AuthenticatedSessionController extends Controller
 
         $user = auth()->user()->load('licenses');
 
-    // Kalau user cuma punya 1 lisensi, set langsung ke session
-    if ($user->employee->licenses->count() === 1) {
-        $license = $user->employee->licenses->first();
-        Session::put('active_license_id', $license->id);
-        Session::put('active_license_name', $license->name);
-    }
+        $licenses = collect();
+
+        if ($user->hasRole('Pemilik Lisensi')) {
+            $licenses = $user->licenses ?? collect();
+        } elseif ($user->hasRole('Akuntan')) {
+            $licenses = $user->employee?->licenses ?? collect();
+        }
+
+        // Kalau hanya ada 1 lisensi, set ke session
+        if ($licenses->count() === 1) {
+            $license = $licenses->first();
+            Session::put('active_license_id', $license->id);
+            Session::put('active_license_name', $license->name);
+        }
+
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
