@@ -32,8 +32,8 @@ class AuthenticatedSessionController extends Controller
         $user = auth()->user()->load('licenses');
 
     // Kalau user cuma punya 1 lisensi, set langsung ke session
-    if ($user->licenses->count() === 1) {
-        $license = $user->licenses->first();
+    if ($user->employee->licenses->count() === 1) {
+        $license = $user->employee->licenses->first();
         Session::put('active_license_id', $license->id);
         Session::put('active_license_name', $license->name);
     }
