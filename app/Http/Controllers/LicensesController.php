@@ -45,7 +45,7 @@ class LicensesController extends Controller
                 ->editColumn('building_condition', fn($row) => $buildingConditions[$row->building_condition] ?? 'Tidak Diketahui')
                 ->editColumn('contract_document', function ($row) {
                     if ($row->contract_document) {
-                        $url = asset('storage/' . $row->contract_document);
+                        $url = asset('storage/public' . $row->contract_document);
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
                                 </a>';
@@ -55,7 +55,7 @@ class LicensesController extends Controller
 
                 ->editColumn('document_form', function ($row) {
                     if ($row->document_form) {
-                        $url = asset('storage/' . $row->document_form);
+                        $url = asset('storage/public' . $row->document_form);
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
                                 </a>';
@@ -149,8 +149,7 @@ class LicensesController extends Controller
     public function create() 
     {
         $provinces = Province::all();
-        $owners = \App\Models\User::role('Pemilik Lisensi')->get();
-        return view('licenses.create', compact('provinces', 'owners'));
+        return view('licenses.create', compact('provinces'));
     }
 
     public function store(Request $request) 

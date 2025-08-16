@@ -226,19 +226,5 @@ Route::get('/api/postal_codes/{sub_district_id}', function ($sub_district_id) {
 
 
 
-Route::get('/import-licenses', [LicenseImportController::class, 'showForm'])->name('licenses.import.form');
-Route::post('/import-licenses', [LicenseImportController::class, 'import'])->name('licenses.import');
 
-Route::get('/import-users', [UserImportController::class, 'showForm'])->name('users.import.form');
-Route::post('/import-users', [UserImportController::class, 'import'])->name('users.import');
-
-
-Route::get('/run-permissions-seeder', function () {
-    Artisan::call('db:seed', [
-        '--class' => 'PermissionsSeeder',
-        '--force' => true
-    ]);
-
-    return 'PermissionsSeeder berhasil dijalankan di Railway.';
-});
 

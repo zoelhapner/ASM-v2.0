@@ -12,7 +12,7 @@
 
     <!-- CSS/JS files -->
     @if(config('tablar','vite'))
-        @vite(['resources/js/app.js', 'resources/scss/login.scss',])
+        @vite(['resources/js/app.js', 'resources/scss/login.scss'])
     @endif
   
     {{-- Custom Stylesheets (post Tablar) --}}
