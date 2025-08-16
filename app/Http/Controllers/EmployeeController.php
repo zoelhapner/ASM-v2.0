@@ -210,9 +210,9 @@ class EmployeeController extends Controller
             $licenses = License::all();
         } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
             // Hanya ambil lisensi yang dimiliki user ini
-            $licenses = $user->licenses; // pastikan relasi licenses sudah ada di model User
+            $licenses = $user->licenses ?? collect();// pastikan relasi licenses sudah ada di model User
         } else {
-            $licenses = $user->employee?->licenses; // atau kosongkan kalau role lain tidak punya hak pilih lisensi
+            $licenses = $user->employee?->licenses ?? collect(); // atau kosongkan kalau role lain tidak punya hak pilih lisensi
         }
 
         $religions = Religion::all();

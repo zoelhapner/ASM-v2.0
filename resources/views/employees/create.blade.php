@@ -62,11 +62,14 @@
                                          <div class="col-md-6 mb-3">
                                             <label class="required">Pilih Lisensi</label>
                                             <select name="licenses[]" class="form-select select2" multiple required>
-                                                @foreach($licenses as $license)
+                                                @forelse($licenses as $license)
                                                     <option value="{{ $license->id }}">{{ $license->name }}</option>
-                                                @endforeach
+                                                @empty
+                                                    <option value="">Tidak ada lisensi tersedia</option>
+                                                @endforelse
                                             </select>
                                         </div>
+
 
                                         <div class="col-md-6 mb-3">
                                             <label class="required">NIK</label>
