@@ -1,1 +1,1 @@
-web: chmod -R 775 storage bootstrap/cache && php artisan storage:link --force && php artisan config:clear && php artisan config:cache && php artisan route:clear && php artisan route:cache && php artisan serve --host 0.0.0.0 --port $PORT
+web: chmod -R 775 storage bootstrap/cache && php artisan config:clear && php artisan config:cache && php artisan route:clear && php artisan route:cache && php artisan serve --host 0.0.0.0 --port $PORT

@@ -196,6 +196,7 @@ return [
                     'text' => 'Akun',
                     'url' => '/accounting',
                     'icon' => 'ti ti-currency-dollar',
+                    'can' => 'akun-akuntansi.lihat',
                 ],
                 [
                     'text' => 'Input Jurnal',

@@ -46,16 +46,20 @@
                         @endif
                     </td>
                     <td>
-                        <a href="{{ route('accounting.edit', $account->id) }}" class="btn btn-warning btn-sm" title="Edit">
-                            <i class="ti ti-edit"></i>
-                        </a>
-                        <form action="{{ route('accounting.destroy', $account->id) }}" method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus jurnal ini?')" title="Hapus">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </form>
+                        @if (auth()->user()->can('akun-akuntansi.ubah')) 
+                            <a href="{{ route('accounting.edit', $account->id) }}" class="btn btn-warning btn-sm" title="Edit">
+                                <i class="ti ti-edit"></i>
+                            </a>
+                        @endif
+                        @if (auth()->user()->can('akun-akuntansi.hapus')) 
+                            <form action="{{ route('accounting.destroy', $account->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Hapus jurnal ini?')" title="Hapus">
+                                    <i class="ti ti-trash"></i>
+                                </button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

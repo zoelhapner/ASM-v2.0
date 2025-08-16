@@ -3,7 +3,11 @@
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
             <span class="avatar">
-                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                @if(auth()->user()->photo)
+                    <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                        alt="Foto Profil" 
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                @endif
             </span>
             <div class="d-none d-xl-block ps-2">
                 @php

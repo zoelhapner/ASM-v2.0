@@ -10,7 +10,7 @@
         <div class="navbar-nav flex-row order-md-last">
             <div class="d-none d-md-flex">
                 @include('tablar::partials.header.notifications')
-                @include('tablar::partials.header.theme-mode')
+                {{-- @include('tablar::partials.header.theme-mode') --}}
                  {{-- Tambahkan dropdown switch license di sini --}}
                 @role('Pemilik Lisensi|Karyawan|Akuntan') {{-- selain Super Admin --}}
                     @php
@@ -38,7 +38,7 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                             @forelse($licenses as $license)
-                                <a class="dropdown-item {{ session('active_license_id') == $license->id ? 'active fw-bold text-primary' : '' }}" 
+                                <a class="dropdown-item {{ session('active_license_id') == $license->id ? 'active fw-normal text-white' : '' }}" 
                                 href="{{ route('switch.license', $license->id) }}">
                                     @if(session('active_license_id') == $license->id)
                                         <i class="ti ti-check me-1"></i>

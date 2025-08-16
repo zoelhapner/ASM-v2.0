@@ -247,7 +247,7 @@
                                             <div class="col-md-6 mb-3">
                                                 <label>PDF Aqad Saat Ini:</label><br>
                                                 @if ($license->contract_document)
-                                                    <embed src="{{ asset('storage/public' . $license->contract_document) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                                    <embed src="{{ asset('storage/' . $license->contract_document) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
                                                 @else
                                                     <div class="me-3">
                                                         <p class="text-muted mb-0">Belum ada dokumen</p>
@@ -266,7 +266,7 @@
                                             <div class="col-md-6 mb-3">
                                                 <label>PDF Form Lisensi Saat Ini:</label><br>
                                                 @if ($license->document_form)
-                                                    <embed src="{{ asset('storage/public' . $license->document_form) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
+                                                    <embed src="{{ asset('storage/' . $license->document_form) }}" type="application/pdf" width="100%" height="100px" {{ $disabled }}>
                                                 @else
                                                     <div class="me-3">
                                                         <p class="text-muted mb-0">Belum ada dokumen</p>

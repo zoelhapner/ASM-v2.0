@@ -40,13 +40,15 @@
                                             <i class="ti ti-edit"></i>
                                         </a>
                                     @endif
-                                    <form action="{{ route('employee_families.destroy', $fam->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger" title="Hapus">
-                                            <i class="ti ti-trash"></i>
-                                        </button>
-                                    </form>
+                                    @if (auth()->user()->can('keluarga-karyawan.hapus')) 
+                                        <form action="{{ route('employee_families.destroy', $fam->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirmDelete(event)">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-danger" title="Hapus">
+                                                <i class="ti ti-trash"></i>
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                                 </tr>
                             @endforeach

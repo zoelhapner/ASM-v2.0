@@ -321,16 +321,32 @@
                                             </select>
                                         </div>
 
-                                        @if(auth()->user()->hasAnyRole(['Pemilik Lisensi', 'Karyawan', 'Akuntan']))
+                                        @php 
+                                            $selectedRole = $employee->user->roles->first()->name ?? '';
+                                        @endphp
+
+                                        @if(auth()->user()->hasRole('Super-Admin'))
+                                            {{-- Super-Admin: Bisa edit role --}}
                                             <div class="col-md-6 mb-3">
                                                 <label class="required" for="role">Role:</label>
-                                                @php $selectedRole = $employee->user->roles->pluck('name')->first(); @endphp
+                                                <select class="form-select" name="role" required>
+                                                    <option value="">-- Pilih Role --</option>
+                                                    @foreach ($roles as $role)
+                                                        <option value="{{ $role->name }}" {{ $selectedRole === $role->name ? 'selected' : '' }}>
+                                                            {{ ucfirst($role->name) }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
 
+                                        @elseif(auth()->user()->hasAnyRole(['Pemilik Lisensi', 'Karyawan', 'Akuntan']))
+                                            {{-- Role tertentu: hanya lihat (readonly) --}}
+                                            <div class="col-md-6 mb-3">
+                                                <label class="required" for="role">Role:</label>
                                                 <input type="hidden" name="role" value="{{ $selectedRole }}">
-
                                                 <select class="form-select" required disabled>
                                                     <option value="">-- Pilih Role --</option>
-                                                    @foreach (\Spatie\Permission\Models\Role::all() as $role)
+                                                    @foreach ($roles as $role)
                                                         <option value="{{ $role->name }}" {{ $selectedRole === $role->name ? 'selected' : '' }}>
                                                             {{ ucfirst($role->name) }}
                                                         </option>

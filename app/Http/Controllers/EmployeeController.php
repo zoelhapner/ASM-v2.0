@@ -398,6 +398,7 @@ private function generateNik($licenseId)
 {
     $religions = Religion::all();
     $provinces = Province::all();
+    $roles = Role::all();
 
     // Default: kosong
     $licenses = collect();
@@ -425,7 +426,7 @@ private function generateNik($licenseId)
     }
 
     return view('employees.edit', compact(
-        'employee', 'religions', 'provinces', 'licenses', 'license',
+        'employee', 'roles', 'religions', 'provinces', 'licenses', 'license',
         'cities', 'districts', 'subDistricts', 'postalCodes'
     ));
 }

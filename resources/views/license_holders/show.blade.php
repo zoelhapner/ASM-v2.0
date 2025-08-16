@@ -12,35 +12,35 @@
                             <a href="#" 
                                 class="list-group-item list-group-item-action"
                                 data-tab="licenses"
-                                data-url="{{ route('license_holders.licenses', $license_holder->id) }}">
+                                data-url="{{ route('license_holders.licenses', $license_holder->id, false) }}">
                                     Data Lisensi
                             </a>
                             
                             <a href="#" 
                                 class="list-group-item list-group-item-action"
                                 data-tab="profile"
-                                data-url="{{ route('license_holders.profile', $license_holder->id) }}">
+                                data-url="{{ route('license_holders.profile', $license_holder->id, false) }}">
                                     Data Diri
                             </a>
 
                             <a href="#" 
                                 class="list-group-item list-group-item-action"
                                 data-tab="educations"
-                                data-url="{{ route('license_holders.educations', $license_holder->id) }}">
+                                data-url="{{ route('license_holders.educations', $license_holder->id, false) }}">
                                     Riwayat Pendidikan
                             </a>
 
                             <a href="#" 
                                 class="list-group-item list-group-item-action"
                                 data-tab="workers"
-                                data-url="{{ route('license_holders.workers', $license_holder->id) }}">
+                                data-url="{{ route('license_holders.workers', $license_holder->id, false) }}">
                                     Riwayat Pekerjaan
                             </a>
 
                             <a href="#" 
                                 class="list-group-item list-group-item-action"
                                 data-tab="families"
-                                data-url="{{ route('license_holders.families', $license_holder->id) }}">
+                                data-url="{{ route('license_holders.families', $license_holder->id, false) }}">
                                     Data Keluarga
                             </a>
                         </div>
