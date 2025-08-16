@@ -51,11 +51,13 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Pilih Lisensi</label>
                                             <select name="license_id" class="form-select" required>
+                                                <option value="">-- Pilih Lisensi --</option>
                                                 @foreach($licenses as $license)
                                                     <option value="{{ $license->id }}">{{ $license->name }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
+
 
                                         <div class="col-md-6 mb-3">
                                             <label class="required">NIS</label>
