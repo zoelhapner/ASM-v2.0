@@ -207,13 +207,20 @@ class EmployeeController extends Controller
     {
         $user = auth()->user();
         if ($user->hasRole('Super-Admin')) {
-            $licenses = License::all();
-        } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
-            // Hanya ambil lisensi yang dimiliki user ini
-            $licenses = $user->licenses ?? collect();// pastikan relasi licenses sudah ada di model User
-        } else {
-            $licenses = $user->employee?->licenses ?? collect(); // atau kosongkan kalau role lain tidak punya hak pilih lisensi
-        }
+    $licenses = License::all();
+
+} elseif ($user->hasRole('Pemilik Lisensi')) {
+    // Lisensi langsung terhubung ke user
+    $licenses = $user->licenses ?? collect();
+
+} elseif ($user->hasRole('Akuntan')) {
+    // Lisensi diambil dari relasi employee
+    $licenses = $user->employee?->licenses ?? collect();
+
+} else {
+    $licenses = collect(); // role lain tidak punya lisensi
+}
+
 
         $religions = Religion::all();
         $provinces = Province::all();
