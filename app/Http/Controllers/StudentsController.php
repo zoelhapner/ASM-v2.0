@@ -273,7 +273,7 @@ private function generateNis($licenseId)
 
     public function edit(Student $student)
     {
-        $student = Student::with('license')->findOrFail($id);
+        $student->load('license');
 
             $user = auth()->user();
                     if ($user->hasRole('Super-Admin')) {
