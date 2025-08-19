@@ -89,6 +89,7 @@ class StudentsController extends Controller
 
 
         return DataTables::of($students)
+            ->addIndexColumn()
             ->addColumn('license_type', fn ($s) => $s->license_type ?? '-')
             ->addColumn('license_name', fn ($s) => $s->license_name ?? '-')
             ->addColumn('religion_name', fn ($s) => $s->religion_name ?? '-')

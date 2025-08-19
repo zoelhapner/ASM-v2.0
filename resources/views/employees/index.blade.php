@@ -55,6 +55,7 @@
                             <table id="tableEmployees" class="table card-table table-vcenter text-nowrap" >
                                 <thead>
                                     <tr>
+                                        <th class="w-1">No.</th>
                                         <th>NIK</th>
                                         <th>Jenis Lisensi</th>
                                         <th>Nama Lisensi</th>
@@ -130,6 +131,7 @@
                     }
                 },
                 columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'nik', name: 'employees.nik' }, 
                     { data: 'license_type', name: 'licenses.license_type' }, 
                     { data: 'license_name', name: 'licenses.name' },

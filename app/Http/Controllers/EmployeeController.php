@@ -32,6 +32,7 @@ class EmployeeController extends Controller
             $employees = $this->getJoinedEmployees();
 
             return DataTables::of($employees)
+                ->addIndexColumn()
                 ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
                 ->addColumn('start_date', fn($row) => $row->start_date ? Carbon::parse($row->start_date)->format('d/m/Y') : '-')
                 ->addColumn('marital_status', fn($row) => $this->readableMaritalStatus($row->marital_status))

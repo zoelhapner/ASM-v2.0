@@ -54,6 +54,7 @@
                             <table id="tableStudents" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
+                                        <th class="w-1">No.</th>
                                         <th>NIS</th>
                                         <th>Tipe Lisensi</th>
                                         <th>Nama Lisensi</th>
@@ -124,6 +125,7 @@
                     }
                 },
                 columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'nis', name: 'nis' },
                 { data: 'license_type', name: 'licenses.license_type' },
                 { data: 'license_name', name: 'licenses.name' },
