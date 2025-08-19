@@ -635,10 +635,10 @@
 
         // Optional: Trigger generate otomatis saat halaman edit dibuka (kalau ingin refresh NIK)
         // Uncomment baris ini kalau memang perlu
-        const initialSelected = $licenses.val();
-        if (Array.isArray(initialSelected) && initialSelected.length > 0) {
-            generateNik(initialSelected[0]);
-        }
+        // const initialSelected = $licenses.val();
+        // if (Array.isArray(initialSelected) && initialSelected.length > 0) {
+        //     generateNik(initialSelected[0]);
+        // }
     });
 </script>
 
