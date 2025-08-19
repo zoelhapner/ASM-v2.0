@@ -115,7 +115,7 @@ class EmployeeController extends Controller
                     return $buttons;
                 })
 
-                ->rawColumns(['fullname', 'action'])
+                ->rawColumns(['fullname', 'action', 'contract_letter_file', 'instructure_certificate'])
                 ->make(true);
         }
 
@@ -417,15 +417,21 @@ private function generateNik($licenseId)
     $provinces = Province::all();
     $roles = Role::all();
 
-    // Default: kosong
-    $licenses = collect();
+    $user = auth()->user();
+        if ($user->hasRole('Super-Admin')) {
+    $licenses = License::all();
 
-    // Ambil semua lisensi jika Super Admin
-    if (auth()->user()->hasRole('Super-Admin')) {
-        $licenses = License::all();
-    } else {
-        $licenses = $employee->licenses; // Lisensi yang dimiliki oleh employee
-    }
+} elseif ($user->hasRole('Pemilik Lisensi')) {
+    // Lisensi langsung terhubung ke user
+    $licenses = $user->licenses ?? collect();
+
+} elseif ($user->hasRole('Akuntan')) {
+    // Lisensi diambil dari relasi employee
+    $licenses = $user->employee?->licenses ?? collect();
+
+} else {
+    $licenses = collect(); // role lain tidak punya lisensi
+}
 
     // Ambil salah satu license untuk wilayah
     $license = $employee;

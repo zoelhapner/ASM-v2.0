@@ -23,32 +23,31 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+public function store(LoginRequest $request): RedirectResponse
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
+    $user = auth()->user()->load([
+        'licenses',           // untuk Pemilik Lisensi
+        'employee.licenses',  // untuk Akuntan / Karyawan
+    ]);
 
-        $user = auth()->user()->load('licenses');
+    $licenses = $user->hasRole('Pemilik Lisensi')
+        ? $user->licenses
+        : ($user->employee?->licenses ?? collect());
 
-        $licenses = collect();
-
-        if ($user->hasRole('Pemilik Lisensi')) {
-            $licenses = $user->licenses ?? collect();
-        } elseif ($user->hasRole('Akuntan')) {
-            $licenses = $user->employee?->licenses ?? collect();
-        }
-
-        // Kalau hanya ada 1 lisensi, set ke session
-        if ($licenses->count() === 1) {
-            $license = $licenses->first();
-            Session::put('active_license_id', $license->id);
-            Session::put('active_license_name', $license->name);
-        }
-
-
-        return redirect()->intended(route('dashboard', absolute: false));
+    if ($licenses->count() === 1) {
+        $license = $licenses->first();
+        session([
+            'active_license_id' => $license->id,
+            'active_license_name' => $license->name,
+        ]);
     }
+
+    return redirect()->intended(route('dashboard', absolute: false));
+}
+
 
     /**
      * Destroy an authenticated session.
