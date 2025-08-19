@@ -108,17 +108,17 @@ class StudentsController extends Controller
             ->addColumn('action', function ($s) {
                         $buttons = '';
                         if (auth()->user()->can('siswa.ubah')) {
-                            $buttons .= '<a href="' . route('students.edit', $s->id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
+                            $buttons .= '<a href="' . route('students.edit', $s) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
                                             <i class="ti ti-edit"></i>
                                         </a>';
                         }
                         if (auth()->user()->can('siswa.lihat')) {
-                            $buttons .= '<a href="' . route('students.show', $s->id) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
+                            $buttons .= '<a href="' . route('students.show', $s) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
                                             <i class="ti ti-eye"></i>
                                         </a>';
                         }
                         if (auth()->user()->can('siswa.hapus')) {
-                            $buttons .= '<button data-id="' . $s->id . '" class="btn btn-icon btn-sm btn-danger delete-student" title="Hapus">
+                            $buttons .= '<button data-id="' . $s . '" class="btn btn-icon btn-sm btn-danger delete-student" title="Hapus">
                                             <i class="ti ti-trash"></i>
                                         </button>';
                         }
