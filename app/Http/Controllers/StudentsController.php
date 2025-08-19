@@ -273,19 +273,30 @@ private function generateNis($licenseId)
 
     public function edit(Student $student)
     {
-        if (auth()->user()->hasRole('Super-Admin')) {
+            $user = auth()->user();
+                    if ($user->hasRole('Super-Admin')) {
             $licenses = License::all();
-        } else {
-            $licenses = $employee->licenses; // Lisensi yang dimiliki oleh employee
-        }
-        $religions = Religion::all();
-        $provinces = Province::all();
-        $cities = City::where('province_id', $student->province_id)->get();
-        $districts = District::where('city_id', $student->city_id)->get();
-        $subDistricts = SubDistrict::where('district_id', $student->district_id)->get();
-        $postalCodes = PostalCode::where('sub_district_id', $student->sub_district_id)->get();
 
-        return view('students.edit', compact('student', 'licenses', 'religions', 'provinces', 'cities', 'districts', 'subDistricts', 'postalCodes'));
+        } elseif ($user->hasRole('Pemilik Lisensi')) {
+            // Lisensi langsung terhubung ke user
+            $licenses = $user->licenses ?? collect();
+
+        } elseif ($user->hasRole('Akuntan')) {
+            // Lisensi diambil dari relasi employee
+            $licenses = $user->employee?->licenses ?? collect();
+
+        } else {
+            $licenses = collect(); // role lain tidak punya lisensi
+
+            $religions = Religion::all();
+            $provinces = Province::all();
+            $cities = City::where('province_id', $student->province_id)->get();
+            $districts = District::where('city_id', $student->city_id)->get();
+            $subDistricts = SubDistrict::where('district_id', $student->district_id)->get();
+            $postalCodes = PostalCode::where('sub_district_id', $student->sub_district_id)->get();
+
+            return view('students.edit', compact('student', 'licenses', 'religions', 'provinces', 'cities', 'districts', 'subDistricts', 'postalCodes'));
+        }
     }
 
     /**

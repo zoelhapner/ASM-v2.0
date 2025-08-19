@@ -68,20 +68,33 @@ class EmployeeController extends Controller
                 ->editColumn('nickname', fn($row) => Str::title($row->nickname))
                 ->editColumn('fullname', function ($row) {
                     $url = route('employees.show', $row->employee_id);
-                    $fullname = $row->fullname;
-                    if (is_array($fullname)) {
-                        $name = implode(', ', $fullname);
-                    } elseif (is_string($fullname)) {
-                        $decoded = json_decode($fullname, true);
-                        $name = is_array($decoded) ? implode(', ', $decoded) : $fullname;
-                    } else {
-                        $name = '-';
-                        \Log::warning('Invalid fullname data', ['employee_id' => $row->employee_id, 'fullname' => $fullname]);
-                    }
-                    $name = Str::title($name);
+                    $name = Str::title($row->fullname ?? '-');
                     return '<a href="'.$url.'">'.e($name).'</a>';
                 })
-    
+                ->editColumn('contract_letter_file', function ($row) {
+                    if ($row->contract_letter_file) {
+                        // Ambil URL file lewat Storage::url
+                        $url = Storage::url($row->contract_letter_file);
+
+                        return '<a href="' . $url . '" target="_blank">
+                                    <i class="ti ti-file-text"></i> Lihat Dokumen
+                                </a>';
+                    }
+
+                    return '<span class="text-muted">Belum ada</span>';
+                })
+                ->editColumn('instructure_certificate', function ($row) {
+                    if ($row->instructure_certificate) {
+                        // Ambil URL file lewat Storage::url
+                        $url = Storage::url($row->instructure_certificate);
+
+                        return '<a href="' . $url . '" target="_blank">
+                                    <i class="ti ti-file-text"></i> Lihat Dokumen
+                                </a>';
+                    }
+
+                    return '<span class="text-muted">Belum ada</span>';
+                })
                 ->addColumn('action', function ($employee) {
                     $buttons = '';
                     if (auth()->user()->can('karyawan.ubah')) {
@@ -166,14 +179,11 @@ class EmployeeController extends Controller
             $query->where('employees.user_id', $auth->id);
         }
 
-        if ($auth->hasRole('Akuntan')) {
-            $query->where('employees.user_id', $auth->id);
-        }
-
-        if ($auth->hasRole('Pemilik Lisensi')) {
-            $licenseIds = $auth->licenses()->pluck('id'); // RELASI licenses di User
+        if ($auth->hasRole(['Pemilik Lisensi', 'Akuntan'])) {
+            $licenseIds = $auth->licenses()->pluck('id');
             $query->whereIn('licenses.id', $licenseIds);
         }
+
 
         if ($activeLicenseId) {
             $query->where('licenses.id', $activeLicenseId);

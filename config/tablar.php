@@ -10,11 +10,11 @@ return [
     |
     */
 
-    'title' => 'SIM AHA Right Brain',
+    'title' => 'ASM v.2.0 | AHA Right Brain',
     'title_prefix' => '',
     'title_postfix' => '',
     'bottom_title' => 'AHA Sistem Management',
-    'current_version' => 'v2.0',
+    'current_version' => 'v.2.0',
 
 
     /*

@@ -352,7 +352,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Bahasa Inngris (Bicara)</label>
+                                            <label>Bahasa Inggris (Bicara)</label>
                                             <select name="english_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1" {{ $license_holder->english_proficiency == 1 ? 'selected' : '' }}>Lancar</option>
