@@ -47,8 +47,8 @@ class LicensesController extends Controller
                 ->editColumn('building_has_ac', fn($row) => $buildinghasAC[$row->buildinghasAC] ?? 'Tidak Diketahui')
                 ->editColumn('contract_document', function ($row) {
                     if ($row->contract_document) {
-                        // Ambil URL file lewat Storage::url
-                        $url = Storage::url($row->contract_document);
+                        // Ambil URL dari disk railway
+                        $url = Storage::disk('railway')->url($row->contract_document);
 
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
@@ -59,8 +59,7 @@ class LicensesController extends Controller
                 })
                 ->editColumn('document_form', function ($row) {
                     if ($row->document_form) {
-                        // Ambil URL file lewat Storage::url
-                        $url = Storage::url($row->document_form);
+                        $url = Storage::disk('railway')->url($row->document_form);
 
                         return '<a href="' . $url . '" target="_blank">
                                     <i class="ti ti-file-text"></i> Lihat Dokumen
@@ -227,13 +226,13 @@ class LicensesController extends Controller
     // Upload file kontrak
     if ($request->hasFile('contract_document')) {
         $validated['contract_document'] = $request->file('contract_document')
-            ->store('contracts', 'public');
+            ->store('contracts', 'railway');
     }
 
     // Upload file form
     if ($request->hasFile('document_form')) {
         $validated['document_form'] = $request->file('document_form')
-            ->store('contracts', 'public');
+            ->store('contracts', 'railway');
     }
 
     if ($validated['license_type'] === 'FO') {
@@ -396,18 +395,18 @@ class LicensesController extends Controller
     if (!$isOwner) {
         if ($request->hasFile('contract_document')) {
             if ($license->contract_document) {
-                Storage::disk('public')->delete($license->contract_document);
+                Storage::disk('railway')->delete($license->contract_document);
             }
             $validated['contract_document'] = $request->file('contract_document')
-                ->store('contracts_aqad', 'public');
+                ->store('contracts_aqad', 'railway');
         }
 
         if ($request->hasFile('document_form')) {
             if ($license->document_form) {
-                Storage::disk('public')->delete($license->document_form);
+                Storage::disk('railway')->delete($license->document_form);
             }
             $validated['document_form'] = $request->file('document_form')
-                ->store('contracts_aqad', 'public');
+                ->store('contracts_aqad', 'railway');
         }
     }
 
