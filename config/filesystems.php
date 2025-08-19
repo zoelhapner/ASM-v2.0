@@ -60,6 +60,14 @@ return [
             'report' => false,
         ],
 
+        'railway' => [
+            'driver' => 'local',
+            'root' => '/mnt/data',
+            'url' => env('APP_URL').'/storage',
+            'visibility' => 'public',
+        ],
+
+
     ],
 
     /*
