@@ -53,7 +53,7 @@
 
 @section('content')
 <div x-data="{ showPassword: false, showConfirmPassword: false, showCurrentPassword: false }">
-    <form method="POST" action="{{ route('password.update') }}">
+    <form method="POST" action="{{ route('user-password.update') }}">
         @csrf
         @method('PUT')
 
