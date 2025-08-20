@@ -17,14 +17,14 @@
                         $user = Auth::user();
 
                         if ($user->hasRole('Pemilik Lisensi')) {
-                            $licenses = \App\Models\License::whereHas('owners', fn($q) => $q->where('users.id', $user->id))->get();
+                            $licenses = $user->licenses;
                         } elseif ($user->hasRole(['Karyawan', 'Akuntan'])) {
-                            $licenses = $user->employee->licenses ?? collect();
+                            $licenses = $user->employee?->licenses ?? collect();
                         } else {
-                            $licenses = collect(); // Kosongkan untuk selain itu
+                            $licenses = collect();
                         }
 
-                        $activeLicense = session('active_license_name', 'Pilih Lisensi');
+                        $activeLicense = session('active_license_name', $licenses->first()->name ?? 'Pilih Lisensi');
                     @endphp
 
                     <div class="nav-item dropdown me-2">

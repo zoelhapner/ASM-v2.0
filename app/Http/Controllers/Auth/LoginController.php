@@ -39,10 +39,6 @@ class LoginController extends Controller
     return '/employees';  // fallback    
 }
 
-protected function authenticated(Request $request, $user)
-{
-    //
-}
 
 
 
