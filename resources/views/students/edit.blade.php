@@ -157,7 +157,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Provinsi </label>
                                             <select name="province_id" id="province" class="form-select select2" required>
-                                                <option value="">-- Pilih Provinsi --</option>
+                                                <option value="province">-- Pilih Provinsi --</option>
                                                 @foreach($provinces as $province)
                                                     <option value="{{ $province->id }}"
                                                         {{ $student->province_id == $province->id ? 'selected' : '' }}>
@@ -170,7 +170,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Kabupaten/Kota </label>
                                             <select name="city_id" id="city" class="form-select select2" required>
-                                                <option value="">-- Pilih Kota --</option>
+                                                <option value="city">-- Pilih Kota --</option>
                                                 @foreach($cities as $city)
                                                     <option value="{{ $city->id }}"
                                                         {{ $student->city_id == $city->id ? 'selected' : '' }}>
@@ -183,7 +183,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Kecamatan </label>
                                             <select name="district_id" id="district" class="form-select select2" required>
-                                                <option value="">-- Pilih Kecamatan --</option>
+                                                <option value="district">-- Pilih Kecamatan --</option>
                                                 @foreach($districts as $district)
                                                     <option value="{{ $district->id }}"
                                                         {{ $student->district_id == $district->id ? 'selected' : '' }}>
@@ -196,7 +196,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Desa </label>
                                             <select name="sub_district_id" id="sub_district" class="form-select select2" required>
-                                                <option value="">-- Pilih Desa --</option>
+                                                <option value="sub_district">-- Pilih Desa --</option>
                                                 @foreach($subDistricts as $sub_district)
                                                     <option value="{{ $sub_district->id }}"
                                                         {{ $student->sub_district_id == $sub_district->id ? 'selected' : '' }}>
@@ -209,7 +209,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Kode Pos </label>
                                             <select name="postal_code_id" id="postal_code" class="form-select select2" required>
-                                                <option value="">-- Pilih Desa --</option>
+                                                <option value="postal_code">-- Pilih Desa --</option>
                                                 @foreach($postalCodes as $postal_code)
                                                     <option value="{{ $postal_code->id }}"
                                                         {{ $student->postal_code_id == $postal_code->id ? 'selected' : '' }}>
