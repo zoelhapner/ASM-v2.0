@@ -96,11 +96,11 @@
 
             {{-- Aksi --}}
             <div class="mt-4">
-                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary">
-                    Edit Profile
+                <a href="{{ route('employees.edit', $employee->id) }}" class="btn btn-primary text-white">
+                    Edit Profil
                 </a>
-                <a href="{{ route('employees.index') }}" class="btn btn-secondary">
-                    Back to List
+                <a href="{{ route('employees.index') }}" class="btn btn-secondary text-white">
+                    Kembali ke daftar
                 </a>
             </div>
         </div>

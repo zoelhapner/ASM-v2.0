@@ -50,15 +50,10 @@
             </div>
 
             {{-- Konten Dinamis --}}
+
             <div class="col-md-9" id="tab-content">
-                @if (request('tab') === 'profile')
+                @if (request('tab') == 'profile')
                     @include('license_holders.tab.profile')
-                @elseif (request('tab') === 'educations')
-                    @include('license_holders.tab.educations')
-                @elseif (request('tab') === 'workers')
-                    @include('license_holders.tab.workers')
-                @elseif (request('tab') === 'families')
-                    @include('license_holders.tab.families')
                 @else
                     @include('license_holders.tab.licenses')
                 @endif

@@ -62,7 +62,7 @@
 
             <div class="mt-4">
                     @if (auth()->user()->can('keluarga-karyawan.tambah')) 
-                        <a href="{{ route('employee_families.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary tetx-white">
+                        <a href="{{ route('employee_families.create') }}?employee_id={{ $employee->id }}" class="btn btn-primary text-white">
                             Tambah Data
                         </a>
                     @endif

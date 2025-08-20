@@ -33,20 +33,26 @@ public function store(LoginRequest $request): RedirectResponse
         'employee.licenses',  // untuk Akuntan / Karyawan
     ]);
 
-    $licenses = $user->hasRole('Pemilik Lisensi')
-        ? $user->licenses
-        : ($user->employee?->licenses ?? collect());
+    $user->update([
+        'last_login_at' => now('Asia/Jakarta'),
+    ]);
 
-    if ($licenses->count() === 1) {
-        $license = $licenses->first();
-        session([
-            'active_license_id' => $license->id,
-            'active_license_name' => $license->name,
-        ]);
+    // Skip kalau super admin
+    if (! $user->hasRole('Super-Admin')) {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : ($user->employee?->licenses ?? collect());
+
+        if ($licenses->count() === 1) {
+            $license = $licenses->first();
+            session()->put('active_license_id', $license->id);
+            session()->put('active_license_name', $license->name);
+        }
     }
 
     return redirect()->intended(route('dashboard', absolute: false));
 }
+
 
 
     /**
