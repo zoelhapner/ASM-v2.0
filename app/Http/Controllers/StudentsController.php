@@ -50,30 +50,10 @@ class StudentsController extends Controller
     }
     
     public function index(Request $request)
-    {
-        if ($request->ajax()) {
-        $students = Student::query()
-        ->leftJoin('licenses', 'students.license_id', '=', 'licenses.id')
-        ->leftJoin('provinces', 'students.province_id', '=', 'provinces.id')
-        ->leftJoin('cities', 'students.city_id', '=', 'cities.id')
-        ->leftJoin('districts', 'students.district_id', '=', 'districts.id')
-        ->leftJoin('sub_districts', 'students.sub_district_id', '=', 'sub_districts.id')
-        ->leftJoin('postal_codes', 'students.postal_code_id', '=', 'postal_codes.id')
-        ->leftJoin('religions', 'students.religion_id', '=', 'religions.id')
-        ->select(
-            'students.*',
-            'licenses.license_type as license_type',
-            'licenses.name as license_name',
-            'provinces.name as province_name',
-            'cities.name as city_name',
-            'districts.name as district_name',
-            'sub_districts.name as sub_district_name',
-            'postal_codes.postal_code as postal_code',
-            'religions.name as religion_name'
-        );
-
+    { 
         $user = Auth::user();
-        $students = Student::query();
+        $students = Student::query()
+            ->with(['province', 'city', 'district', 'subDistrict', 'postalCode']);
 
         // Cek role user
         if ($user->hasRole('Siswa')) {
@@ -100,18 +80,37 @@ class StudentsController extends Controller
             }
         }
 
-
+        if ($request->ajax()) {
+        $students = $students
+        ->leftJoin('licenses', 'students.license_id', '=', 'licenses.id')
+        ->leftJoin('provinces', 'students.province_id', '=', 'provinces.id')
+        ->leftJoin('cities', 'students.city_id', '=', 'cities.id')
+        ->leftJoin('districts', 'students.district_id', '=', 'districts.id')
+        ->leftJoin('sub_districts', 'students.sub_district_id', '=', 'sub_districts.id')
+        ->leftJoin('postal_codes', 'students.postal_code_id', '=', 'postal_codes.id')
+        ->leftJoin('religions', 'students.religion_id', '=', 'religions.id')
+        ->select(
+            'students.*',
+            'licenses.license_type as license_type',
+            'licenses.name as license_name',
+            'provinces.name as province_name',
+            'cities.name as city_name',
+            'districts.name as district_name',
+            'sub_districts.name as sub_district_name',
+            'postal_codes.postal_code as postal_code',
+            'religions.name as religion_name'
+        );
 
         return DataTables::of($students)
             ->addIndexColumn()
             ->addColumn('license_type', fn ($s) => $s->license_type ?? '-')
             ->addColumn('license_name', fn ($s) => $s->license_name ?? '-')
             ->addColumn('religion_name', fn ($s) => $s->religion_name ?? '-')
-            ->addColumn('provinsi', fn ($s) => $s->province_name ?? '-')
-            ->addColumn('kabupaten_kota', fn ($s) => $s->city_name ?? '-')
-            ->addColumn('kecamatan', fn ($s) => $s->district_name ?? '-')
-            ->addColumn('kelurahan', fn ($s) => $s->sub_district_name ?? '-')
-            ->addColumn('kode_pos', fn ($s) => $s->postal_code ?? '-')
+            ->addColumn('province_name', fn ($s) => $s->province_name ?? '-')
+            ->addColumn('city_name', fn ($s) => $s->city_name ?? '-')
+            ->addColumn('district_name', fn ($s) => $s->district_name ?? '-')
+            ->addColumn('sub_district_name', fn ($s) => $s->sub_district_name ?? '-')
+            ->addColumn('postal_code', fn ($s) => $s->postal_code ?? '-')
             ->addColumn('gender', fn($row) => $this->readableGender($row->gender))
             ->addColumn('where_know', fn($row) => $this->readableInfo($row->where_know))
             ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')

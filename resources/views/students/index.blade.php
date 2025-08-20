@@ -124,7 +124,8 @@
                         alert("Gagal memuat data! Cek console untuk detail error.");
                     }
                 },
-                columns: [
+                columns: 
+                [
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'nis', name: 'nis' },
                 { data: 'license_type', name: 'licenses.license_type' },
