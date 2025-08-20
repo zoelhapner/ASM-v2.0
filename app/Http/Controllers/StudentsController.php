@@ -362,7 +362,7 @@ private function generateNis($licenseId)
         'previous_school' => 'nullable|string',
         'grade' => 'nullable|string',
         'status' => 'nullable|string',
-        'photo' => ['nullable|image|mimes:jpeg,png,jpg,gif|max:2048'],
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'registered_date' => ['required', 'date_format:Y-m-d'],
         'where_know' => 'nullable|in:1,2,3,4,5,6,7,8,9',
     ]);
