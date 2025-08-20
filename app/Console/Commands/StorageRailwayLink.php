@@ -18,22 +18,24 @@ class StorageRailwayLink extends Command
      *
      * @var string
      */
-    protected $description = 'Link the public/storage directory to Railway volume';
+    protected $description = 'Create a symbolic link from public/storage to /mnt/data for Railway deployment';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $target = '/mnt/data';
         $link = public_path('storage');
+        $target = '/mnt/data';
 
-        if (file_exists($link)) {
-            $this->laravel->make('files')->delete($link);
+        // Hapus kalau sudah ada link/folder sebelumnya
+        if (File::exists($link)) {
+            File::delete($link);
         }
 
-        $this->laravel->make('files')->link($target, $link);
+        // Buat symlink baru
+        symlink($target, $link);
 
-        $this->info("The [public/storage] directory has been linked to {$target}.");
+        $this->info("The [public/storage] directory has been linked to [$target].");
     }
 }

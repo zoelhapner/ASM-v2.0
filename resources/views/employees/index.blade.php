@@ -114,7 +114,7 @@
                 scrollX: true,
                 scrollCollapse: true,
                 fixedColumns: {
-                    leftColumns: 4
+                    leftColumns: 5
                 },
                 serverSide: true,
                 processing: true,

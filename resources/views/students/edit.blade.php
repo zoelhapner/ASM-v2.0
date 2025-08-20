@@ -1,4 +1,3 @@
-{{-- Penting --}}
 @extends('tablar::page')
 
 @section('content')
@@ -42,9 +41,9 @@
                         </div>
 
                         <div class="card-body">
-                            <form  class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('students.update', $student->id) }}" method="POST" enctype="multipart/form-data">
+                            <form  class="font-normal" action="{{ route('students.update', $student->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
-                                        @method('put')
+                                        @method('PUT')
 
                                         @if ($errors->any())
                                             <div class="alert alert-danger">
@@ -56,7 +55,7 @@
                                             </div>
                                         @endif
 
-                                    <h2 class="mt-4 mb-3">Data Pemilik</h2>
+                                    <h2 class="mt-4 mb-3">Data Siswa</h2>
                                     <div class="row mb-4">
 
                                         <div class="col-md-6 mb-3">
@@ -106,8 +105,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label for="email">Email: </label>
-                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $student->email) }}"
-                                            >
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email', $student->email) }}">
                                             @error('email')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -133,7 +131,6 @@
                                             @enderror
                                         </div>
                                     
-
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Tanggal Lahir </label>
                                             <input type="date" name="birth_date" class="form-control" required
@@ -334,7 +331,7 @@
                                         </div>
                                     </div>
 
-                                <button type="submit" class="btn btn-primary mt-4">Update</button>
+                                <button type="submit" class="btn btn-primary text-white mt-4">Update</button>
                              </form>
 
                         </div>
@@ -396,10 +393,10 @@
         });
 
         // Optional: Trigger generate otomatis saat halaman edit dibuka
-        const initialSelected = $licenseSelect.val();
-        if (initialSelected) {
-            generateNis(initialSelected);
-        }
+        // const initialSelected = $licenseSelect.val();
+        // if (initialSelected) {
+        //     generateNis(initialSelected);
+        // }
     });
 </script>
 
