@@ -11,7 +11,7 @@ class LicenseHolderWorkExperiences extends Model
 {
     use HasFactory, HasUuid;
 
-    protected $table = 'license_holders_work_experiences';
+    protected $table = 'license_holder_work_experiences';
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = false;

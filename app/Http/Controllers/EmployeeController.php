@@ -176,19 +176,28 @@ class EmployeeController extends Controller
             'employees.expired_date_certificate',
         );
 
-        if ($auth->hasRole('Karyawan')) {
-            $query->where('employees.user_id', $auth->id);
-        }
+        // Jika user punya role Pemilik Lisensi atau Akuntan
+        if ($auth->hasRole(['Pemilik Lisensi', 'Akuntan', 'Karyawan'])) {
 
-        if ($auth->hasRole(['Pemilik Lisensi', 'Akuntan'])) {
-            $licenseIds = $auth->licenses()->pluck('id');
-            $query->whereIn('licenses.id', $licenseIds);
-        }
+            // Ambil license IDs sesuai role
+            $licenseIds = $auth->hasRole('Pemilik Lisensi')
+                ? $auth->licenses()->pluck('id')
+                : ($auth->employee?->licenses()->pluck('id') ?? collect());
 
+            // Filter query berdasarkan license IDs
+            if ($licenseIds->isNotEmpty()) {
+                $query->whereIn('licenses.id', $licenseIds);
+            } else {
+                // Kalau akuntan/pemilik lisensi tidak punya license sama sekali,
+                // bikin query kosong supaya tidak menampilkan data yang salah
+                $query->whereNull('licenses.id');
+            }
+        }
 
         if ($activeLicenseId) {
             $query->where('licenses.id', $activeLicenseId);
         }
+
 
         return $query;
     }

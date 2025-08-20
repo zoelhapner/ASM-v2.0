@@ -28,14 +28,12 @@ public function store(LoginRequest $request): RedirectResponse
     $request->authenticate();
     $request->session()->regenerate();
 
-    $user = auth()->user()->load([
-        'licenses',           // untuk Pemilik Lisensi
-        'employee.licenses',  // untuk Akuntan / Karyawan
-    ]);
-
+    $user = auth()->user();
     $user->update([
         'last_login_at' => now('Asia/Jakarta'),
     ]);
+    
+    $user->load(['licenses', 'employee.licenses']);
 
     // Skip kalau super admin
     if (! $user->hasRole('Super-Admin')) {

@@ -17,13 +17,12 @@
         <small class="d-block mt-2">
             Terakhir login:
             @if (auth()->check() && auth()->user()->last_login_at)
-                {{ \Carbon\Carbon::parse(auth()->user()->last_login_at)
-                    ->locale('id')
-                    ->translatedFormat('l, H:i') }}
+                {{ auth()->user()->last_login_at->locale('id')->translatedFormat('l, H:i') }}
             @else
                 Belum pernah login
             @endif
         </small>
+
     </div>
 
 

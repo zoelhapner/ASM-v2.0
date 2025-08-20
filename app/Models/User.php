@@ -71,6 +71,7 @@ public function getNameAttribute()
         'name',
         'email',
         'password',
+        'last_login_at',
     ];
 
     /**
