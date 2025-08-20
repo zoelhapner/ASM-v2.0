@@ -35,9 +35,8 @@
 @section('content')
 <div class="container-fluid mt-3">
     <div class="row">
-
         <!-- Update Profile Information -->
-        <div class="col-md-6 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-primary text-white">
                     <h3 class="card-title mb-0">
@@ -51,7 +50,7 @@
         </div>
 
         <!-- Update Password -->
-        <div class="col-md-6 mb-4">
+        <div class="col-lg-6 mb-4">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-info text-white">
                     <h3 class="card-title mb-0">
@@ -64,9 +63,8 @@
             </div>
         </div>
 
-        {{-- Delete User Account (Opsional) --}}
-        {{-- 
-        <div class="col-12">
+        {{-- Delete User Account --}}
+        {{-- <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-danger text-white">
                     <h3 class="card-title mb-0">
@@ -77,9 +75,9 @@
                     @include('profile.partials.delete-user-form')
                 </div>
             </div>
-        </div>
-        --}}
+        </div> --}}
     </div>
 </div>
 @endsection
+
 
