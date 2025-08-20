@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class StudentsController extends Controller
 {
@@ -71,21 +72,34 @@ class StudentsController extends Controller
             'religions.name as religion_name'
         );
 
-        if (Auth::user()->hasRole('Siswa')) {
-            $students->where('students.user_id', Auth::id());
-        }
+        $user = Auth::user();
+        $students = Student::query();
 
-        // if (Auth::user()->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
-        //     $licenseIds = Auth::user()->licenses()->pluck('id');
-        //     $students->whereIn('students.license_id', $licenseIds);
-        // }
+        // Cek role user
+        if ($user->hasRole('Siswa')) {
 
-        if (Auth::user()->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
+            $students->where('students.user_id', $user->id);
+
+        } elseif ($user->hasAnyRole(['Pemilik Lisensi', 'Akuntan'])) {
+            // Ambil semua license ID sesuai role
+            if ($user->hasRole('Pemilik Lisensi')) {
+                $licenseIds = $user->licenses()->pluck('id')->toArray();
+            } elseif ($user->hasRole('Akuntan')) {
+                $licenseIds = $user->employee?->licenses()->pluck('id')->toArray() ?? [];
+            } else {
+                $licenseIds = [];
+            }
+
+            // Jika ada license aktif di session & dimiliki user → pakai itu
             $activeLicenseId = session('active_license_id');
-            if ($activeLicenseId) {
+            if ($activeLicenseId && in_array($activeLicenseId, $licenseIds)) {
                 $students->where('students.license_id', $activeLicenseId);
+            } else {
+                // Kalau tidak ada session atau session tidak valid, pakai semua lisensi user
+                $students->whereIn('students.license_id', $licenseIds);
             }
         }
+
 
 
         return DataTables::of($students)
