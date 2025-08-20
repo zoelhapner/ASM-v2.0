@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
         $(this).addClass('active');
 
         // Load tab content via AJAX
-        $.get(url, function (res) {
+        $.get(url.replace(/^http:/, 'https:'), function (res) {
             $container.html(res);
         }).fail(function () {
             $container.html('<div class="alert alert-danger">Gagal memuat data.</div>');

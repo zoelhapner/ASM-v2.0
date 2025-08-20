@@ -92,8 +92,8 @@ $(document).ready(function () {
         $container.html('<div class="text-center p-3">Memuat...</div>');
 
         // Load konten via AJAX
-        $.get(url, function (res) {
-            $container.html(res);
+        $.get(url.replace(/^http:/, 'https:'), function (res) {
+        $container.html(res);
         }).fail(function () {
             $container.html('<div class="alert alert-danger">Gagal memuat data.</div>');
         });
