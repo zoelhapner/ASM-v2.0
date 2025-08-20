@@ -26,17 +26,23 @@ class StorageRailwayLink extends Command
      */
     public function handle()
     {
-        $link = public_path('storage');
-        $target = '/mnt/data';
+        $storagePath = '/mnt/data/public';
+        $publicPath = public_path('storage');
 
-        // Hapus kalau sudah ada link/folder sebelumnya
-        if (File::exists($link)) {
-            File::delete($link);
+        // Buat folder /mnt/data/public kalau belum ada
+        if (!File::exists($storagePath)) {
+            File::makeDirectory($storagePath, 0755, true);
+            $this->info("Created directory: {$storagePath}");
         }
 
-        // Buat symlink baru
-        symlink($target, $link);
+        // Hapus symlink lama kalau ada
+        if (is_link($publicPath) || File::exists($publicPath)) {
+            File::delete($publicPath);
+            $this->info("Removed old storage link: {$publicPath}");
+        }
 
-        $this->info("The [public/storage] directory has been linked to [$target].");
+        // Bikin symlink baru
+        symlink($storagePath, $publicPath);
+        $this->info("Linked {$publicPath} => {$storagePath}");
     }
 }

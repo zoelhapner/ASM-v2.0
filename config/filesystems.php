@@ -40,7 +40,7 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => '/mnt/data',
+            'root' => '/mnt/data/public',
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
             'throw' => false,
@@ -82,7 +82,7 @@ return [
     */
 
     'links' => [
-        public_path('storage') => '/mnt/data',
+        public_path('storage') => '/mnt/data/public',
     ],
 
 ];
