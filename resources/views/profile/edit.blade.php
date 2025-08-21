@@ -159,10 +159,11 @@
                         <i class="ti ti-lock me-2"></i> Ubah Kata Sandi
                     </h3>
                 </div>
-                <div class="card-body" x-data="{ showPassword: false, showConfirmPassword: false, showCurrentPassword: false }">
+                <div class="card-body" x-data="{ showPassword: true, showConfirmPassword: true, showCurrentPassword: true }">
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
-                        @method('PUT')
+
+                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
                         <!-- Password Saat Ini -->
                         <div class="mb-3">
