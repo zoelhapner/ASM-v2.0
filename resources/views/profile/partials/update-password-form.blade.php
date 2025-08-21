@@ -52,8 +52,8 @@
 @section('title', 'Ubah Kata Sandi')
 
 @section('content')
-<div x-data="{ showPassword: false, showConfirmPassword: false, showCurrentPassword: false }">
-    <form method="POST" action="{{ route('user-password.update') }}">
+<div x-data="{ showPassword: true, showConfirmPassword: true, showCurrentPassword: true }">
+    <form method="POST" action="{{ route('password.update') }}">
         @csrf
         @method('PUT')
 
