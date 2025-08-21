@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -36,26 +37,25 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // 1. Update data profil
-        $user->fill($request->validated());
+        $user->fill($request->only('name', 'email'));
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        // 2. Jika password diisi, maka validasi dan update password
-        if ($request->filled('current_password') || $request->filled('password')) {
-            $request->validate([
-                'current_password' => ['required', 'current_password'],
-                'password' => ['required', 'confirmed', 'min:8'],
-            ]);
-
-            $user->password = Hash::make($request->password);
-        }
-
-        // 3. Simpan semua perubahan sekaligus
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // 2. Jika password diisi, maka validasi dan update password
+        if ($request->filled('current_password') && $request->filled('password')) {
+
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            
+        }
+
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
 
 

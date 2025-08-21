@@ -104,6 +104,7 @@
                         @csrf
                         @method('patch')
 
+                        <!-- Nama -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Nama</label>
                             <input id="name" name="name" type="text"
@@ -114,6 +115,7 @@
                             @enderror
                         </div>
 
+                        <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input id="email" name="email" type="email"
@@ -122,41 +124,21 @@
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-
-                            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                                <div class="mt-2">
-                                    <p class="text-sm text-warning mb-2">
-                                        {{ __('Alamat email kamu belum terverifikasi.') }}
-                                    </p>
-                                    <button form="send-verification" class="btn btn-link p-0">
-                                        {{ __('Klik di sini untuk memverifikasi email.') }}
-                                    </button>
-
-                                    @if (session('status') === 'verification-link-sent')
-                                        <p class="mt-2 text-success fw-semibold">
-                                            {{ __('Link verifikasi telah dikirim.') }}
-                                        </p>
-                                    @endif
-                                </div>
-                            @endif
                         </div>
 
-                          <!-- Password Saat Ini -->
+                        <!-- Password Saat Ini -->
                         <div class="mb-3">
                             <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
                             <div class="input-group">
-                                <input id="current_password" name="current_password"
-                                    :type="showCurrentPassword ? 'text' : 'password'"
-                                    class="form-control @error('current_password', 'updatePassword') is-invalid @enderror"
-                                    placeholder="Masukkan kata sandi lama"
-                                    autocomplete="current-password">
+                                <input id="current_password" name="current_password" type="password"
+                                    class="form-control @error('current_password') is-invalid @enderror"
+                                    placeholder="Masukkan kata sandi lama" autocomplete="current-password">
                                 <button type="button" class="btn btn-outline-secondary"
-                                    @click="showCurrentPassword = !showCurrentPassword">
-                                    <i x-show="!showCurrentPassword" class="ti ti-eye"></i>
-                                    <i x-show="showCurrentPassword" class="ti ti-eye-off"></i>
+                                    onclick="togglePassword('current_password', this)">
+                                    <i class="ti ti-eye"></i>
                                 </button>
                             </div>
-                            @error('current_password', 'updatePassword')
+                            @error('current_password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -165,18 +147,15 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Kata Sandi Baru</label>
                             <div class="input-group">
-                                <input id="password" name="password"
-                                    :type="showPassword ? 'text' : 'password'"
-                                    class="form-control @error('password', 'updatePassword') is-invalid @enderror"
-                                    placeholder="Masukkan kata sandi baru"
-                                    autocomplete="new-password">
+                                <input id="password" name="password" type="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    placeholder="Masukkan kata sandi baru" autocomplete="new-password">
                                 <button type="button" class="btn btn-outline-secondary"
-                                    @click="showPassword = !showPassword">
-                                    <i x-show="!showPassword" class="ti ti-eye"></i>
-                                    <i x-show="showPassword" class="ti ti-eye-off"></i>
+                                    onclick="togglePassword('password', this)">
+                                    <i class="ti ti-eye"></i>
                                 </button>
                             </div>
-                            @error('password', 'updatePassword')
+                            @error('password')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -185,76 +164,32 @@
                         <div class="mb-3">
                             <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
                             <div class="input-group">
-                                <input id="password_confirmation" name="password_confirmation"
-                                    :type="showConfirmPassword ? 'text' : 'password'"
-                                    class="form-control @error('password_confirmation', 'updatePassword') is-invalid @enderror"
-                                    placeholder="Ulangi kata sandi baru"
-                                    autocomplete="new-password">
+                                <input id="password_confirmation" name="password_confirmation" type="password"
+                                    class="form-control @error('password_confirmation') is-invalid @enderror"
+                                    placeholder="Ulangi kata sandi baru" autocomplete="new-password">
                                 <button type="button" class="btn btn-outline-secondary"
-                                    @click="showConfirmPassword = !showConfirmPassword">
-                                    <i x-show="!showConfirmPassword" class="ti ti-eye"></i>
-                                    <i x-show="showConfirmPassword" class="ti ti-eye-off"></i>
+                                    onclick="togglePassword('password_confirmation', this)">
+                                    <i class="ti ti-eye"></i>
                                 </button>
                             </div>
-                            @error('password_confirmation', 'updatePassword')
+                            @error('password_confirmation')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
+                        <!-- Tombol Simpan -->
                         <button type="submit" class="btn btn-primary">Simpan</button>
 
                         @if (session('status') === 'profile-updated')
-                            <div x-data="{ show: true }" x-show="show"
-                             x-init="setTimeout(() => show = false, 3000)"
-                             class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4 shadow"
-                             role="alert">
-                                <div class="d-flex">
-                                    <div class="toast-body">
-                                        <i class="ti ti-check me-2"></i> tersimpan
-                                    </div>
-                                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                        @click="show = false"></button>
-                                </div>
+                            <div class="alert alert-success mt-3">
+                                <i class="ti ti-check"></i> Profil berhasil diperbarui!
                             </div>
                         @endif
                     </form>
+                   
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
-
-
-        {{-- <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-info text-white">
-                    <h3 class="card-title mb-0">
-                        <i class="ti ti-lock me-2"></i> Ubah Kata Sandi
-                    </h3>
-                </div>
-                <div class="card-body" x-data="{ showPassword: true, showConfirmPassword: true, showCurrentPassword: true }">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
-
-                      
-
-                        <!-- Tombol Simpan -->
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-info">
-                                <i class="ti ti-lock-check me-1"></i> Simpan Kata Sandi
-                            </button>
-                        </div>
-                    </form>
-
-                    <!-- Toast Notification -->
-                    @if (session('status') === 'password-updated')
-                        
-                    @endif
-                </div>
-            </div>
-        </div> --}}
-
-
-
-
