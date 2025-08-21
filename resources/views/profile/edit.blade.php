@@ -141,29 +141,7 @@
                             @endif
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-
-                        @if (session('status') === 'profile-updated')
-                            <span class="text-success ms-3">✔ Tersimpan!</span>
-                        @endif
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- Form Update Password -->
-        <div class="col-lg-6 mb-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-info text-white">
-                    <h3 class="card-title mb-0">
-                        <i class="ti ti-lock me-2"></i> Ubah Kata Sandi
-                    </h3>
-                </div>
-                <div class="card-body" x-data="{ showPassword: true, showConfirmPassword: true, showCurrentPassword: true }">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
-
-                        <!-- Password Saat Ini -->
+                          <!-- Password Saat Ini -->
                         <div class="mb-3">
                             <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
                             <div class="input-group">
@@ -223,6 +201,41 @@
                             @enderror
                         </div>
 
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+
+                        @if (session('status') === 'profile-updated')
+                            <div x-data="{ show: true }" x-show="show"
+                             x-init="setTimeout(() => show = false, 3000)"
+                             class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4 shadow"
+                             role="alert">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        <i class="ti ti-check me-2"></i> Kata sandi berhasil diperbarui!
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        @click="show = false"></button>
+                                </div>
+                            </div>
+                        @endif
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        {{-- <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-info text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="ti ti-lock me-2"></i> Ubah Kata Sandi
+                    </h3>
+                </div>
+                <div class="card-body" x-data="{ showPassword: true, showConfirmPassword: true, showCurrentPassword: true }">
+                    <form method="POST" action="{{ route('password.update') }}">
+                        @csrf
+
+                      
+
                         <!-- Tombol Simpan -->
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn btn-info">
@@ -233,22 +246,11 @@
 
                     <!-- Toast Notification -->
                     @if (session('status') === 'password-updated')
-                        <div x-data="{ show: true }" x-show="show"
-                             x-init="setTimeout(() => show = false, 3000)"
-                             class="toast align-items-center text-white bg-success border-0 position-fixed bottom-0 end-0 m-4 shadow"
-                             role="alert">
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    <i class="ti ti-check me-2"></i> Kata sandi berhasil diperbarui!
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                                    @click="show = false"></button>
-                            </div>
-                        </div>
+                        
                     @endif
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
 @endsection

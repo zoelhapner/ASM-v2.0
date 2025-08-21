@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("employees.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("employees.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -36,7 +36,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <p class="text-center mb-4" style="font-size: 1.5rem; font-weight: 400; font-family: 'Poppins', sans-serif;">
+                            <p class="text-center mb-4">
                                 Edit Data Penddikan
                             </p>
                         </div>
@@ -85,8 +85,8 @@
                                 </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-secondary">Batal</a>
-                            <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                            <a href="{{ route('employees.show', $employee->id) }}" class="btn btn-secondary text-white">Batal</a>
+                            <button type="submit" class="btn btn-success text-white">Simpan Perubahan</button>
                         </div>
                     </form>
  

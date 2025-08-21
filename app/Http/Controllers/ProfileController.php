@@ -30,55 +30,54 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
+    
     public function update(ProfileUpdateRequest $request): RedirectResponse {
     
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        // 1. Update data profil
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        // 2. Jika password diisi, maka validasi dan update password
+        if ($request->filled('current_password') || $request->filled('password')) {
+            $request->validate([
+                'current_password' => ['required', 'current_password'],
+                'password' => ['required', 'confirmed', 'min:8'],
+            ]);
+
+            $user->password = Hash::make($request->password);
+        }
+
+        // 3. Simpan semua perubahan sekaligus
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    public function updatePassword(Request $request)
-{
-    $request->validate([
-        'current_password' => ['required', 'current_password'],
-        'password' => ['required', 'confirmed', 'min:8'],
-    ]);
 
-    $user = $request->user();
-    $user->update([
-        'password' => Hash::make($request->password),
-    ]);
-
-    return back()->with('status', 'password-updated');
-}
 
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse {
+    // public function destroy(Request $request): RedirectResponse {
     
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+    //     $request->validateWithBag('userDeletion', [
+    //         'password' => ['required', 'current_password'],
+    //     ]);
 
-        $user = $request->user();
+    //     $user = $request->user();
 
-        Auth::logout();
+    //     Auth::logout();
 
-        $user->delete();
+    //     $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
 
-        return Redirect::to('/');
-    }
+    //     return Redirect::to('/');
+    // }
 }
