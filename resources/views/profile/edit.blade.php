@@ -210,7 +210,7 @@
                              role="alert">
                                 <div class="d-flex">
                                     <div class="toast-body">
-                                        <i class="ti ti-check me-2"></i> Kata sandi berhasil diperbarui!
+                                        <i class="ti ti-check me-2"></i> tersimpan
                                     </div>
                                     <button type="button" class="btn-close btn-close-white me-2 m-auto"
                                         @click="show = false"></button>
@@ -221,6 +221,9 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
+@endsection
 
 
         {{-- <div class="col-lg-6 mb-4">
@@ -251,9 +254,7 @@
                 </div>
             </div>
         </div> --}}
-    </div>
-</div>
-@endsection
+
 
 
 

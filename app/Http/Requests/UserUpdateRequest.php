@@ -31,7 +31,7 @@ class UserUpdateRequest extends FormRequest
                 'email',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
-            'password' => ['require'],
+            'password' => 'required',
         ];
     }
 }
