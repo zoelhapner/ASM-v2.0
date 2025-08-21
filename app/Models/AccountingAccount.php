@@ -25,7 +25,7 @@ class AccountingAccount extends Model
 
     
     protected $fillable = [
-       'license_id',
+        'license_id',
         'account_code',
         'account_name',
         'account_type',

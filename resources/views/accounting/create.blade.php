@@ -54,14 +54,21 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label>Jenis Akun</label>
-                                            <input type="text" name="account_type" class="form-control" required>
+                                            <label>Kategori</label>
+                                            <select name="account_type" class="form-select" required>
+                                                <option value="Debit">Aset Lancar</option>
+                                                <option value="Kredit">Aset Tetap</option>
+                                                <option value="Debit">Kewajiban</option>
+                                                <option value="Kredit">Ekuitas</option>
+                                                <option value="Debit">Pendapatan</option>
+                                                <option value="Kredit">Beban</option>
+                                            </select>
                                         </div>
                                     </div>
 
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
-                                            <label>Debit/Kredit</label>
+                                            <label>Sub Kategori</label>
                                             <select name="balance_type" class="form-select" required>
                                                 <option value="Debit">Debit</option>
                                                 <option value="Kredit">Kredit</option>

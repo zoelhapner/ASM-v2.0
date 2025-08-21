@@ -172,9 +172,24 @@
                                 <span class="input-group-text">
                                     <a href="#" class="toggle-password link-secondary" data-bs-toggle="tooltip" 
                                     data-target="password" title="Show password" aria-label="Show password">
-                                        <!-- Sama seperti di atas -->
-                                        <svg class="eyeIcon" ...>...</svg>
-                                        <svg class="eyeOffIcon" style="display:none;" ...>...</svg>
+                                        <svg class="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="12" cy="12" r="2"/>
+                                            <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/>
+                                        </svg>
+                                        <svg class="eyeOffIcon" xmlns="http://www.w3.org/2000/svg" style="display:none;"
+                                            width="24" height="24" viewBox="0 0 24 24" stroke-width="2" 
+                                            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M3 3l18 18"/>
+                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/>
+                                            <path d="M9.878 5.878c.995-.586 2.111-.878 3.122-.878 4 0 7.333 2.333 10 7
+                                                    -1.193 2.089 -2.495 3.695 -3.907 4.82"/>
+                                            <path d="M6.14 6.128c-1.653 1.147-3.041 2.797-4.14 4.872
+                                                    2.667 4.667 6 7 10 7 1.575 0 3.082-.355 4.5-1"/>
+                                        </svg>
                                     </a>
                                 </span>
                             </div>
@@ -194,8 +209,24 @@
                                     <a href="#" class="toggle-password link-secondary" data-bs-toggle="tooltip" 
                                     data-target="password_confirmation" title="Show password" aria-label="Show password">
                                         <!-- Sama seperti di atas -->
-                                        <svg class="eyeIcon" ...>...</svg>
-                                        <svg class="eyeOffIcon" style="display:none;" ...>...</svg>
+                                        <svg class="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <circle cx="12" cy="12" r="2"/>
+                                            <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/>
+                                        </svg>
+                                        <svg class="eyeOffIcon" xmlns="http://www.w3.org/2000/svg" style="display:none;"
+                                            width="24" height="24" viewBox="0 0 24 24" stroke-width="2" 
+                                            stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M3 3l18 18"/>
+                                            <path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/>
+                                            <path d="M9.878 5.878c.995-.586 2.111-.878 3.122-.878 4 0 7.333 2.333 10 7
+                                                    -1.193 2.089 -2.495 3.695 -3.907 4.82"/>
+                                            <path d="M6.14 6.128c-1.653 1.147-3.041 2.797-4.14 4.872
+                                                    2.667 4.667 6 7 10 7 1.575 0 3.082-.355 4.5-1"/>
+                                        </svg>
                                     </a>
                                 </span>
                             </div>

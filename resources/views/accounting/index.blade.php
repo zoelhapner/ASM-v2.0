@@ -13,8 +13,8 @@
                 <th>Nama Lisensi</th>
                 <th>Kode Akun</th>
                 <th>Nama Akun</th>
-                <th>Jenis</th>
-                <th>Debit/Kredit</th>
+                <th>Kategori</th>
+                <th>Sub Kategori</th>
                 <th>Saldo Awal</th>
                 <th>Akun Induk</th>
                 <th>Status</th>

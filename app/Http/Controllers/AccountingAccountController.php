@@ -87,7 +87,7 @@ class AccountingAccountController extends Controller
             'account_code' => 'required|string|max:255',
             'account_name' => 'required|string|max:255',
             'account_type' => 'required|string|max:255',
-            'balance_type' => 'required|in:Debit,Kredit',
+            'balance_type' => 'required|string|max:255',
             'initial_balance' => 'nullable|numeric',
             'is_parent' => 'boolean',
             'parent_id' => 'nullable|uuid|exists:accounting_accounts,id',

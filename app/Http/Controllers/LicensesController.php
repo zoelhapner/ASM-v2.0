@@ -33,7 +33,7 @@ class LicensesController extends Controller
             $buildingStatuses = [1 => 'Milik Sendiri', 2 => 'Sewa', 3 => 'Lain-Lain'];
             $buildingConditions = [1 => 'Baik', 2 => 'Perlu Renovasi', 3 => 'Rusak Berat'];
             $status = ['active' => 'Aktif', 'inactive' => 'Masa Tenggang', 'expired' => 'Sudah Habis'];
-            $buildinghasAC = [1 => 'Punya', 0 => 'Tidak Punya'];
+            $buildinghasAC = [true => 'Punya', false => 'Tidak Punya'];
 
             return DataTables::of($licenses)
                 ->addColumn('province_name', fn($row) => $row->province->name ?? '-')
@@ -44,7 +44,7 @@ class LicensesController extends Controller
                 ->editColumn('building_type', fn($row) => $buildingTypes[$row->building_type] ?? 'Tidak Diketahui')
                 ->editColumn('building_status', fn($row) => $buildingStatuses[$row->building_status] ?? 'Tidak Diketahui')
                 ->editColumn('building_condition', fn($row) => $buildingConditions[$row->building_condition] ?? 'Tidak Diketahui')
-                ->editColumn('building_has_ac', fn($row) => $buildinghasAC[$row->buildinghasAC] ?? 'Tidak Diketahui')
+                ->editColumn('building_has_ac', fn($row) => $buildinghasAC[$row->building_has_ac] ?? 'Tidak Diketahui')
                 ->editColumn('contract_document', function ($row) {
                     if ($row->contract_document) {
                         // Ambil URL dari disk public
@@ -75,7 +75,7 @@ class LicensesController extends Controller
                 ->addColumn('youtube', fn($row) => $this->linkOrDash($row->youtube))
                 ->addColumn('google_maps', fn($row) => $this->linkOrDash($row->google_maps))
                 ->addColumn('landing_page_student_registration', fn($row) => $this->linkOrDash($row->landing_page_student_registration))
-                ->addColumn('join_date', fn($row) => Carbon::parse($row->join_date)->format('d/m/Y'))
+                ->addColumn('join_date', fn($row) => $row->join_date ? Carbon::parse($row->join_date)->format('d/m/Y') : '-')
                 ->addColumn('expired_date', fn($row) => $row->expired_date ? Carbon::parse($row->expired_date)->format('d/m/Y') : '-')
                 ->addColumn('building_rent_expired_date', fn($row) => $row->building_rent_expired_date ? Carbon::parse($row->building_rent_expired_date)->format('d/m/Y') : '-')
                 ->addColumn('status', function ($row) use ($status) {
@@ -410,6 +410,29 @@ class LicensesController extends Controller
         }
     }
 
+        $defaultAccounts = Config::get('accounting_defaults.accounts');
+
+        foreach ($defaultAccounts as $acc) {
+            AccountingAccount::firstOrCreate(
+                [
+                    // Kombinasi unik, bukan account_code saja
+                    'license_id' => $license->id,
+                    'account_code' => $acc['account_code'],
+                ],
+                [
+                    'id' => Str::uuid(),
+                    'account_type' => $acc['account_type'] ?? null,
+                    'account_name' => $acc['account_name'] ?? null,
+                    'person_type' => $acc['person_type'] ?? null,
+                    'is_active' => true,
+                    'is_parent' => false,
+                    'initial_balance' => 0,
+                    'balance_type' => $acc['balance_type'] ?? null,
+                ]
+            );
+        }
+
+    
     // Status lisensi
     if ($validated['license_type'] === 'FO') {
         $validated['status'] = 'active';

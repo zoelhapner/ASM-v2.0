@@ -212,7 +212,7 @@
                                     
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Tanggal Bergabung</label>
-                                            <input type="date" id="join_date" name="join_date" class="form-control" required
+                                            <input type="date" id="join_date" name="join_date" class="form-control" 
                                                 value="{{ old('join_date', $license->join_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
@@ -223,7 +223,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Tanggal Expired</label>
-                                            <input type="date" id="expired_date" name="expired_date" class="form-control" required
+                                            <input type="date" id="expired_date" name="expired_date" class="form-control"
                                                 value="{{ old('expired_date', $license->expired_date) }}"
                                                 pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD" {{ $disabled }}>
                                         </div>
