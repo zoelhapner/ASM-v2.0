@@ -163,8 +163,6 @@
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf
 
-                        <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
                         <!-- Password Saat Ini -->
                         <div class="mb-3">
                             <label for="current_password" class="form-label">Kata Sandi Saat Ini</label>
