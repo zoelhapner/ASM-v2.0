@@ -16,7 +16,7 @@
                 <th>Kategori</th>
                 <th>Sub Kategori</th>
                 <th>Saldo Awal</th>
-                <th>Akun Induk</th>
+                {{-- <th>Akun Induk</th> --}}
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>

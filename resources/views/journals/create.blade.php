@@ -103,9 +103,9 @@
                     </tr>
                 </tbody>
                 <tfoot>
-                    {{-- <tr>
+                    <tr>
                         <td colspan="6"><button type="button" id="add-row" class="btn btn-sm btn-primary">Tambah Baris</button></td>
-                    </tr> --}}
+                    </tr>
                     <tr>
                         <th colspan="2">Subtotal</th>
                         <th id="subtotal-debit">0</th>
@@ -177,46 +177,46 @@
                 creditInput.prop('disabled', false);
                 debitInput.prop('disabled', true).val('');
             } else {
-                debitInput.prop('disabled', false).val('');
-                creditInput.prop('disabled', false).val('');
+                debitInput.prop('disabled', true).val('');
+                creditInput.prop('disabled', true).val('');
             }
         }
 
-        const akunOtomatisPusat = ['K 0001', 'K 0002', 'K 0003', 'K 0004', 'K 0005', 'K 0006', 'K 0007', 'K 0008', 'K 0013', 'K 0014', 'K 0015', 'K 0016',
-            'K 0021',
-            'K 0022',
-            'K 0023',
-            'K 0024',
-            'K 0029',
-            'K 0031', 
-            'K 0034',    
-        ];
-        const pusatUserId = @json($pusatUserId ?? '');
-        const pusatUserName = @json($pusatUserName ?? '');
+        // const akunOtomatisPusat = ['K 0001', 'K 0002', 'K 0003', 'K 0004', 'K 0005', 'K 0006', 'K 0007', 'K 0008', 'K 0013', 'K 0014', 'K 0015', 'K 0016',
+        //     'K 0021',
+        //     'K 0022',
+        //     'K 0023',
+        //     'K 0024',
+        //     'K 0029',
+        //     'K 0031', 
+        //     'K 0034',    
+        // ];
+        // const pusatUserId = @json($pusatUserId ?? '');
+        // const pusatUserName = @json($pusatUserName ?? '');
 
-        $('#detail-rows').on('change', '.account-select', function () {
-            const row = $(this).data('row');
-            const code = $(this).find('option:selected').data('code') || '';
-            const personType = $(this).find('option:selected').data('person-type') || null;
-            const $userSelect = $(`select.user-select[data-row="${row}"]`);
+        // $('#detail-rows').on('change', '.account-select', function () {
+        //     const row = $(this).data('row');
+        //     const code = $(this).find('option:selected').data('code') || '';
+        //     const personType = $(this).find('option:selected').data('person-type') || null;
+        //     const $userSelect = $(`select.user-select[data-row="${row}"]`);
 
-            if (akunOtomatisPusat.includes(code) && pusatUserId) {
-                $userSelect.empty()
-                    .append(`<option value="">-- Pilih User --</option>`)
-                    .append(`<option value="${pusatUserId}" selected>${pusatUserName}</option>`)
-                    .show()
-                    .prop('disabled', false);
+        //     if (akunOtomatisPusat.includes(code) && pusatUserId) {
+        //         $userSelect.empty()
+        //             .append(`<option value="">-- Pilih User --</option>`)
+        //             .append(`<option value="${pusatUserId}" selected>${pusatUserName}</option>`)
+        //             .show()
+        //             .prop('disabled', false);
 
-                // Aktifkan kolom debit/kredit sesuai kode akun
-                toggleDebitCreditInputs(row, code);
-            } else if (['Siswa', 'Karyawan', 'Lisensi'].includes(personType)) {
-                renderUserOptions(row, personType);
-                toggleDebitCreditInputs(row, code);
-            } else {
-                $userSelect.hide().prop('disabled', false).empty();
-                toggleDebitCreditInputs(row, code);
-            }
-        });
+        //         // Aktifkan kolom debit/kredit sesuai kode akun
+        //         toggleDebitCreditInputs(row, code);
+        //     } else if (['Siswa', 'Karyawan', 'Lisensi'].includes(personType)) {
+        //         renderUserOptions(row, personType);
+        //         toggleDebitCreditInputs(row, code);
+        //     } else {
+        //         $userSelect.hide().prop('disabled', false).empty();
+        //         toggleDebitCreditInputs(row, code);
+        //     }
+        // });
 
         $('#add-row').click(function () {
             const rowCount = $('#detail-rows tr').length;
