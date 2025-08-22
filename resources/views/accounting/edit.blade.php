@@ -32,15 +32,27 @@
             <input type="text" name="category" value="{{ $account->account_type }}" class="form-control" required>
         </div>
 
+        <div class="col-md-6 mb-3">
+            <label>Kategori</label>
+            <select name="category" class="form-select" required>
+                <option value="">-- Pilih Kategori --</option>
+                <option value="AKTIVA"  {{ $account->category == "AKTIVA" ? 'selected' : '' }}>AKTIVA</option>
+                <option value="KEWAJIBAN"  {{ $account->category == "KEWAJIBAN" ? 'selected' : '' }}>KEWAJIBAN</option>
+                <option value="EKUITAS"  {{ $account->category == "EKUITAS" ? 'selected' : '' }}>EKUITAS</option>
+                <option value="PENDAPATAN"  {{ $account->category == "PENDAPATAN" ? 'selected' : '' }}>PENDAPATAN</option>
+                <option value="BEBAN"  {{ $account->category == "BEBAN" ? 'selected' : '' }}>BEBAN</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <label>Sub kategori</label>
             <select name="sub_category" class="form-select" required>
                 <option value="">-- Pilih Sub kategori --</option>
-                <option value="Kas & Bank" {{ $account->sub_category == "Kas & Bank" ? 'selected' : '' }}>Kas & Bank</option>
-                <option value="Persediaan Barang" {{ $account->sub_category == "Persediaan Barang" ? 'selected' : '' }}>Persediaan Barang</option>
-                <option value="Piutang" {{ $account->sub_category == "Piutang" ? 'selected' : '' }}>Piutang</option>
-                <option value="Dana Belum Disetor" {{ $account->sub_category == "Dana Belum Disetor" ? 'selected' : '' }}>Dana Belum Disetor</option>
-                <option value="Pajak Bayar Dimuka" {{ $account->sub_category == "Pajak Bayar Dimuka" ? 'selected' : '' }}>Pajak Bayar Dimuka</option>
+                <option value="Aset Lancar - Kas & Bank" {{ $account->sub_category == "Aset Lancar - Kas & Bank" ? 'selected' : '' }}>Aset Lancar - Kas & Bank</option>
+                <option value="Aset Lancar - Persediaan Barang" {{ $account->sub_category == "Aset Lancar - Persediaan Barang" ? 'selected' : '' }}>Aset Lancar - Persediaan Barang</option>
+                <option value="Aset Lancar - Piutang" {{ $account->sub_category == "Aset Lancar - Piutang" ? 'selected' : '' }}>Aset Lancar - Piutang</option>
+                <option value="Aset Lancar - Dana Belum Disetor" {{ $account->sub_category == "Aset Lancar - Dana Belum Disetor" ? 'selected' : '' }}>Aset Lancar - Dana Belum Disetor</option>
+                <option value="Aset Lancar - Pajak Bayar Dimuka" {{ $account->sub_category == "Aset Lancar - Pajak Bayar Dimuka" ? 'selected' : '' }}>Aset Lancar - Pajak Bayar Dimuka</option>
                 <option value="Aset Tetap" {{ $account->sub_category == "Aset Tetap" ? 'selected' : '' }}>Aset Tetap</option>
                 <option value="Penyusutan" {{ $account->sub_category == "Penyusutan" ? 'selected' : '' }}>Penyusutan</option>
                 <option value="Hutang" {{ $account->sub_category == "Hutang" ? 'selected' : '' }}>Hutang</option>

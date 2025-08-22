@@ -44,7 +44,6 @@
 
 
                                     <div class="row mb-4">
-                                        <div class="col-md-6 mb-3">
                                             <div class="col-md-6 mb-3">
                                                 <label>Kategori</label>
                                                 <select name="account_type" class="form-select" required>
@@ -86,17 +85,20 @@
                                                     <option value="Beban Administrasi & Umum">Beban Administrasi & Umum</option>
                                                 </select>
                                             </div>
-                                        </div>
                                     </div>
 
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
                                             <label>Kode Akun</label>
                                             <input type="text" name="account_code" class="form-control" required>
+                                        </div>
 
+                                        <div class="col-md-6 mb-3">
                                             <label>Nama Akun</label>
                                             <input type="text" name="account_name" class="form-control" required>
+                                        </div>
 
+                                        <div class="col-md-6 mb-3">
                                             <label>Saldo Awal</label>
                                             <input type="number" step="0.01" name="initial_balance" class="form-control">
                                         </div>
