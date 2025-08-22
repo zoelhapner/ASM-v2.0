@@ -421,13 +421,13 @@ class LicensesController extends Controller
                 ],
                 [
                     'id' => Str::uuid(),
-                    'account_type' => $acc['account_type'] ?? null,
+                    'category' => $acc['category'] ?? null,
                     'account_name' => $acc['account_name'] ?? null,
                     'person_type' => $acc['person_type'] ?? null,
                     'is_active' => true,
                     'is_parent' => false,
                     'initial_balance' => 0,
-                    'balance_type' => $acc['balance_type'] ?? null,
+                    'sub_category' => $acc['sub_category'] ?? null,
                 ]
             );
         }

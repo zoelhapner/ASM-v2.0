@@ -138,14 +138,14 @@ public function pusatUser()
             AccountingAccount::create([
                 'id' => Str::uuid(),
                 'license_id' => $license->id,
-                'account_type' => $acc['account_type'] ?? null,
+                'category' => $acc['account_type'] ?? null,
                 'account_code' => $acc['account_code'] ?? null,
                 'account_name' => $acc['account_name'] ?? null,
                 'person_type' => $acc['person_type'] ?? null,           
                 'is_active' => true,
                 'is_parent' => false,
                 'initial_balance' => 0,
-                'balance_type' => $acc['balance_type'] ?? null,
+                'sub_category' => $acc['balance_type'] ?? null,
             ]);
         }
     });
