@@ -134,16 +134,24 @@ public function pusatUser()
     static::created(function ($license) {
         $defaultAccounts = Config::get('accounting_defaults.accounts');
 
+        $uuidMap = [];
+        foreach ($defaultAccounts as $acc) {
+            $uuidMap[$acc['account_code']] = Str::uuid();
+        }
+
         foreach ($defaultAccounts as $acc) {
             AccountingAccount::create([
-                'id' => Str::uuid(),
+                'id' => $uuidMap[$acc['account_code']],
                 'license_id' => $license->id,
-                'account_type' => $acc['account_type'] ?? null,
+                'category' => $acc['category'] ?? null,
                 'account_code' => $acc['account_code'] ?? null,
                 'account_name' => $acc['account_name'] ?? null,
-                'person_type' => $acc['person_type'] ?? null,           
+                'sub_category' => $acc['sub_category'] ?? null,           
                 'is_active' => true,
-                'is_parent' => false,
+                'is_parent' => $acc['is_parent'] ?? false,
+                'parent_id' => !empty($acc['parent_code']) 
+                    ? $uuidMap[$acc['parent_code']] 
+                    : null,
                 'initial_balance' => 0,
                 'balance_type' => $acc['balance_type'] ?? null,
             ]);

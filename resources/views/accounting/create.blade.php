@@ -56,12 +56,12 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Kategori</label>
                                             <select name="account_type" class="form-select" required>
-                                                <option value="Debit">Aset Lancar</option>
-                                                <option value="Kredit">Aset Tetap</option>
-                                                <option value="Debit">Kewajiban</option>
-                                                <option value="Kredit">Ekuitas</option>
-                                                <option value="Debit">Pendapatan</option>
-                                                <option value="Kredit">Beban</option>
+                                                <option value="Aset Lancar">Aset Lancar</option>
+                                                <option value="Aset Tetap">Aset Tetap</option>
+                                                <option value="Kewajiban">Kewajiban</option>
+                                                <option value="Ekuitas">Ekuitas</option>
+                                                <option value="Pendapatan">Pendapatan</option>
+                                                <option value="Beban">Beban</option>
                                             </select>
                                         </div>
                                     </div>
@@ -70,8 +70,16 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Sub Kategori</label>
                                             <select name="balance_type" class="form-select" required>
-                                                <option value="Debit">Debit</option>
-                                                <option value="Kredit">Kredit</option>
+                                                <option value="Debit">Kas & Bank</option>
+                                                <option value="Kredit">Persediaan Barang</option>
+                                                <option value="Debit">Piutang</option>
+                                                <option value="Kredit">Dana Belum Disetor</option>
+                                                <option value="Debit">Pajak Bayar Dimuka</option>
+                                                <option value="Kredit">Aset Tetap</option>
+                                                <option value="Debit">Penyusutan</option>
+                                                <option value="Kredit">Hutang</option>
+                                                <option value="Uang Muka Penjualan">Uang Muka Penjualan</option>
+                                                <option value="Pajak">Pajak</option>
                                             </select>
                                         </div>
 

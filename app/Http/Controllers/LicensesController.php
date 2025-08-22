@@ -412,6 +412,11 @@ class LicensesController extends Controller
 
         $defaultAccounts = Config::get('accounting_defaults.accounts');
 
+        $uuidMap = [];
+        foreach ($defaultAccounts as $acc) {
+            $uuidMap[$acc['account_code']] = Str::uuid();
+        }
+
         foreach ($defaultAccounts as $acc) {
             AccountingAccount::firstOrCreate(
                 [
@@ -420,14 +425,17 @@ class LicensesController extends Controller
                     'account_code' => $acc['account_code'],
                 ],
                 [
-                    'id' => Str::uuid(),
-                    'account_type' => $acc['account_type'] ?? null,
+                    'id' => $uuidMap[$acc['account_code']],
+                    'category' => $acc['category'] ?? null,
                     'account_name' => $acc['account_name'] ?? null,
                     'person_type' => $acc['person_type'] ?? null,
                     'is_active' => true,
-                    'is_parent' => false,
+                    'is_parent' => $acc['is_parent'] ?? false,
+                    'parent_id' => !empty($acc['parent_code']) 
+                        ? $uuidMap[$acc['parent_code']] 
+                        : null,
                     'initial_balance' => 0,
-                    'balance_type' => $acc['balance_type'] ?? null,
+                    'sub_category' => $acc['sub_category'] ?? null,
                 ]
             );
         }
