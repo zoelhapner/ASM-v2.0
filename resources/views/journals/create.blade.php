@@ -71,10 +71,11 @@
                 <thead>
                     <tr>
                         <th>Akun</th>
+                        <th>Keterangan</th>
                         <th>User</th>
                         <th>Debit</th>
                         <th>Kredit</th>
-                        <th>Keterangan</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="detail-rows">
@@ -92,6 +93,7 @@
                                     @endforeach
                             </select>
                         </td>
+                        <td><input type="text" name="details[0][description]" class="form-control"></td>
                         <td>
                             <select name="details[0][person]" class="form-select select2 user-select" data-row="0" width="75px;">
                                 <option value="">-- Pilih User --</option>
@@ -99,7 +101,7 @@
                         </td>
                         <td><input type="number" step="0.01" name="details[0][debit]" class="form-control debit-input" disabled></td>
                         <td><input type="number" step="0.01" name="details[0][credit]" class="form-control credit-input" disabled></td>
-                        <td><input type="text" name="details[0][description]" class="form-control"></td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -140,153 +142,119 @@
 </script>
 
     <script>
-        const studentOptions = @json($students);
-        const employeeOptions = @json($employees);
-        const licenseOptions = @json($licenses);
+    const studentOptions  = @json($students);
+    const employeeOptions = @json($employees);
+    const licenseOptions  = @json($licenses);
 
-        function renderUserOptions(row, source) {
-            const $userSelect = $(`select.user-select[data-row="${row}"]`);
-            $userSelect.empty().append(`<option value="">-- Pilih User --</option>`);
-            $userSelect.prop('disabled', true).hide();
-            $userSelect.show().prop('disabled', false);
+    function renderUserOptions(row, source) {
+        const $userSelect = $(`select.user-select[data-row="${row}"]`);
+        $userSelect.empty().append(`<option value="">-- Pilih User --</option>`).show().prop('disabled', false);
 
-            let data = [];
-            if (source === 'Siswa') data = studentOptions;
-            if (source === 'Karyawan') data = employeeOptions;
-            if (source === 'Lisensi') data = licenseOptions;
+        let data = [];
+        if (source === 'Siswa') data = studentOptions;
+        if (source === 'Karyawan') data = employeeOptions;
+        if (source === 'Lisensi') data = licenseOptions;
 
-            if (data.length) {
-                $userSelect.append(`<option value="">-- Pilih User --</option>`);
-                data.forEach(item => {
-                    $userSelect.append(`<option value="${item.id}">${item.name}</option>`);
-                });
-                $userSelect.show();
-            } else {
-                $userSelect.hide();
-            }
-        }
-
-        function toggleDebitCreditInputs(row, code) {
-            const debitInput = $(`input[name="details[${row}][debit]"]`);
-            const creditInput = $(`input[name="details[${row}][credit]"]`);
-
-            if (code.startsWith('D')) {
-                debitInput.prop('disabled', false);
-                creditInput.prop('disabled', true).val('');
-            } else if (code.startsWith('K')) {
-                creditInput.prop('disabled', false);
-                debitInput.prop('disabled', true).val('');
-            } else {
-                debitInput.prop('disabled', true).val('');
-                creditInput.prop('disabled', true).val('');
-            }
-        }
-
-        // const akunOtomatisPusat = ['K 0001', 'K 0002', 'K 0003', 'K 0004', 'K 0005', 'K 0006', 'K 0007', 'K 0008', 'K 0013', 'K 0014', 'K 0015', 'K 0016',
-        //     'K 0021',
-        //     'K 0022',
-        //     'K 0023',
-        //     'K 0024',
-        //     'K 0029',
-        //     'K 0031', 
-        //     'K 0034',    
-        // ];
-        // const pusatUserId = @json($pusatUserId ?? '');
-        // const pusatUserName = @json($pusatUserName ?? '');
-
-        // $('#detail-rows').on('change', '.account-select', function () {
-        //     const row = $(this).data('row');
-        //     const code = $(this).find('option:selected').data('code') || '';
-        //     const personType = $(this).find('option:selected').data('person-type') || null;
-        //     const $userSelect = $(`select.user-select[data-row="${row}"]`);
-
-        //     if (akunOtomatisPusat.includes(code) && pusatUserId) {
-        //         $userSelect.empty()
-        //             .append(`<option value="">-- Pilih User --</option>`)
-        //             .append(`<option value="${pusatUserId}" selected>${pusatUserName}</option>`)
-        //             .show()
-        //             .prop('disabled', false);
-
-        //         // Aktifkan kolom debit/kredit sesuai kode akun
-        //         toggleDebitCreditInputs(row, code);
-        //     } else if (['Siswa', 'Karyawan', 'Lisensi'].includes(personType)) {
-        //         renderUserOptions(row, personType);
-        //         toggleDebitCreditInputs(row, code);
-        //     } else {
-        //         $userSelect.hide().prop('disabled', false).empty();
-        //         toggleDebitCreditInputs(row, code);
-        //     }
-        // });
-
-        $('#add-row').click(function () {
-            const rowCount = $('#detail-rows tr').length;
-            const newRow = `
-                <tr>
-                    <td>
-                        <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
-                            <option value="">-- Pilih Akun --</option>
-                            @foreach ($accounts as $account)
-                                <option value="{{ $account->id }}"
-                                    data-code="{{ $account->account_code }}"
-                                    data-name="{{ $account->account_name }}"
-                                    data-person-type="{{ $account->person_type }}">
-                                    {{ $account->account_code }} - {{ $account->account_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td>
-                        <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
-                    </td>
-                    <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
-                    <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
-                    <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-                    <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
-                </tr>
-            `;
-            $('#detail-rows').append(newRow);
-            $(`select[data-row="${rowCount}"]`).select2({
-                placeholder: "-- Pilih --",
-                width: '100%'
-            });
+        data.forEach(item => {
+            $userSelect.append(`<option value="${item.id}">${item.name}</option>`);
         });
 
-        $('#detail-rows').on('click', '.remove-row', function () {
-            $(this).closest('tr').remove();
+        if (data.length === 0) {
+            $userSelect.hide();
+        }
+    }
+
+    function toggleDebitCreditInputs(row, code) {
+        code = code ? code.toString() : '';
+        const debitInput  = $(`input[name="details[${row}][debit]"]`);
+        const creditInput = $(`input[name="details[${row}][credit]"]`);
+
+        if (code.startsWith('D')) {
+            debitInput.prop('disabled', false);
+            creditInput.prop('disabled', true).val('');
+        } else if (code.startsWith('K')) {
+            creditInput.prop('disabled', false);
+            debitInput.prop('disabled', true).val('');
+        } else {
+            debitInput.prop('disabled', false).val('');
+            creditInput.prop('disabled', false).val('');
+        }
+    }
+
+    $('#detail-rows').on('change', '.account-select', function () {
+        const row = $(this).data('row');
+        const code = $(this).find('option:selected').data('code') || '';
+        const personType = $(this).find('option:selected').data('person-type') || null;
+        const $userSelect = $(`select.user-select[data-row="${row}"]`);
+
+        if (['Siswa', 'Karyawan', 'Lisensi'].includes(personType)) {
+            renderUserOptions(row, personType);
+        } else {
+            $userSelect.hide().prop('disabled', false).empty();
+        }
+        toggleDebitCreditInputs(row, code);
+    });
+
+    $('#add-row').click(function () {
+        const rowCount = $('#detail-rows tr').length;
+        const newRow = `
+            <tr>
+                <td>
+                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
+                        <option value="">-- Pilih Akun --</option>
+                        @foreach ($accounts as $account)
+                            <option value="{{ $account->id }}"
+                                data-code="{{ $account->account_code }}"
+                                data-name="{{ $account->account_name }}"
+                                data-person-type="{{ $account->person_type }}">
+                                {{ $account->account_code }} - {{ $account->account_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
+                </td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
+            </tr>
+        `;
+        $('#detail-rows').append(newRow);
+
+        $(`select.account-select[data-row="${rowCount}"], select.user-select[data-row="${rowCount}"]`).select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
+    });
+
+    $('#detail-rows').on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+        calculateSubtotals();
+    });
+
+    function calculateSubtotals() {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+        });
+        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
+        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+    }
+
+    $(document).ready(function() {
+        $(document).on('input', '.debit-input, .credit-input', function() {
+            const val = parseFloat($(this).val());
+            if (val < 0) $(this).val('');
             calculateSubtotals();
         });
 
-        function calculateSubtotals() {
-            let totalDebit = 0;
-            let totalCredit = 0;
+        calculateSubtotals();
+    });
+</script>
 
-            $('.debit-input').each(function() {
-                let value = parseFloat($(this).val()) || 0;
-                totalDebit += value;
-            });
-
-            $('.credit-input').each(function() {
-                let value = parseFloat($(this).val()) || 0;
-                totalCredit += value;
-            });
-
-            $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
-            $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
-        }
-
-        // Aktifkan saat halaman load & saat ada perubahan
-        $(document).ready(function() {
-            $(document).on('input', '.debit-input, .credit-input', function() {
-                const val = parseFloat($(this).val());
-                if (val < 0) $(this).val('');
-                calculateSubtotals();
-            });
-
-            // Panggil awal
-            calculateSubtotals();
-        });
-        
-    </script>
 @endsection
 
 
