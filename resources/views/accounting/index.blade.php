@@ -31,13 +31,13 @@
                     <td>{{ $account->category }}</td>
                     <td>{{ $account->sub_category }}</td>
                     <td>{{ number_format($account->initial_balance, 2) }}</td>
-                    <td>
+                    {{-- <td>
                         @if ($account->parent)
                             {{ optional($account->parent)->account_name ?? '-' }}
                         @else
                             -
                         @endif
-                    </td>
+                    </td> --}}
                     <td>
                         @if ($account->is_active)
                             <span class="badge bg-success">Aktif</span>
