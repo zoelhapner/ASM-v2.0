@@ -56,6 +56,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Kategori</label>
                                             <select name="account_type" class="form-select" required>
+                                                <option value="">-- Pilih Kategori --</option>
                                                 <option value="Aset Lancar">Aset Lancar</option>
                                                 <option value="Aset Tetap">Aset Tetap</option>
                                                 <option value="Kewajiban">Kewajiban</option>
@@ -70,16 +71,31 @@
                                         <div class="col-md-6 mb-3">
                                             <label>Sub Kategori</label>
                                             <select name="balance_type" class="form-select" required>
-                                                <option value="Debit">Kas & Bank</option>
-                                                <option value="Kredit">Persediaan Barang</option>
-                                                <option value="Debit">Piutang</option>
-                                                <option value="Kredit">Dana Belum Disetor</option>
-                                                <option value="Debit">Pajak Bayar Dimuka</option>
-                                                <option value="Kredit">Aset Tetap</option>
-                                                <option value="Debit">Penyusutan</option>
-                                                <option value="Kredit">Hutang</option>
+                                                <option value="">-- Pilih Sub kategori --</option>
+                                                <option value="Kas & Bank">Kas & Bank</option>
+                                                <option value="Persediaan Barang">Persediaan Barang</option>
+                                                <option value="Piutang">Piutang</option>
+                                                <option value="Dana Belum Disetor">Dana Belum Disetor</option>
+                                                <option value="Pajak Bayar Dimuka">Pajak Bayar Dimuka</option>
+                                                <option value="Aset Tetap">Aset Tetap</option>
+                                                <option value="Penyusutan">Penyusutan</option>
+                                                <option value="Hutang">Hutang</option>
                                                 <option value="Uang Muka Penjualan">Uang Muka Penjualan</option>
                                                 <option value="Pajak">Pajak</option>
+                                                <option value="Modal">Modal</option>
+                                                <option value="Pendapatan Lisensi">Pendapatan Lisensi</option>
+                                                <option value="Pendapatan Modul">Pendapatan Modul</option>
+                                                <option value="Pendapatan Siswa">Pendapatan Siswa</option>
+                                                <option value="Pendapatan Merchandise">Pendapatan Merchandise</option>
+                                                <option value="Pendapatan Lainnya">Pendapatan Lainnya</option>
+                                                <option value="Biaya Lisensi">Biaya Lisensi</option>
+                                                <option value="Biaya Pembelian Modul">Biaya Pembelian Modul</option>
+                                                <option value="Biaya Pembelian Merchandise">Biaya Pembelian Merchandise</option>
+                                                <option value="Biaya Produksi Modul">Biaya Produksi Modul</option>
+                                                <option value="Biaya Produksi Merchandise">Biaya Produksi Merchandise</option>
+                                                <option value="Beban Penjualan & Pemasaran">Beban Penjualan & Pemasaran</option>
+                                                <option value="Beban Administrasi & Umum">Beban Administrasi & Umum</option>
+
                                             </select>
                                         </div>
 

@@ -28,8 +28,8 @@
                     <td>{{ $account->license ? $account->license->name : '-' }}</td>
                     <td>{{ $account->account_code }}</td>
                     <td>{{ $account->account_name }}</td>
-                    <td>{{ $account->account_type }}</td>
-                    <td>{{ $account->balance_type }}</td>
+                    <td>{{ $account->category }}</td>
+                    <td>{{ $account->sub_category }}</td>
                     <td>{{ number_format($account->initial_balance, 2) }}</td>
                     <td>
                         @if ($account->parent)

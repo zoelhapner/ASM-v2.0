@@ -28,15 +28,37 @@
         </div>
 
         <div class="mb-3">
-            <label>Jenis Akun</label>
-            <input type="text" name="account_type" value="{{ $account->account_type }}" class="form-control" required>
+            <label>Kategori</label>
+            <input type="text" name="category" value="{{ $account->account_type }}" class="form-control" required>
         </div>
 
         <div class="mb-3">
-            <label>Debit/Kredit</label>
-            <select name="balance_type" class="form-control" required>
-                <option value="Debit" @if($account->balance_type == 'Debit') selected @endif>Debit</option>
-                <option value="Kredit" @if($account->balance_type == 'Kredit') selected @endif>Kredit</option>
+            <label>Sub kategori</label>
+            <select name="sub_category" class="form-select" required>
+                <option value="">-- Pilih Sub kategori --</option>
+                <option value="Kas & Bank" {{ $account->sub_category == "Kas & Bank" ? 'selected' : '' }}>Kas & Bank</option>
+                <option value="Persediaan Barang" {{ $account->sub_category == "Persediaan Barang" ? 'selected' : '' }}>Persediaan Barang</option>
+                <option value="Piutang" {{ $account->sub_category == "Piutang" ? 'selected' : '' }}>Piutang</option>
+                <option value="Dana Belum Disetor" {{ $account->sub_category == "Dana Belum Disetor" ? 'selected' : '' }}>Dana Belum Disetor</option>
+                <option value="Pajak Bayar Dimuka" {{ $account->sub_category == "Pajak Bayar Dimuka" ? 'selected' : '' }}>Pajak Bayar Dimuka</option>
+                <option value="Aset Tetap" {{ $account->sub_category == "Aset Tetap" ? 'selected' : '' }}>Aset Tetap</option>
+                <option value="Penyusutan" {{ $account->sub_category == "Penyusutan" ? 'selected' : '' }}>Penyusutan</option>
+                <option value="Hutang" {{ $account->sub_category == "Hutang" ? 'selected' : '' }}>Hutang</option>
+                <option value="Uang Muka Penjualan" {{ $account->sub_category == "Uang Muka Penjualan" ? 'selected' : '' }}>Uang Muka Penjualan</option>
+                <option value="Pajak" {{ $account->sub_category == "Pajak" ? 'selected' : '' }}>Pajak</option>
+                <option value="Modal" {{ $account->sub_category == "Modal" ? 'selected' : '' }}>Modal</option>
+                <option value="Pendapatan Lisensi" {{ $account->sub_category == "Pendapatan Lisensi" ? 'selected' : '' }}>Pendapatan Lisensi</option>
+                <option value="Pendapatan Modul" {{ $account->sub_category == "Pendapatan Modul" ? 'selected' : '' }}>Pendapatan Modul</option>
+                <option value="Pendapatan Siswa" {{ $account->sub_category == "Pendapatan Siswa" ? 'selected' : '' }}>Pendapatan Siswa</option>
+                <option value="Pendapatan Merchandise" {{ $account->sub_category == "Pendapatan Merchandise" ? 'selected' : '' }}>Pendapatan Merchandise</option>
+                <option value="Pendapatan Lainnya" {{ $account->sub_category == "Pendapatan Lainnya" ? 'selected' : '' }}>Pendapatan Lainnya</option>
+                <option value="Biaya Lisensi" {{ $account->sub_category == "Biaya Lisensi" ? 'selected' : '' }}>Biaya Lisensi</option>
+                <option value="Biaya Pembelian Modul" {{ $account->sub_category == "Biaya Pembelian Modul" ? 'selected' : '' }}>Biaya Pembelian Modul</option>
+                <option value="Biaya Pembelian Merchandise" {{ $account->sub_category == "Biaya Pembelian Merchandise" ? 'selected' : '' }}>Biaya Pembelian Merchandise</option>
+                <option value="Biaya Produksi Modul" {{ $account->sub_category == "Biaya Produksi Modul" ? 'selected' : '' }}>Biaya Produksi Modul</option>
+                <option value="Biaya Produksi Merchandise" {{ $account->sub_category == "Biaya Produksi Merchandise" ? 'selected' : '' }}>Biaya Produksi Merchandise</option>
+                <option value="Beban Penjualan & Pemasaran" {{ $account->sub_category == "Beban Penjualan & Pemasaran" ? 'selected' : '' }}>Beban Penjualan & Pemasaran</option>
+                <option value="Beban Administrasi & Umum" {{ $account->sub_category == "Beban Administrasi & Umum" ? 'selected' : '' }}>Beban Administrasi & Umum</option>
             </select>
         </div>
 
@@ -62,7 +84,7 @@
             </select>
         </div>
 
-        <button class="btn btn-primary">Update</button>
+        <button class="btn btn-primary text-white">Update</button>
     </form>
 </div>
 @endsection
