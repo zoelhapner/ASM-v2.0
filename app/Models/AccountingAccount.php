@@ -11,8 +11,8 @@ class AccountingAccount extends Model
 
     protected $table = 'accounting_accounts';
     protected $casts = [
-        'account_type' => 'string',
-        'balance_type' => 'string',
+        'category' => 'string',
+        'sub_category' => 'string',
         'is_active' => 'boolean',
         'is_parent' => 'boolean',
         'initial_balance' => 'decimal:2',
@@ -28,10 +28,10 @@ class AccountingAccount extends Model
         'license_id',
         'account_code',
         'account_name',
-        'account_type',
+        'category',
         'is_parent',
         'parent_id',
-        'balance_type',
+        'sub_category',
         'initial_balance',
         'is_active',
         'person_type',

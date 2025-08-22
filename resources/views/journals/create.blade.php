@@ -121,8 +121,10 @@
                 {{ $errors->first('total') }}
             </div>
         @endif
-
-        <button type="submit" class="btn btn-success">Simpan</button>
+        
+        <div class="text-end">
+            <button type="submit" class="btn btn-success text-white">Simpan</button>
+        </div>
     </form>
 </div>
 @endsection
@@ -216,6 +218,44 @@
             }
         });
 
+        $('#add-row').click(function () {
+            const rowCount = $('#detail-rows tr').length;
+            const newRow = `
+                <tr>
+                    <td>
+                        <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
+                            <option value="">-- Pilih Akun --</option>
+                            @foreach ($accounts as $account)
+                                <option value="{{ $account->id }}"
+                                    data-code="{{ $account->account_code }}"
+                                    data-name="{{ $account->account_name }}"
+                                    data-person-type="{{ $account->person_type }}">
+                                    {{ $account->account_code }} - {{ $account->account_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td>
+                        <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
+                    </td>
+                    <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
+                    <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
+                    <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                    <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
+                </tr>
+            `;
+            $('#detail-rows').append(newRow);
+            $(`select[data-row="${rowCount}"]`).select2({
+                placeholder: "-- Pilih --",
+                width: '100%'
+            });
+        });
+
+        $('#detail-rows').on('click', '.remove-row', function () {
+            $(this).closest('tr').remove();
+            calculateSubtotals();
+        });
+
         function calculateSubtotals() {
             let totalDebit = 0;
             let totalCredit = 0;
@@ -245,45 +285,6 @@
             // Panggil awal
             calculateSubtotals();
         });
-
-
-        // $('#add-row').click(function () {
-        //     const rowCount = $('#detail-rows tr').length;
-        //     const newRow = `
-        //         <tr>
-        //             <td>
-        //                 <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
-        //                     <option value="">-- Pilih Akun --</option>
-        //                     @foreach ($accounts as $account)
-        //                         <option value="{{ $account->id }}"
-        //                             data-code="{{ $account->account_code }}"
-        //                             data-name="{{ $account->account_name }}"
-        //                             data-person-type="{{ $account->person_type }}">
-        //                             {{ $account->account_code }} - {{ $account->account_name }}
-        //                         </option>
-        //                     @endforeach
-        //                 </select>
-        //             </td>
-        //             <td>
-        //                 <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
-        //             </td>
-        //             <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
-        //             <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
-        //             <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-        //             <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
-        //         </tr>
-        //     `;
-        //     $('#detail-rows').append(newRow);
-        //     $(`select[data-row="${rowCount}"]`).select2({
-        //         placeholder: "-- Pilih --",
-        //         width: '100%'
-        //     });
-        // });
-
-        // $('#detail-rows').on('click', '.remove-row', function () {
-        //     $(this).closest('tr').remove();
-        //     calculateSubtotals();
-        // });
         
     </script>
 @endsection

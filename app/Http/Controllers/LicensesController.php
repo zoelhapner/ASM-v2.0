@@ -427,6 +427,7 @@ class LicensesController extends Controller
                 [
                     'id' => $uuidMap[$acc['account_code']],
                     'category' => $acc['category'] ?? null,
+                    'account_code' => $acc['account_code'] ?? null,
                     'account_name' => $acc['account_name'] ?? null,
                     'person_type' => $acc['person_type'] ?? null,
                     'is_active' => true,

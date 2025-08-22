@@ -122,7 +122,9 @@
                                         </div>
                                     </div>
 
-                                    <button class="btn btn-primary">Simpan</button>
+                                    <div class="text-end">
+                                        <button class="btn btn-primary text-white">Simpan</button>
+                                    </div>
                                 </form>
                             </div>
                     </div>

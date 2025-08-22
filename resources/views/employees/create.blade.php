@@ -380,7 +380,7 @@
 
                                     {{-- Submit Button --}}
                                         <div class="text-end">
-                                        <button type="submit" class="btn btn-primary text-white">Simpan</button>
+                                            <button type="submit" class="btn btn-primary text-white">Simpan</button>
                                         </div>
                                 </form>
                             </div>
