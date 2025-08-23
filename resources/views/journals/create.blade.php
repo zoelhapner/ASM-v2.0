@@ -129,8 +129,8 @@
                                 <option value="">-- Pilih User --</option>
                             </select>
                         </td>
-                        <td><input type="number" step="0.01" name="details[0][debit]" class="form-control debit-input" disabled></td>
-                        <td><input type="number" step="0.01" name="details[0][credit]" class="form-control credit-input" disabled></td>
+                        <td><input type="number" step="0.01" name="details[0][debit]" class="form-control debit-input"></td>
+                        <td><input type="number" step="0.01" name="details[0][credit]" class="form-control credit-input"></td>
                         <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
                     </tr>
                 </tbody>
@@ -171,28 +171,8 @@
 <script>
 $(document).ready(function () {
     // Inisialisasi Select2
-    $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
-
-    // Fungsi toggle debit/credit
-    function toggleDebitCreditInputs($select) {
-        const accountCode = $select.find(':selected').data('code') || '';
-        const row = $select.closest('tr');
-        const debitInput = row.find('.debit-input');
-        const creditInput = row.find('.credit-input');
-
-        if (accountCode.startsWith('1') || accountCode.startsWith('5')) {
-            debitInput.prop('disabled', false);
-            creditInput.prop('disabled', true).val('');
-        } else if (accountCode.startsWith('2') || accountCode.startsWith('3') || accountCode.startsWith('4')) {
-            debitInput.prop('disabled', true).val('');
-            creditInput.prop('disabled', false);
-        } else {
-            debitInput.prop('disabled', true).val('');
-            creditInput.prop('disabled', true).val('');
-        }
-    }
-
-    // Fungsi render user/person sesuai person_type
+    $('.select2').select2({ placeholder: "-- Pilih --" });
+    
     function renderUserOptions($select) {
         const personType = $select.find(':selected').data('person-type');
         const row = $select.closest('tr');
@@ -217,7 +197,6 @@ $(document).ready(function () {
 
     // Event saat pilih akun
     $(document).on('change', '.account-select', function () {
-        toggleDebitCreditInputs($(this));
         renderUserOptions($(this));
     });
 
@@ -239,7 +218,7 @@ $(document).ready(function () {
                                 </option>`
                             );
                         });
-                        $select.select2({ placeholder: "-- Pilih --", width: '100%' });
+                        $select.select2({ placeholder: "-- Pilih --"});
                     });
                 }
             });
@@ -259,8 +238,8 @@ $(document).ready(function () {
                 <td>
                     <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
                 </td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
                 <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
             </tr>
@@ -283,7 +262,7 @@ $(document).ready(function () {
                             </option>`
                         );
                     });
-                    $select.select2({ placeholder: "-- Pilih --", width: '100%' });
+                    $select.select2({ placeholder: "-- Pilih --"});
                 }
             });
         }
@@ -292,9 +271,41 @@ $(document).ready(function () {
     // Hapus baris
     $(document).on('click', '.remove-row', function () {
         $(this).closest('tr').remove();
+        calculateSubtotals();
     });
+
+    function calculateSubtotals() {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+        });
+        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
+        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+    }
+
+        $(document).on('input', '.debit-input, .credit-input', function() {
+            const val = parseFloat($(this).val());
+            if (val < 0) $(this).val('');
+            calculateSubtotals();
+        });
+
+        $(document).on('input', '.debit-input', function() {
+            if ($(this).val()) {
+                $(this).closest('tr').find('.credit-input').val('');
+            }
+            calculateSubtotals();
+        });
+
+        $(document).on('input', '.credit-input', function() {
+            if ($(this).val()) {
+                $(this).closest('tr').find('.debit-input').val('');
+            }
+            calculateSubtotals();
+        });     
 });
 </script>
+@endsection
 
 {{-- <script>
     $(document).ready(function() {
@@ -481,6 +492,25 @@ $(document).ready(function () {
     });
 </script> --}}
 
-@endsection
+{{-- // Fungsi toggle debit/credit
+    // function toggleDebitCreditInputs($select) {
+    //     const accountCode = $select.find(':selected').data('code') || '';
+    //     const row = $select.closest('tr');
+    //     const debitInput = row.find('.debit-input');
+    //     const creditInput = row.find('.credit-input');
+
+    //     if (accountCode.startsWith('1') || accountCode.startsWith('5')) {
+    //         debitInput.prop('disabled', false);
+    //         creditInput.prop('disabled', true).val('');
+    //     } else if (accountCode.startsWith('2') || accountCode.startsWith('3') || accountCode.startsWith('4')) {
+    //         debitInput.prop('disabled', true).val('');
+    //         creditInput.prop('disabled', false);
+    //     } else {
+    //         debitInput.prop('disabled', true).val('');
+    //         creditInput.prop('disabled', true).val('');
+    //     }
+    // } --}}
+
+
 
 
