@@ -23,7 +23,7 @@
         </div>
     @endif
 
-    {{-- Form filter lisensi (GET) --}}
+    {{-- Form filter lisensi (GET)
     @if(auth()->user()->hasRole('Super-Admin'))
         <form method="GET" action="{{ route('journals.create') }}">
             <div class="row mb-3 align-items-center">
@@ -44,8 +44,7 @@
                     <input type="text" id="journal_code" name="journal_code" 
                         class="form-control" required readonly>
                 </div>
-
-                {{-- Tanggal Transaksi --}}
+                
                 <div class="col-md-4 mb-3">
                     <label for="transaction_date" class="required">Tanggal Transaksi</label>
                     <input type="date" id="transaction_date" name="transaction_date" 
@@ -55,28 +54,47 @@
                 <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
             </div>
         </form>
-    @endif
+    @endif --}}
 
 
     {{-- Form --}}
     <form action="{{ route('journals.store') }}" method="POST">
         @csrf
 
-        {{-- <div class="row mb-3 align-items-center">
-           
-            <div class="col-md-4 mb-3">
-                <label for="journal_code" class="required">No Transaksi</label>
-                <input type="text" id="journal_code" name="journal_code" 
-                    class="form-control" required readonly>
-            </div>
+            <div class="row mb-3 align-items-center">
+                {{-- Filter Lisensi (hanya untuk Super Admin) --}}
+                @if(auth()->user()->hasRole('Super-Admin'))
+                    <div class="col-md-4 mb-3">
+                        <label for="license_id" class="form-label required">Filter Lisensi</label>
+                        <select name="license_id" id="license_id" class="form-select select2" required>
+                            <option value="">-- Pilih Lisensi --</option>
+                            @foreach ($licenses as $license)
+                                <option value="{{ $license->id }}" 
+                                    {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                                    {{ $license->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    {{-- Kalau bukan Super Admin, tetap pakai hidden --}}
+                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+                @endif
 
-            
-            <div class="col-md-4 mb-3">
-                <label for="transaction_date" class="required">Tanggal Transaksi</label>
-                <input type="date" id="transaction_date" name="transaction_date" 
-                    class="form-control" required>
+                {{-- No Transaksi --}}
+                <div class="col-md-4 mb-3">
+                    <label for="journal_code" class="required">No Transaksi</label>
+                    <input type="text" id="journal_code" name="journal_code" 
+                        class="form-control" required readonly>
+                </div>
+
+                {{-- Tanggal Transaksi --}}
+                <div class="col-md-4 mb-3">
+                    <label for="transaction_date" class="required">Tanggal Transaksi</label>
+                    <input type="date" id="transaction_date" name="transaction_date" 
+                        class="form-control" required>
+                </div>
             </div>
-        </div> --}}
   
         <h5>Detail Akun</h5>
             <table class="table table-bordered">
