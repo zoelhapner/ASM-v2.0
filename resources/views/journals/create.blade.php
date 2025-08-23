@@ -44,7 +44,7 @@
                     <input type="text" id="journal_code" name="journal_code" 
                         class="form-control" required readonly>
                 </div>
-                
+
                 <div class="col-md-4 mb-3">
                     <label for="transaction_date" class="required">Tanggal Transaksi</label>
                     <input type="date" id="transaction_date" name="transaction_date" 
@@ -177,6 +177,26 @@
 </script>
 
     <script>
+    $('#license_id').on('change', function() {
+        let licenseId = $(this).val();
+
+        $.ajax({
+            url: '/get-accounts-by-license/' + licenseId,
+            type: 'GET',
+            success: function(data) {
+                let accountSelects = $('.account-select'); // class di dropdown akun detail
+                accountSelects.empty();
+                accountSelects.append('<option value="">-- Pilih Akun --</option>');
+                
+                $.each(data, function(key, account) {
+                    accountSelects.append(
+                        '<option value="'+account.id+'">'+account.account_code+' - '+account.account_name+'</option>'
+                    );
+                });
+            }
+        });
+    });
+
     const studentOptions  = @json($students);
     const employeeOptions = @json($employees);
     const licenseOptions  = @json($licenses);

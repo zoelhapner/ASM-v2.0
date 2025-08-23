@@ -109,6 +109,13 @@ Route::get('/students/generate-nis/{licenseId}', [StudentsController::class, 'ge
 
 Route::get('/journals/generate-jurnal/{licenseId}', [AccountingJournalController::class, 'generateJurnalAjax']);
 
+Route::get('/get-accounts-by-license/{license}', function($licenseId) {
+    return \App\Models\AccountingAccount::where('license_id', $licenseId)
+        ->orderBy('account_code')
+        ->get();
+});
+
+
 
 
 Route::middleware(['auth', 'permission:siswa.tambah'])->group(function () {

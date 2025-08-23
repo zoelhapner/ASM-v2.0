@@ -185,7 +185,7 @@ private function generateJurnal($licenseId)
         ->orderByDesc('journal_code')
         ->first();
 
-    $nextNumber = 1;
+    $nextNumber = 0;
     if ($lastJurnal) {
         $lastNumber = (int)substr($lastJurnal->journal_code, strlen($prefix)); // ambil 4 digit akhir
         $nextNumber = $lastNumber + 1;
