@@ -111,7 +111,7 @@
                 <tbody id="detail-rows">
                     <tr>
                         <td>
-                            <select name="details[0][account_id]" class="form-select select2 account-select" data-row="0" width="100px;" required>
+                            <select name="details[0][account_id]" class="form-select select2 account-select" data-row="0" required>
                                 <option value="account">-- Pilih Akun --</option>
                                     @foreach ($accounts as $account)
                                         <option value="{{ $account->id }}"
@@ -125,7 +125,7 @@
                         </td>
                         <td><input type="text" name="details[0][description]" class="form-control"></td>
                         <td>
-                            <select name="details[0][person]" class="form-select select2 user-select" data-row="0" width="75px;">
+                            <select name="details[0][person]" class="form-select select2 user-select" data-row="0">
                                 <option value="">-- Pilih User --</option>
                             </select>
                         </td>
@@ -139,7 +139,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="6"><button type="button" id="add-row" class="btn btn-sm btn-primary">Tambah Baris</button></td>
+                        <td colspan="6"><button type="button" id="add-row" class="btn btn-sm btn-primary text-white">Tambah Baris</button></td>
                     </tr>
                     <tr>
                         <th colspan="3">Subtotal</th>
@@ -203,56 +203,7 @@ $(document).ready(function () {
         renderUserOptions($(this));
     });
 
-    // Filter akun berdasarkan lisensi
-    $('#license_id').on('change', function () {
-        const licenseId = $(this).val();
-        if (licenseId) {
-            $.ajax({
-                url: '/get-accounts-by-license/' + licenseId,
-                type: 'GET',
-                success: function (data) {
-                    $('.account-select').each(function () {
-                        const $select = $(this);
-                        $select.empty().append('<option value="">-- Pilih Akun --</option>');
-                        $.each(data, function (_, account) {
-                            $select.append(
-                                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                                    ${account.account_code} - ${account.account_name}
-                                </option>`
-                            );
-                        });
-                        $select.select2({ placeholder: "-- Pilih --"});
-                    });
-                }
-            });
-        }
-    });
-
-    // Tambah baris baru
-    $('#add-row').click(function () {
-        const rowCount = $('#detail-rows tr').length;
-        const newRow = `
-            <tr>
-                <td>
-                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
-                        <option value="">-- Pilih Akun --</option>
-                    </select>
-                </td>
-                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-                <td>
-                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
-                </td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
-                        <i class="ti ti-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-        $('#detail-rows').append(newRow);
-
-        // Isi akun sesuai lisensi aktif
+    // Isi akun sesuai lisensi aktif
         $('#license_id').on('change', function () {
             const licenseId = $(this).val();
 
@@ -286,6 +237,32 @@ $(document).ready(function () {
                 $('#journal_code').val('');
             }
         });
+
+    // Tambah baris baru
+    $('#add-row').click(function () {
+        const rowCount = $('#detail-rows tr').length;
+        const newRow = `
+            <tr>
+                <td>
+                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
+                        <option value="">-- Pilih Akun --</option>
+                    </select>
+                </td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                <td>
+                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
+                </td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+        $('#detail-rows').append(newRow);
+
+        
     });
 
     // Hapus baris

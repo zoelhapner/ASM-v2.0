@@ -169,7 +169,7 @@ public function getNextCode($licenseId)
 {
     // Cari jurnal terakhir milik license ini
     $lastJournal = AccountingJournal::where('license_id', $licenseId)
-        ->orderBy('id', 'desc')
+        ->orderBy('license_id', 'desc')
         ->first();
 
     if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {

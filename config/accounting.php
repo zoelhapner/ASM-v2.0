@@ -3,7 +3,8 @@
 return [
     // Daftar kode akun yang disembunyikan untuk role tertentu
     'hidden_accounts' => [
-        'Pemilik Lisensi' => ['D 0001', 'D 0002', 'D 0003', 'D 0004'],
-        'Akuntan'         => ['D 0001', 'D 0002', 'D 0003', 'D 0004'],
+        'Super-Admin'     => ['1', '2', '3', '4', '5'],
+        'Pemilik Lisensi' => ['1', '2', '3', '4', '5'],
+        'Akuntan'         => ['1', '2', '3', '4', '5'],
     ],
 ];
