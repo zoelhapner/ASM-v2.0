@@ -165,34 +165,24 @@ public function store(StoreAccountingJournalRequest $request)
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
 }
 
-    public function generateJurnalAjax($licenseId)
+public function getNextCode($licenseId)
 {
-    $journal_code = $this->generateJurnal($licenseId); // pakai helper internal
-    return response()->json(['journal_code' => $journal_code]);
-}
-
-private function generateJurnal($licenseId)
-{
-    $license = License::findOrFail($licenseId);
-
-    // Asumsikan id lisensi kamu itu angka seperti: 3379
-    $prefix = str_pad($license->license_id, 4, '0', STR_PAD_LEFT); // jadi 4 digit
-
-    $prefix .= '02'; // tambahkan 01 setelah id lisensi
-
-    // Ambil NIK terakhir yang sesuai prefix ini
-    $lastJurnal = AccountingJouranl::where('journal_code', 'like', $prefix . '%')
-        ->orderByDesc('journal_code')
+    // Cari jurnal terakhir milik license ini
+    $lastJournal = AccountingJournal::where('license_id', $licenseId)
+        ->orderBy('id', 'desc')
         ->first();
 
-    $nextNumber = 0;
-    if ($lastJurnal) {
-        $lastNumber = (int)substr($lastJurnal->journal_code, strlen($prefix)); // ambil 4 digit akhir
-        $nextNumber = $lastNumber + 1;
+    if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
+        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
+    } else {
+        $nextNumber = '0001';
     }
 
-    return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT); // ex: 3379010001
+    $nextCode = 'IJ-' . $licenseId . '-' . $nextNumber;
+
+    return response()->json(['next_code' => $nextCode]);
 }
+
 
 
 // private function isPerpanjanganAccount($accountId)

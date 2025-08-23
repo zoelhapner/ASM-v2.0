@@ -85,7 +85,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="journal_code" class="required">No Transaksi</label>
                     <input type="text" id="journal_code" name="journal_code" 
-                        class="form-control" required readonly>
+                        class="form-control" readonly>
                 </div>
 
                 {{-- Tanggal Transaksi --}}
@@ -131,7 +131,10 @@
                         </td>
                         <td><input type="number" step="0.01" name="details[0][debit]" class="form-control debit-input"></td>
                         <td><input type="number" step="0.01" name="details[0][credit]" class="form-control credit-input"></td>
-                        <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -192,7 +195,7 @@ $(document).ready(function () {
                 userSelect.append('<option value="{{ $license->id }}">{{ $license->name }}</option>');
             @endforeach
         }
-        userSelect.select2({ placeholder: "-- Pilih --", width: '100%' });
+        userSelect.select2({ placeholder: "-- Pilih --"});
     }
 
     // Event saat pilih akun
@@ -235,37 +238,54 @@ $(document).ready(function () {
                         <option value="">-- Pilih Akun --</option>
                     </select>
                 </td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
                 <td>
                     <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
                 </td>
                 <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
                 <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
-                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </td>
             </tr>
         `;
         $('#detail-rows').append(newRow);
 
         // Isi akun sesuai lisensi aktif
-        const licenseId = $('#license_id').val();
-        if (licenseId) {
-            $.ajax({
-                url: '/get-accounts-by-license/' + licenseId,
-                type: 'GET',
-                success: function (data) {
-                    const $select = $(`select.account-select[data-row="${rowCount}"]`);
-                    $select.empty().append('<option value="">-- Pilih Akun --</option>');
-                    $.each(data, function (_, account) {
-                        $select.append(
-                            `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                                ${account.account_code} - ${account.account_name}
-                            </option>`
-                        );
+        $('#license_id').on('change', function () {
+            const licenseId = $(this).val();
+
+            if (licenseId) {
+                // Ambil akun-akun
+                $.get('/get-accounts-by-license/' + licenseId, function (data) {
+                    $('.account-select').each(function () {
+                        const $select = $(this);
+                        $select.empty().append('<option value="">-- Pilih Akun --</option>');
+                        $.each(data, function (_, account) {
+                            $select.append(
+                                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                                    ${account.account_code} - ${account.account_name}
+                                </option>`
+                            );
+                        });
+                        $select.select2({ placeholder: "-- Pilih --"});
                     });
-                    $select.select2({ placeholder: "-- Pilih --"});
-                }
-            });
-        }
+                });
+
+                // Ambil kode jurnal
+                $.get('/journals/next-code/' + licenseId, function (res) {
+                    $('#journal_code').val(res.next_code);
+                }).fail(function () {
+                    $('#journal_code').val('');
+                    alert('Gagal mengambil kode jurnal');
+                });
+            } else {
+                // Reset kalau belum pilih lisensi
+                $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
+                $('#journal_code').val('');
+            }
+        });
     });
 
     // Hapus baris
