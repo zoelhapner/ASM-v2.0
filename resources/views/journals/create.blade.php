@@ -25,7 +25,7 @@
 
     {{-- Form filter lisensi (GET) --}}
     @if(auth()->user()->hasRole('Super-Admin'))
-        <form method="GET" action="{{ route('journals.create') }}" class="col-md-4 mb-3">
+        <form method="GET" action="{{ route('journals.create') }}">
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label for="license_id" class="form-label">Filter Lisensi</label>

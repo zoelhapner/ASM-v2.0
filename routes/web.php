@@ -107,6 +107,8 @@ Route::get('/employees/generate-nik/{licenseId}', [EmployeeController::class, 'g
 
 Route::get('/students/generate-nis/{licenseId}', [StudentsController::class, 'generateNisAjax']);
 
+Route::get('/journals/generate-jurnal/{licenseId}', [AccountingJournalController::class, 'generateJurnalAjax']);
+
 
 
 Route::middleware(['auth', 'permission:siswa.tambah'])->group(function () {
@@ -121,9 +123,7 @@ Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi|Akuntan|Siswa'])->g
     Route::resource('/students', StudentsController::class)->only(['index', 'show', 'destroy']);
 });
 
-
-
-Route::middleware(['auth', 'role:Super-Admin|Akuntan|Pemilik Lisensi'])
+Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
         ->resource('accounting', AccountingAccountController::class)
          ->parameters(['accounting' => 'account']);
 
@@ -163,10 +163,6 @@ Route::patch('/notifications/{notification}/read', [LicenseNotificationControlle
 
 Route::post('/notifications/read-all', [LicenseNotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
 
-
-
-
-
 Route::get('/periods/close', [AccountingClosingController::class, 'showCloseForm'])->name('periods.close.form');
 Route::post('/periods/close', [AccountingClosingController::class, 'close'])->name('periods.close');
 
@@ -174,9 +170,6 @@ Route::post('/periods/close', [AccountingClosingController::class, 'close'])->na
 Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
     Route::resource('roles', RoleController::class);
 });
-
-
-
 
 Route::middleware(['auth', 'role:Super-Admin|Pemilik Lisensi'])->group(function () {
     route::resource('/users', UsersController::class);
