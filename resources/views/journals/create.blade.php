@@ -26,7 +26,7 @@
     {{-- Form filter lisensi (GET) --}}
     @if(auth()->user()->hasRole('Super-Admin'))
         <form method="GET" action="{{ route('journals.create') }}">
-            <div class="row">
+            <div class="row mb-3 align-items-center">
                 <div class="col-md-4 mb-3">
                     <label for="license_id" class="form-label">Filter Lisensi</label>
                     <select name="license_id" id="license_id" class="form-select select2" onchange="this.form.submit()">
@@ -39,6 +39,20 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-md-4 mb-3">
+                    <label for="journal_code" class="required">No Transaksi</label>
+                    <input type="text" id="journal_code" name="journal_code" 
+                        class="form-control" required readonly>
+                </div>
+
+                {{-- Tanggal Transaksi --}}
+                <div class="col-md-4 mb-3">
+                    <label for="transaction_date" class="required">Tanggal Transaksi</label>
+                    <input type="date" id="transaction_date" name="transaction_date" 
+                        class="form-control" required>
+                </div>
+
+                <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
             </div>
         </form>
     @endif
@@ -48,27 +62,22 @@
     <form action="{{ route('journals.store') }}" method="POST">
         @csrf
 
-        <div class="row mb-3 align-items-center">
-            {{-- No Transaksi --}}
+        {{-- <div class="row mb-3 align-items-center">
+           
             <div class="col-md-4 mb-3">
                 <label for="journal_code" class="required">No Transaksi</label>
                 <input type="text" id="journal_code" name="journal_code" 
                     class="form-control" required readonly>
             </div>
 
-            {{-- Tanggal Transaksi --}}
+            
             <div class="col-md-4 mb-3">
                 <label for="transaction_date" class="required">Tanggal Transaksi</label>
                 <input type="date" id="transaction_date" name="transaction_date" 
                     class="form-control" required>
             </div>
-        </div>
-
-        {{-- Hidden License --}}
-        <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
-
-
-        {{-- Detail Akun --}}
+        </div> --}}
+  
         <h5>Detail Akun</h5>
             <table class="table table-bordered">
                 <thead>
