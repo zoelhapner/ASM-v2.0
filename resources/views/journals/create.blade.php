@@ -167,7 +167,136 @@
 @endsection
 
 @section('js')
+
 <script>
+$(document).ready(function () {
+    // Inisialisasi Select2
+    $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
+
+    // Fungsi toggle debit/credit
+    function toggleDebitCreditInputs($select) {
+        const accountCode = $select.find(':selected').data('code') || '';
+        const row = $select.closest('tr');
+        const debitInput = row.find('.debit-input');
+        const creditInput = row.find('.credit-input');
+
+        if (accountCode.startsWith('1') || accountCode.startsWith('5')) {
+            debitInput.prop('disabled', false);
+            creditInput.prop('disabled', true).val('');
+        } else if (accountCode.startsWith('2') || accountCode.startsWith('3') || accountCode.startsWith('4')) {
+            debitInput.prop('disabled', true).val('');
+            creditInput.prop('disabled', false);
+        } else {
+            debitInput.prop('disabled', true).val('');
+            creditInput.prop('disabled', true).val('');
+        }
+    }
+
+    // Fungsi render user/person sesuai person_type
+    function renderUserOptions($select) {
+        const personType = $select.find(':selected').data('person-type');
+        const row = $select.closest('tr');
+        const userSelect = row.find('.user-select');
+
+        userSelect.empty();
+        if (personType === "student") {
+            @foreach($students as $student)
+                userSelect.append('<option value="{{ $student->id }}">{{ $student->name }}</option>');
+            @endforeach
+        } else if (personType === "employee") {
+            @foreach($employees as $employee)
+                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->name }}</option>');
+            @endforeach
+        } else if (personType === "license") {
+            @foreach($licenses as $license)
+                userSelect.append('<option value="{{ $license->id }}">{{ $license->name }}</option>');
+            @endforeach
+        }
+        userSelect.select2({ placeholder: "-- Pilih --", width: '100%' });
+    }
+
+    // Event saat pilih akun
+    $(document).on('change', '.account-select', function () {
+        toggleDebitCreditInputs($(this));
+        renderUserOptions($(this));
+    });
+
+    // Filter akun berdasarkan lisensi
+    $('#license_id').on('change', function () {
+        const licenseId = $(this).val();
+        if (licenseId) {
+            $.ajax({
+                url: '/get-accounts-by-license/' + licenseId,
+                type: 'GET',
+                success: function (data) {
+                    $('.account-select').each(function () {
+                        const $select = $(this);
+                        $select.empty().append('<option value="">-- Pilih Akun --</option>');
+                        $.each(data, function (_, account) {
+                            $select.append(
+                                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                                    ${account.account_code} - ${account.account_name}
+                                </option>`
+                            );
+                        });
+                        $select.select2({ placeholder: "-- Pilih --", width: '100%' });
+                    });
+                }
+            });
+        }
+    });
+
+    // Tambah baris baru
+    $('#add-row').click(function () {
+        const rowCount = $('#detail-rows tr').length;
+        const newRow = `
+            <tr>
+                <td>
+                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
+                        <option value="">-- Pilih Akun --</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
+                </td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
+            </tr>
+        `;
+        $('#detail-rows').append(newRow);
+
+        // Isi akun sesuai lisensi aktif
+        const licenseId = $('#license_id').val();
+        if (licenseId) {
+            $.ajax({
+                url: '/get-accounts-by-license/' + licenseId,
+                type: 'GET',
+                success: function (data) {
+                    const $select = $(`select.account-select[data-row="${rowCount}"]`);
+                    $select.empty().append('<option value="">-- Pilih Akun --</option>');
+                    $.each(data, function (_, account) {
+                        $select.append(
+                            `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                                ${account.account_code} - ${account.account_name}
+                            </option>`
+                        );
+                    });
+                    $select.select2({ placeholder: "-- Pilih --", width: '100%' });
+                }
+            });
+        }
+    });
+
+    // Hapus baris
+    $(document).on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+    });
+});
+</script>
+
+{{-- <script>
     $(document).ready(function() {
     $('.select2').select2({
         placeholder: "-- Pilih User --",
@@ -176,7 +305,7 @@
     });
 </script>
 
-    <script>
+<script>
     $('#license_id').on('change', function() {
         let licenseId = $(this).val();
 
@@ -350,7 +479,7 @@
         }
 
     });
-</script>
+</script> --}}
 
 @endsection
 
