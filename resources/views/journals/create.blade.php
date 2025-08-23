@@ -150,12 +150,7 @@
                 </tfoot>
             </table>
 
-        {{-- Validasi Total (khusus error total) --}}
-        @if ($errors->has('total'))
-            <div class="alert alert-danger">
-                {{ $errors->first('total') }}
-            </div>
-        @endif
+            <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Balance</div>
 
         <div class="mb-3">
             <label for="description">Keterangan</label>
@@ -262,7 +257,10 @@ $(document).ready(function () {
         `;
         $('#detail-rows').append(newRow);
 
-        
+        $(`select.account-select[data-row="${rowCount}"], select.user-select[data-row="${rowCount}"]`).select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
     });
 
     // Hapus baris
@@ -279,6 +277,12 @@ $(document).ready(function () {
         });
         $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
         $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+
+        if (totalDebit === totalCredit && totalDebit > 0) {
+            $('#balance-status').text('✅ Balance').css('color', 'green');
+        } else {
+            $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
+        }
     }
 
         $(document).on('input', '.debit-input, .credit-input', function() {
@@ -299,7 +303,20 @@ $(document).ready(function () {
                 $(this).closest('tr').find('.debit-input').val('');
             }
             calculateSubtotals();
-        });     
+        });
+        
+        $('form').on('submit', function (e) {
+            let totalDebit = 0, totalCredit = 0;
+            $('#detail-rows tr').each(function() {
+                totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+                totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+            });
+
+            if (totalDebit !== totalCredit) {
+                e.preventDefault();
+                alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
+            }
+        });
 });
 </script>
 @endsection

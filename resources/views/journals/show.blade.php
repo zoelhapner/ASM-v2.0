@@ -12,21 +12,16 @@
     {{-- Filter --}}
     <div class="row mb-4">
         <div class="col-md-3">
-            <label class="form-label">No. Transaksi</label>
-            <input type="text" class="form-control" placeholder="Cari...">
+            <label class="form-label fw-bold">No. Transaksi</label>
+            <div>{{ $journal->journal_code }}</div>
         </div>
         <div class="col-md-3">
-            <label class="form-label">Tanggal</label>
-            <input type="date" class="form-control">
+            <label class="form-label fw-bold">Tanggal Transaksi</label>
+            <div>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</div>
         </div>
         <div class="col-md-3">
-            <label class="form-label">Lisensi</label>
-            <select class="form-select">
-                <option value="">Pilih Lisensi</option>
-                @foreach($licenses as $license)
-                    <option value="{{ $license->id }}">{{ $license->name }}</option>
-                @endforeach
-            </select>
+            <label class="form-label fw-bold">Lisensi</label>
+            <div>{{ $journal->license->name ?? '-' }}</div>
         </div>
     </div>
 

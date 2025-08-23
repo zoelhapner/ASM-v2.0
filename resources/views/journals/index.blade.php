@@ -15,7 +15,7 @@
             <tr>
                 <th>Tipe Lisensi</th>
                 <th>Nama Lisensi</th>
-                <th>Kode</th>
+                <th>No. Transaksi</th>
                 <th>Tanggal</th>
                 <th>Deskripsi</th>
                 <th>PIC</th>
@@ -27,7 +27,11 @@
                 <tr>
                     <td>{{ $journal->license ? $journal->license->license_type : '-' }}</td>
                     <td>{{ $journal->license ? $journal->license->name : '-' }}</td>
-                    <td>{{ $journal->journal_code }}</td>
+                    <td>
+                        <a href="{{ route('journals.show', $journal->id) }}" class="text-decoration-none fw-bold text-primary">
+                            {{ $journal->journal_code }}
+                        </a>
+                    </td>
                     <td>{{ $journal->transaction_date }}</td>
                     <td>{{ $journal->description }}</td>
                     <td>
