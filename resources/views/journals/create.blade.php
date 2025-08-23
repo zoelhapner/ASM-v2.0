@@ -193,7 +193,7 @@ $(document).ready(function () {
                 userSelect.append('<option value="{{ $license->id }}">{{ $license->name }}</option>');
             @endforeach
         }
-        userSelect.select2({ placeholder: "-- Pilih --"});
+        userSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
     }
 
     // Event saat pilih akun
@@ -220,7 +220,7 @@ $(document).ready(function () {
                             </option>`
                         );
                     });
-                    $select.select2({ placeholder: "-- Pilih --"});
+                    $select.select2({ placeholder: "-- Pilih --", width: '100%'});
                 });
             });
 

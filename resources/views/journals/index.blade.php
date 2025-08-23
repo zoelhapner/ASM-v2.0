@@ -33,7 +33,7 @@
                         </a>
                     </td>
                     <td>{{ $journal->transaction_date }}</td>
-                    <td>{{ $journal->details->description }}</td>
+                    <td>{{ $journal->description }}</td>
                     <td>
                             @if($journal->creator)
                                 {{ $journal->creator->name }}
