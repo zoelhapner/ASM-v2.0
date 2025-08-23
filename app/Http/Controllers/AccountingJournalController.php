@@ -167,9 +167,12 @@ public function store(StoreAccountingJournalRequest $request)
 
 public function getNextCode($licenseId)
 {
+    // Ambil license dari UUID
+    $license = License::findOrFail($licenseId);
+
     // Cari jurnal terakhir milik license ini
-    $lastJournal = AccountingJournal::where('license_id', $licenseId)
-        ->orderBy('license_id', 'desc')
+    $lastJournal = AccountingJournal::where('license_id', $license->id)
+        ->orderBy('id', 'desc')
         ->first();
 
     if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
@@ -178,10 +181,12 @@ public function getNextCode($licenseId)
         $nextNumber = '0001';
     }
 
-    $nextCode = 'IJ-' . $licenseId . '-' . $nextNumber;
+    // Gunakan kolom license_id (string)
+    $nextCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
 
     return response()->json(['next_code' => $nextCode]);
 }
+
 
 
 
@@ -193,10 +198,27 @@ public function getNextCode($licenseId)
 // }
 
 
-    public function show(AccountingJournal $journal)
+    public function show(Request $request, AccountingJournal $journal)
     {
+        $user = Auth::user();
+
+        if ($user->hasRole('Super-Admin')) {
+            $licenses = License::all();
+            $activeLicenseId = $request->get('license_id'); // Ambil dari filter form
+        } else {
+            $licenses = $user->hasRole('Pemilik Lisensi')
+                ? $user->licenses
+                : $user->employee?->licenses;
+
+            if (!$licenses || $licenses->isEmpty()) {
+                abort(403, 'License tidak ditemukan untuk user ini.');
+            }
+
+            $activeLicenseId = session('active_license_id');
+        }
+
         $journal->load(['details.account', 'creator']);
-        return view('journals.show', compact('journal'));
+        return view('journals.show', compact('journal', 'licenses', 'activeLicenseId'));
     }
 
     /**
