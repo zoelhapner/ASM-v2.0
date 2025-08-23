@@ -392,11 +392,6 @@
             }
         });
 
-        // Optional: Trigger generate otomatis saat halaman edit dibuka
-        // const initialSelected = $licenseSelect.val();
-        // if (initialSelected) {
-        //     generateNis(initialSelected);
-        // }
     });
 </script>
 

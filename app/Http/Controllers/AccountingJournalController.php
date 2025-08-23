@@ -306,20 +306,45 @@ public function store(StoreAccountingJournalRequest $request)
     }
 }
 
-
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
 }
 
-
-/**
- * Mengecek apakah account_id adalah akun perpanjangan lisensi.
- */
-private function isPerpanjanganAccount($accountId)
+    public function generateJurnalAjax($licenseId)
 {
-    return AccountingAccount::where('id', $accountId)
-        ->where('account_name', 'LIKE', '%Perpanjangan Sub%')
-        ->exists();
+    $jurnal = $this->generateJurnal($licenseId); // pakai helper internal
+    return response()->json(['journal_code' => $jurnal]);
 }
+
+private function generateJurnal($licenseId)
+{
+    $license = License::findOrFail($licenseId);
+
+    // Asumsikan id lisensi kamu itu angka seperti: 3379
+    $prefix = str_pad($license->license_id, 4, '0', STR_PAD_LEFT); // jadi 4 digit
+
+    $prefix .= '02'; // tambahkan 01 setelah id lisensi
+
+    // Ambil NIK terakhir yang sesuai prefix ini
+    $lastJurnal = AccountingJouranl::where('journal_code', 'like', $prefix . '%')
+        ->orderByDesc('journal_code')
+        ->first();
+
+    $nextNumber = 1;
+    if ($lastJurnal) {
+        $lastNumber = (int)substr($lastJurnal->jurnal, strlen($prefix)); // ambil 4 digit akhir
+        $nextNumber = $lastNumber + 1;
+    }
+
+    return $prefix . str_pad($nextNumber, 4, '0', STR_PAD_LEFT); // ex: 3379010001
+}
+
+
+// private function isPerpanjanganAccount($accountId)
+// {
+//     return AccountingAccount::where('id', $accountId)
+//         ->where('account_name', 'LIKE', '%Perpanjangan Sub%')
+//         ->exists();
+// }
 
 
     public function show(AccountingJournal $journal)

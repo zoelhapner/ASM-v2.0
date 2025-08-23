@@ -25,9 +25,9 @@
 
     {{-- Form filter lisensi (GET) --}}
     @if(auth()->user()->hasRole('Super-Admin'))
-        <form method="GET" action="{{ route('journals.create') }}" class="mb-3">
+        <form method="GET" action="{{ route('journals.create') }}" class="col-md-4 mb-3">
             <div class="row">
-                <div class="mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="license_id" class="form-label">Filter Lisensi</label>
                     <select name="license_id" id="license_id" class="form-select select2" onchange="this.form.submit()">
                         <option value="">-- Semua Lisensi --</option>
@@ -48,22 +48,25 @@
     <form action="{{ route('journals.store') }}" method="POST">
         @csrf
 
-        {{-- License --}}
-            <div class="mb-3">
-                <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+        <div class="row mb-3 align-items-center">
+            {{-- No Transaksi --}}
+            <div class="col-md-4 mb-3">
+                <label for="journal_code" class="required">No Transaksi</label>
+                <input type="text" id="journal_code" name="journal_code" 
+                    class="form-control" required readonly>
             </div>
 
-        {{-- Tanggal --}}
-        <div class="mb-3">
-            <label for="transaction_date">Tanggal Transaksi</label>
-            <input type="date" name="transaction_date" class="form-control" required>
+            {{-- Tanggal Transaksi --}}
+            <div class="col-md-4 mb-3">
+                <label for="transaction_date" class="required">Tanggal Transaksi</label>
+                <input type="date" id="transaction_date" name="transaction_date" 
+                    class="form-control" required>
+            </div>
         </div>
 
-        {{-- Deskripsi --}}
-        <div class="mb-3">
-            <label for="description">Deskripsi Umum</label>
-            <textarea name="description" class="form-control"></textarea>
-        </div>
+        {{-- Hidden License --}}
+        <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+
 
         {{-- Detail Akun --}}
         <h5>Detail Akun</h5>
@@ -71,7 +74,7 @@
                 <thead>
                     <tr>
                         <th>Akun</th>
-                        <th>Keterangan</th>
+                        <th>Deskripsi</th>
                         <th>User</th>
                         <th>Debit</th>
                         <th>Kredit</th>
@@ -109,10 +112,10 @@
                         <td colspan="6"><button type="button" id="add-row" class="btn btn-sm btn-primary">Tambah Baris</button></td>
                     </tr>
                     <tr>
-                        <th colspan="2">Subtotal</th>
+                        <th colspan="3">Subtotal</th>
                         <th id="subtotal-debit">0</th>
                         <th id="subtotal-credit">0</th>
-                        <th colspan="2"></th>
+                        <th colspan="3"></th>
                     </tr>
                 </tfoot>
             </table>
@@ -123,6 +126,11 @@
                 {{ $errors->first('total') }}
             </div>
         @endif
+
+        <div class="mb-3">
+            <label for="description">Keterangan</label>
+            <textarea name="description" class="form-control"></textarea>
+        </div>
         
         <div class="text-end">
             <button type="submit" class="btn btn-success text-white">Simpan</button>
@@ -252,6 +260,48 @@
         });
 
         calculateSubtotals();
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        const $licenseSelect = $('select[name="license_id"]');
+        const $jurnalInput = $('input[name="journal_code"]');
+
+        // Fungsi AJAX untuk ambil NIS
+        function generateJurnal(licenseId) {
+            $.ajax({
+                url: `/journals/generate-jurnal/${licenseId}`, // pastikan endpoint ini sesuai
+                type: 'GET',
+                success: function (response) {
+                    if (response.jurnal) {
+                        $jurnalInput.val(response.jurnal);
+                    } else {
+                        $nisInput.val('');
+                    }
+                },
+                error: function () {
+                    console.error("Gagal mengambil Jurnal.");
+                    $jurnalInput.val('');
+                }
+            });
+        }
+
+        // Event saat lisensi dipilih
+        $licenseSelect.on('change', function () {
+            const licenseId = $(this).val();
+            if (licenseId) {
+                generateJurnal(licenseId);
+            } else {
+                $jurnalInput.val('');
+            }
+        });
+
+        // Untuk halaman edit: generate NIS hanya kalau input masih kosong
+        if ($licenseSelect.val() && !$jurnalInput.val()) {
+            generateJurnal($licenseSelect.val());
+        }
+
     });
 </script>
 
