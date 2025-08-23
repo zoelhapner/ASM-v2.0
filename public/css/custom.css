@@ -259,6 +259,24 @@ label {
     box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
 }
 
+#detail-rows {
+    table-layout: fixed;   /* Supaya kolom paten, tidak mengecil */
+    width: 100%;
+}
+
+#detail-rows th,
+#detail-rows td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 6px;
+}
+
+#detail-rows .form-select,
+#detail-rows .form-control {
+    width: 100% !important; /* Paksa full width dalam kolom */
+}
+
+
 
 
 

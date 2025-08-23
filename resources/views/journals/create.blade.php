@@ -100,12 +100,12 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th>Akun</th>
-                        <th>Deskripsi</th>
-                        <th>User</th>
-                        <th>Debit</th>
-                        <th>Kredit</th>
-                        <th>Aksi</th>
+                        <th style="width:20%">Akun</th>
+                        <th style="width:20%">Deskripsi</th>
+                        <th style="width:20%">User</th>
+                        <th style="width:10%">Debit</th>
+                        <th style="width:10%">Kredit</th>
+                        <th style="width:10%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="detail-rows">
@@ -169,8 +169,11 @@
 <script>
 $(document).ready(function () {
     // Inisialisasi Select2
-    $('.select2').select2({ placeholder: "-- Pilih --" });
-    
+    $('.select2').select2({ placeholder: "-- Pilih --",  width: '100%'});
+
+    let accountsData = []; // cache akun sesuai lisensi aktif
+
+    // Render user options (student/employee/license)
     function renderUserOptions($select) {
         const personType = $select.find(':selected').data('person-type');
         const row = $select.closest('tr');
@@ -198,40 +201,43 @@ $(document).ready(function () {
         renderUserOptions($(this));
     });
 
-    // Isi akun sesuai lisensi aktif
-        $('#license_id').on('change', function () {
-            const licenseId = $(this).val();
+    // Saat lisensi dipilih
+    $('#license_id').on('change', function () {
+        const licenseId = $(this).val();
 
-            if (licenseId) {
-                // Ambil akun-akun
-                $.get('/get-accounts-by-license/' + licenseId, function (data) {
-                    $('.account-select').each(function () {
-                        const $select = $(this);
-                        $select.empty().append('<option value="">-- Pilih Akun --</option>');
-                        $.each(data, function (_, account) {
-                            $select.append(
-                                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                                    ${account.account_code} - ${account.account_name}
-                                </option>`
-                            );
-                        });
-                        $select.select2({ placeholder: "-- Pilih --"});
+        if (licenseId) {
+            // Ambil akun-akun
+            $.get('/get-accounts-by-license/' + licenseId, function (data) {
+                accountsData = data; // simpan cache
+
+                $('.account-select').each(function () {
+                    const $select = $(this);
+                    $select.empty().append('<option value="">-- Pilih Akun --</option>');
+                    $.each(data, function (_, account) {
+                        $select.append(
+                            `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                                ${account.account_code} - ${account.account_name}
+                            </option>`
+                        );
                     });
+                    $select.select2({ placeholder: "-- Pilih --"});
                 });
+            });
 
-                // Ambil kode jurnal
-                $.get('/journals/next-code/' + licenseId, function (res) {
-                    $('#journal_code').val(res.next_code);
-                }).fail(function () {
-                    $('#journal_code').val('');
-                    alert('Gagal mengambil kode jurnal');
-                });
-            } else {
-                // Reset kalau belum pilih lisensi
-                $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
+            // Ambil kode jurnal
+            $.get('/journals/next-code/' + licenseId, function (res) {
+                $('#journal_code').val(res.next_code);
+            }).fail(function () {
                 $('#journal_code').val('');
-            }
-        });
+                alert('Gagal mengambil kode jurnal');
+            });
+        } else {
+            // Reset kalau belum pilih lisensi
+            $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
+            $('#journal_code').val('');
+            accountsData = [];
+        }
+    });
 
     // Tambah baris baru
     $('#add-row').click(function () {
@@ -257,10 +263,17 @@ $(document).ready(function () {
         `;
         $('#detail-rows').append(newRow);
 
-        $(`select.account-select[data-row="${rowCount}"], select.user-select[data-row="${rowCount}"]`).select2({
-            placeholder: "-- Pilih --",
-            width: '100%'
+        // Isi dropdown akun dengan cache
+        const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
+        $.each(accountsData, function (_, account) {
+            $newAccountSelect.append(
+                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                    ${account.account_code} - ${account.account_name}
+                </option>`
+            );
         });
+        $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
     });
 
     // Hapus baris
@@ -269,15 +282,18 @@ $(document).ready(function () {
         calculateSubtotals();
     });
 
+    // Hitung subtotal & cek balance
     function calculateSubtotals() {
         let totalDebit = 0, totalCredit = 0;
         $('#detail-rows tr').each(function() {
             totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
             totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
         });
+
         $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
         $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
 
+        // tampilkan status balance
         if (totalDebit === totalCredit && totalDebit > 0) {
             $('#balance-status').text('✅ Balance').css('color', 'green');
         } else {
@@ -285,40 +301,43 @@ $(document).ready(function () {
         }
     }
 
-        $(document).on('input', '.debit-input, .credit-input', function() {
-            const val = parseFloat($(this).val());
-            if (val < 0) $(this).val('');
-            calculateSubtotals();
+    // Input handler
+    $(document).on('input', '.debit-input, .credit-input', function() {
+        const val = parseFloat($(this).val());
+        if (val < 0) $(this).val('');
+        calculateSubtotals();
+    });
+
+    $(document).on('input', '.debit-input', function() {
+        if ($(this).val()) {
+            $(this).closest('tr').find('.credit-input').val('');
+        }
+        calculateSubtotals();
+    });
+
+    $(document).on('input', '.credit-input', function() {
+        if ($(this).val()) {
+            $(this).closest('tr').find('.debit-input').val('');
+        }
+        calculateSubtotals();
+    });
+
+    // Validasi saat submit
+    $('form').on('submit', function (e) {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
         });
 
-        $(document).on('input', '.debit-input', function() {
-            if ($(this).val()) {
-                $(this).closest('tr').find('.credit-input').val('');
-            }
-            calculateSubtotals();
-        });
-
-        $(document).on('input', '.credit-input', function() {
-            if ($(this).val()) {
-                $(this).closest('tr').find('.debit-input').val('');
-            }
-            calculateSubtotals();
-        });
-        
-        $('form').on('submit', function (e) {
-            let totalDebit = 0, totalCredit = 0;
-            $('#detail-rows tr').each(function() {
-                totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
-                totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
-            });
-
-            if (totalDebit !== totalCredit) {
-                e.preventDefault();
-                alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
-            }
-        });
+        if (totalDebit !== totalCredit) {
+            e.preventDefault();
+            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
+        }
+    });
 });
 </script>
+
 @endsection
 
 {{-- <script>
