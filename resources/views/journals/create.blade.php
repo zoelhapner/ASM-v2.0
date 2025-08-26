@@ -85,7 +85,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="journal_code" class="required">No Transaksi</label>
                     <input type="text" id="journal_code" name="journal_code" 
-                        class="form-control" readonly>
+                        class="form-control" value="{{ $journalCode }}" readonly>
                 </div>
 
                 {{-- Tanggal Transaksi --}}
@@ -152,7 +152,7 @@
 
             <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Balance</div>
 
-        <div class="mb-3">
+        <div class="col-md-4 mb-3">
             <label for="description">Keterangan</label>
             <textarea name="description" class="form-control"></textarea>
         </div>
@@ -182,11 +182,11 @@ $(document).ready(function () {
         userSelect.empty();
         if (personType === "student") {
             @foreach($students as $student)
-                userSelect.append('<option value="{{ $student->id }}">{{ $student->name }}</option>');
+                userSelect.append('<option value="{{ $student->id }}">{{ $student->fullname }}</option>');
             @endforeach
         } else if (personType === "employee") {
             @foreach($employees as $employee)
-                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->name }}</option>');
+                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->fullname }}</option>');
             @endforeach
         } else if (personType === "license") {
             @foreach($licenses as $license)
@@ -198,6 +198,8 @@ $(document).ready(function () {
 
     // Event saat pilih akun
     $(document).on('change', '.account-select', function () {
+        const personType = $(this).find(':selected').data('person-type');
+        console.log("Person type:", personType);
         renderUserOptions($(this));
     });
 

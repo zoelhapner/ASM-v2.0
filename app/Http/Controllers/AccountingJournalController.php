@@ -125,8 +125,27 @@ class AccountingJournalController extends Controller
     $pusatUserId   = $pusatLicense?->pusatUser()?->id;
     $pusatUserName = $pusatLicense?->pusatUser()?->name;
 
+    $journalCode = null;
+    if ($activeLicenseId) {
+        $license = License::find($activeLicenseId);
+        if ($license) {
+            $lastJournal = AccountingJournal::where('license_id', $license->id)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
+                $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
+            } else {
+                $nextNumber = '0001';
+            }
+
+            // 🔑 Gunakan license_id (string), bukan UUID
+            $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
+        }
+    }
+
     return view('journals.create', compact(
-        'accounts', 'licenses', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
+        'accounts', 'licenses', 'journalCode', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
 
     ));
 }

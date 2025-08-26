@@ -118,7 +118,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Pekerjaan</label>
+                                        <label class="form-label">Nama Perusahaan</label>
                                         <input type="text" name="company_name" class="form-control" value="{{ old('company_name') }}">
                                     </div>
 
