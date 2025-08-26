@@ -12,7 +12,7 @@
                         Overview
                     </div>
                     <h2 class="page-title">
-                        Pendidikan
+                        Keluarga
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-header">
                             <p class="text-center mb-4">
-                                Tambah Data Penddikan
+                                Tambah Data Keluarga
                             </p>
                         </div>
 

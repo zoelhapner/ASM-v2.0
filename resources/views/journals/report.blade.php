@@ -97,7 +97,7 @@
                     <tr>
                         <td class="text-center">{{ $no++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</td>
-                        <td class="desc-column">{{ $journal->description }}</td>
+                        <td class="desc-column">{{ $detail->description }}</td>
                         <td>{{ $detail->account->account_code }}</td>
                         <td class="account-column">{{ $detail->account->account_name }}</td>
                         <td class="user-column">{{ $detail->person_name }}</td>
@@ -112,7 +112,7 @@
                         <td class="text-end">{{ number_format($debit, 0, ',', '.') }}</td>
                         <td class="text-end">{{ number_format($kredit, 0, ',', '.') }}</td>
                         <td class="text-end">{{ number_format($saldo, 0, ',', '.') }}</td>
-                        <td>{{ $detail->description ?? '-' }}</td>
+                        <td>{{ $jouurnal->description ?? '-' }}</td>
                     </tr>
                 @endforeach
             @endforeach
