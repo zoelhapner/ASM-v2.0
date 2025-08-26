@@ -233,11 +233,12 @@ $(document).ready(function () {
                 $('#journal_code').val('');
                 alert('Gagal mengambil kode jurnal');
             });
-        } else {
-            // Reset kalau belum pilih lisensi
-            $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
-            $('#journal_code').val('');
         }
+        // } else {
+        //     // Reset kalau belum pilih lisensi
+        //     $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
+        //     $('#journal_code').val('');
+        // }
     });
 
     // Tambah baris baru
@@ -262,6 +263,7 @@ $(document).ready(function () {
                 </td>
             </tr>
         `;
+
         $('#detail-rows').append(newRow);
 
         // Isi dropdown akun dengan cache
@@ -274,7 +276,7 @@ $(document).ready(function () {
                 </option>`
             );
         });
-        $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
+        $newAccountSelect.select2({ placeholder: "-- Pilih Akun --",  width: '100%'});
     });
 
     // Hapus baris
