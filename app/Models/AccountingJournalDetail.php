@@ -45,13 +45,13 @@ public function getPersonNameAttribute()
 
     // Kalau ada data person di DB, langsung proses sesuai type
     switch ($this->account->person_type) {
-        case 'Siswa':
+        case 'student':
             return \App\Models\Student::find($this->person)?->fullname ?? '-';
-        case 'Karyawan':
+        case 'employee':
             return \App\Models\Employee::find($this->person)?->fullname ?? '-';
         case 'Pemilik Lisensi':
             return \App\Models\LicenseHolder::find($this->person)?->fullname ?? '-';
-        case 'Lisensi':
+        case 'license':
             return \App\Models\License::find($this->person)?->name ?? '-';
         default:
             return '-';

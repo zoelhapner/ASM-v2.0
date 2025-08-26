@@ -248,11 +248,6 @@ $(document).ready(function () {
                 <td>
                     <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
                         <option value="">-- Pilih Akun --</option>
-                        ${accountsData.map(acc =>
-                            `<option value="${acc.id}" data-code="${acc.account_code}" data-person-type="${acc.person_type}">
-                                ${acc.account_code} - ${acc.account_name}
-                            </option>`
-                        ).join('')}
                     </select>
                 </td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
@@ -270,16 +265,16 @@ $(document).ready(function () {
         $('#detail-rows').append(newRow);
 
         // Isi dropdown akun dengan cache
-        // const $newAccountSelect = $('#detail-rows tr:last .account-select');
-        // $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
-        // $.each(accountsData, function (_, account) {
-        //     $newAccountSelect.append(
-        //         `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-        //             ${account.account_code} - ${account.account_name}
-        //         </option>`
-        //     );
-        // });
-        // $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
+        const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
+        $.each(accountsData, function (_, account) {
+            $newAccountSelect.append(
+                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+                    ${account.account_code} - ${account.account_name}
+                </option>`
+            );
+        });
+        $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
     });
 
     // Hapus baris

@@ -24,7 +24,6 @@
         </thead>
         <tbody>
     @forelse ($journals as $journal)
-        @forelse ($journal->details as $detail)
             <tr>
                 <td>{{ $journal->license?->license_type ?? '-' }}</td>
                 <td>{{ $journal->license?->name ?? '-' }}</td>
@@ -35,7 +34,13 @@
                     </a>
                 </td>
                 <td>{{ $journal->transaction_date }}</td>
-                <td>{{ $detail->description }}</td>
+                <td>
+                    {{-- ambil deskripsi pertama --}}
+                    {{ $journal->details->first()?->description ?? '-' }}
+
+                    {{-- atau kalau mau semua deskripsi digabung koma --}}
+                    {{-- $journal->details->pluck('description')->implode(', ') --}}
+                </td>
                 <td>
                     @if($journal->creator)
                         {{ $journal->creator->name }}
@@ -70,11 +75,6 @@
                     @endcan
                 </td>
             </tr>
-        @empty
-            <tr>
-                <td colspan="7" class="text-center">Tidak ada detail pada jurnal ini.</td>
-            </tr>
-        @endforelse
     @empty
         <tr>
             <td colspan="7" class="text-center">Belum ada jurnal.</td>
