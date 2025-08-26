@@ -74,7 +74,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Jenis Kelamin</label>
+                                        <label class="form-label required">Jenis Kelamin</label>
                                         <select name="gender" class="form-select" required>
                                             <option value="">-- Pilih kelamin --</option>
                                             <option value="1">Laki - Laki</option>
@@ -83,7 +83,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                                <label class="form-label">Tanggal Lahir</label>
+                                                <label class="form-label required">Tanggal Lahir</label>
                                                 <input type="date" name="birth_date" class="form-control" required
                                                     value="{{ old('birth_date') }}"
                                                     pattern="\d{4}-\d{2}-\d{2}" placeholder="YYYY-MM-DD">
@@ -104,7 +104,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                            <label for="last_education_level" class="form-label">Jenjang Pendidikan <code>*</code></label>
+                                            <label for="last_education_level" class="form-label required">Jenjang Pendidikan 
                                             <select name="last_education_level" class="form-select" required>
                                                 <option value="">-- Pilih Jenjang --</option>
                                                 <option value="SD">SD</option>

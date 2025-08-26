@@ -81,8 +81,8 @@ return [
         ['category' => 'Pendapatan', 'account_code' => '414', 'account_name' => 'Penjualan Modul Advance', 'sub_category' => 'Pendapatan Modul', 'person_type' => 'license'],
 
         ['category' => 'Pendapatan', 'account_code' => '420', 'account_name' => 'Pendapatan Siswa', 'sub_category' => 'Pendapatan Siswa'],
-        ['category' => 'Pendapatan', 'account_code' => '421', 'account_name' => 'Pendaftaran Siswa', 'sub_category' => 'Pendapatan Siswa', 'person_type' => 'Student'],
-        ['category' => 'Pendapatan', 'account_code' => '422', 'account_name' => 'SPP Siswa', 'sub_category' => 'Pendapatan Siswa', 'person_type' => 'Student'],
+        ['category' => 'Pendapatan', 'account_code' => '421', 'account_name' => 'Pendaftaran Siswa', 'sub_category' => 'Pendapatan Siswa', 'person_type' => 'student'],
+        ['category' => 'Pendapatan', 'account_code' => '422', 'account_name' => 'SPP Siswa', 'sub_category' => 'Pendapatan Siswa', 'person_type' => 'student'],
 
         ['category' => 'Pendapatan', 'account_code' => '430', 'account_name' => 'Pendapatan Merchandise', 'sub_category' => 'Pendapatan Merchandise', 'person_type' => 'license'],
         ['category' => 'Pendapatan', 'account_code' => '431', 'account_name' => 'Penjualan Gelang Prebasic', 'sub_category' => 'Pendapatan Merchandise', 'person_type' => 'license'],
@@ -156,9 +156,9 @@ return [
 
         ['category' => 'Beban', 'account_code' => '610', 'account_name' => 'Beban Administrasi & Umum', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '611', 'account_name' => 'Biaya Training Instruktur', 'sub_category' => 'Beban Administrasi & Umum'],
-        ['category' => 'Beban', 'account_code' => '612', 'account_name' => 'Biaya Gaji', 'sub_category' => 'Beban Administrasi & Umum'],
-        ['category' => 'Beban', 'account_code' => '613', 'account_name' => 'Biaya Fee', 'sub_category' => 'Beban Administrasi & Umum'],
-        ['category' => 'Beban', 'account_code' => '614', 'account_name' => 'Biaya Bonus', 'sub_category' => 'Beban Administrasi & Umum'],
+        ['category' => 'Beban', 'account_code' => '612', 'account_name' => 'Biaya Gaji', 'sub_category' => 'Beban Administrasi & Umum', 'person_type' => 'employee'],
+        ['category' => 'Beban', 'account_code' => '613', 'account_name' => 'Biaya Fee', 'sub_category' => 'Beban Administrasi & Umum', 'person_type' => 'employee'],
+        ['category' => 'Beban', 'account_code' => '614', 'account_name' => 'Biaya Bonus', 'sub_category' => 'Beban Administrasi & Umum', 'person_type' => 'employee'],
         ['category' => 'Beban', 'account_code' => '615', 'account_name' => 'Biaya Konsumsi', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '616', 'account_name' => 'Biaya ATK & FC', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '617', 'account_name' => 'Biaya Listrik, Air, Pulsa, WiFi', 'sub_category' => 'Beban Administrasi & Umum'],

@@ -105,7 +105,7 @@
                         <th style="width:20%">User</th>
                         <th style="width:10%">Debit</th>
                         <th style="width:10%">Kredit</th>
-                        {{-- <th>Aksi</th> --}}
+                        <th style="width:5%">Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="detail-rows">
@@ -170,6 +170,10 @@
 $(document).ready(function () {
     // Inisialisasi Select2
     $('.select2').select2({ placeholder: "-- Pilih --",  width: '100%'});
+
+    if ($('#license_id').val()) {
+        $('#license_id').trigger('change'); // langsung load accountsData
+    }
 
     let accountsData = []; // cache akun sesuai lisensi aktif
 
@@ -425,7 +429,7 @@ $(document).ready(function () {
         toggleDebitCreditInputs(row, code);
     });
 
-    $('#add-row').click(function () {
+    $('#add-rowwwwwww').click(function () {
         const rowCount = $('#detail-rows tr').length;
         const newRow = `
             <tr>

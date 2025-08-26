@@ -44,7 +44,6 @@
                         <div class="card-body">
                             <form action="{{ route('license_holder_educations.store') }}" method="POST">
                                 @csrf
-                                
 
                                     <input type="hidden" name="license_holder_id" value="{{ $license_holder->id }}">
 
@@ -54,7 +53,7 @@
                                     </div>
 
                                 <div class="mb-3">
-                                        <label for="education_level" class="form-label">Jenjang Pendidikan <code>*</code></label>
+                                        <label for="education_level" class="form-label required">Jenjang Pendidikan 
                                         <select name="education_level" class="form-select" required>
                                             <option value="">-- Pilih Jenjang --</option>
                                             <option value="SD">SD</option>
@@ -68,7 +67,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">Nama Sekolah</label>
+                                    <label class="form-label required">Nama Sekolah</label>
                                     <input type="text" name="institution_name" class="form-control" value="{{ old('institution_name') }}" required>
                                 </div>
 
@@ -79,7 +78,7 @@
 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Tahun Masuk</label>
+                                        <label class="form-label required">Tahun Masuk</label>
                                         <input type="number" name="start_year" class="form-control" value="{{ old('start_year') }}" required>
                                     </div>
                                     <div class="col-md-6 mb-3">

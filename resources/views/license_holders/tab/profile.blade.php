@@ -56,7 +56,7 @@
                             @if ($license_holder->identity_photo)
                                 <div class="mt-3">
                                     <label class="text-secondary fw-normal">Foto KTP  :</label><br>
-                                    <img src="{{ asset('storage/photos/' . $license_holder->identity_photo) }}" 
+                                    <img src="{{ asset('storage/' . $license_holder->identity_photo) }}" 
                                         alt="Foto KTP" 
                                         style="max-width: 100%; height: auto;" 
                                         class="img-thumbnail">
