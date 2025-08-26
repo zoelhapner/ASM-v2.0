@@ -4,13 +4,13 @@
             {{-- Foto & Nama --}}
             <div class="d-flex align-items-center mb-4">
                 @if ($license_holder->photo)
-                    <span class="avatar avatar-xl me-3 rounded" style="background-image: url('{{ asset('storage/photos/' . $license_holder->photo) }}')"></span>
+                    <span class="avatar avatar-xl me-3 rounded" style="background-image: url('{{ asset('storage/' . $license_holder->photo) }}')"></span>
                 @else
                     <span class="avatar avatar-xl me-3 avatar-rounded bg-secondary-lt">?</span>
                 @endif
                 <div>
                     <h3 class="card-title mb-1">{{ $license_holder->fullname }}</h3>
-                    <div class="text-muted">{{ $license_holder->job ?? 'No Job Title' }}</div>
+                    <div class="text-muted">{{ $license_holder->position ?? 'No Job Title' }}</div>
                 </div>
             </div>
 

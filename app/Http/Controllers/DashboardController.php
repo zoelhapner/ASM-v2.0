@@ -63,13 +63,13 @@ class DashboardController extends Controller
         $studentsCount = Student::whereIn('license_id', $licenses->pluck('id'))->count();
 
         $monthlyRevenue = AccountingJournalDetail::whereHas('account', function($q) {
-                $q->where('account_code', 'like', 'D%');
+                $q->where('account_code', 'like', '4%');
             })
             ->whereHas('journal', function($q) use ($awalBulan, $akhirBulan, $licenses) {
                 $q->whereIn('license_id', $licenses->pluck('id'))
                   ->whereBetween('transaction_date', [$awalBulan, $akhirBulan]);
             })
-            ->sum('debit');
+            ->sum('credit');
 
     } else {
         $licensesCount = 0;

@@ -182,11 +182,11 @@ $(document).ready(function () {
         userSelect.empty();
         if (personType === "student") {
             @foreach($students as $student)
-                userSelect.append('<option value="{{ $student->id }}">{{ $student->fullname }}</option>');
+                userSelect.append('<option value="{{ $student->id }}">{{ $student->name }}</option>');
             @endforeach
         } else if (personType === "employee") {
             @foreach($employees as $employee)
-                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->fullname }}</option>');
+                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->name }}</option>');
             @endforeach
         } else if (personType === "license") {
             @foreach($licenses as $license)
