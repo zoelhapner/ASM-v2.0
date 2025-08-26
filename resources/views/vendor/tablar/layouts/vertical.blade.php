@@ -18,12 +18,10 @@
             </div>
         </div>
 
-        <form id="logout-form" action="{{ $logout_url }}" method="POST" style="display: none;">
-                @if(config('tablar.logout_method'))
-                    {{ method_field(config('tablar.logout_method')) }}
-                @endif
-                {{ csrf_field() }}
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
         </form>
+
         
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>

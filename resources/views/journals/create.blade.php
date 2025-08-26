@@ -105,7 +105,7 @@
                         <th style="width:20%">User</th>
                         <th style="width:10%">Debit</th>
                         <th style="width:10%">Kredit</th>
-                        <th style="width:10%">Aksi</th>
+                        {{-- <th>Aksi</th> --}}
                     </tr>
                 </thead>
                 <tbody id="detail-rows">
