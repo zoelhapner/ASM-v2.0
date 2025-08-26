@@ -237,7 +237,6 @@ $(document).ready(function () {
             // Reset kalau belum pilih lisensi
             $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
             $('#journal_code').val('');
-            accountsData = [];
         }
     });
 
@@ -249,11 +248,11 @@ $(document).ready(function () {
                 <td>
                     <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
                         <option value="">-- Pilih Akun --</option>
-                         ${accountsData.map(acc =>
-                        `<option value="${acc.id}" data-code="${acc.account_code}" data-person-type="${acc.person_type}">
-                            ${acc.account_code} - ${acc.account_name}
-                        </option>`
-                    ).join('')}
+                        ${accountsData.map(acc =>
+                            `<option value="${acc.id}" data-code="${acc.account_code}" data-person-type="${acc.person_type}">
+                                ${acc.account_code} - ${acc.account_name}
+                            </option>`
+                        ).join('')}
                     </select>
                 </td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
@@ -271,16 +270,16 @@ $(document).ready(function () {
         $('#detail-rows').append(newRow);
 
         // Isi dropdown akun dengan cache
-        const $newAccountSelect = $('#detail-rows tr:last .account-select');
-        $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
-        $.each(accountsData, function (_, account) {
-            $newAccountSelect.append(
-                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                    ${account.account_code} - ${account.account_name}
-                </option>`
-            );
-        });
-        $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
+        // const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        // $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
+        // $.each(accountsData, function (_, account) {
+        //     $newAccountSelect.append(
+        //         `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+        //             ${account.account_code} - ${account.account_name}
+        //         </option>`
+        //     );
+        // });
+        // $newAccountSelect.select2({ placeholder: "-- Pilih --",  width: '100%'});
     });
 
     // Hapus baris
@@ -415,32 +414,7 @@ $(document).ready(function () {
             creditInput.prop('disabled', false).val('');
         }
     }
-
-    $('#detail-rows').on('change', '.account-select', function () {
-        const row = $(this).data('row');
-        const code = $(this).find('option:selected').data('code') || '';
-        const personType = $(this).find('option:selected').data('person-type') || null;
-        const $userSelect = $(`select.user-select[data-row="${row}"]`);
-
-        if (['Siswa', 'Karyawan', 'Lisensi'].includes(personType)) {
-            renderUserOptions(row, personType);
-        } else {
-            $userSelect.hide().prop('disabled', false).empty();
-        }
-        toggleDebitCreditInputs(row, code);
-    });
-
-    function calculateSubtotals() {
-        let totalDebit = 0, totalCredit = 0;
-        $('#detail-rows tr').each(function() {
-            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
-            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
-        });
-        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
-        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
-    }
-
-    $(document).ready(function() {
+   $(document).ready(function() {
         $(document).on('input', '.debit-input, .credit-input', function() {
             const val = parseFloat($(this).val());
             if (val < 0) $(this).val('');
