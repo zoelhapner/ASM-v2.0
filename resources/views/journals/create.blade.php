@@ -171,10 +171,6 @@ $(document).ready(function () {
     // Inisialisasi Select2
     $('.select2').select2({ placeholder: "-- Pilih --",  width: '100%'});
 
-    if ($('#license_id').val()) {
-        $('#license_id').trigger('change'); // langsung load accountsData
-    }
-
     let accountsData = []; // cache akun sesuai lisensi aktif
 
     // Render user options (student/employee/license)
@@ -253,6 +249,11 @@ $(document).ready(function () {
                 <td>
                     <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
                         <option value="">-- Pilih Akun --</option>
+                         ${accountsData.map(acc =>
+                        `<option value="${acc.id}" data-code="${acc.account_code}" data-person-type="${acc.person_type}">
+                            ${acc.account_code} - ${acc.account_name}
+                        </option>`
+                    ).join('')}
                     </select>
                 </td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
@@ -427,45 +428,6 @@ $(document).ready(function () {
             $userSelect.hide().prop('disabled', false).empty();
         }
         toggleDebitCreditInputs(row, code);
-    });
-
-    $('#add-rowwwwwww').click(function () {
-        const rowCount = $('#detail-rows tr').length;
-        const newRow = `
-            <tr>
-                <td>
-                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
-                        <option value="">-- Pilih Akun --</option>
-                        @foreach ($accounts as $account)
-                            <option value="{{ $account->id }}"
-                                data-code="{{ $account->account_code }}"
-                                data-name="{{ $account->account_name }}"
-                                data-person-type="{{ $account->person_type }}">
-                                {{ $account->account_code }} - {{ $account->account_name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
-                </td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input" disabled></td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input" disabled></td>
-                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row">Hapus</button></td>
-            </tr>
-        `;
-        $('#detail-rows').append(newRow);
-
-        $(`select.account-select[data-row="${rowCount}"], select.user-select[data-row="${rowCount}"]`).select2({
-            placeholder: "-- Pilih --",
-            width: '100%'
-        });
-    });
-
-    $('#detail-rows').on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        calculateSubtotals();
     });
 
     function calculateSubtotals() {
