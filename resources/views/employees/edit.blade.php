@@ -19,7 +19,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("employees.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("employees.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -555,7 +555,7 @@
 </div>
 
 
-                                <button type="submit" class="btn btn-primary mt-4">Update</button>
+                                <button type="submit" class="btn btn-primary text-white mt-4">Update</button>
                              </form>
 
                         </div>
@@ -566,7 +566,7 @@
     </div>
 @endsection
 
-                                    @push('js')
+@push('js')
 <script>
     $(document).ready(function () {
         function toggleSertifikatInstruktur() {

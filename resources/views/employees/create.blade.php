@@ -361,7 +361,7 @@
                                         </div>
 
                                         <div class="col-md-6 mb-3">
-                                            <label class="required">Bonus *</label>
+                                            <label class="required">Bonus</label>
                                             <input type="number" class="form-control @error('bonus') is-invalid @enderror" id="bonus" name="bonus" value="{{ old('bonus') }}" required>
                                             @error('bonus')
                                                 <div class="invalid-feedback">{{ $message }}</div>

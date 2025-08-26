@@ -94,9 +94,9 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
+                    {{-- <form id="send-verification" method="post" action="{{ route('verification.send') }}">
                         @csrf
-                    </form>
+                    </form> --}}
 
                     <form method="post" action="{{ route('profile.update') }}">
                         @csrf

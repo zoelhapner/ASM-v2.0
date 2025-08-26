@@ -42,13 +42,6 @@
                 {{ __('tablar::tablar.log_out') }}
             </a>
 
-            <form id="logout-form" action="{{ $logout_url }}" method="POST" style="display: none;">
-                @if(config('tablar.logout_method'))
-                    {{ method_field(config('tablar.logout_method')) }}
-                @endif
-                {{ csrf_field() }}
-            </form>
-
         </div>
     </div>
 @endif

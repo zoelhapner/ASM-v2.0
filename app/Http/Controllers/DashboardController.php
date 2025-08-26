@@ -45,12 +45,12 @@ class DashboardController extends Controller
         $studentsCount = Student::count();
 
         $monthlyRevenue = AccountingJournalDetail::whereHas('account', function($q) {
-                $q->where('account_code', 'like', 'D%');
+                $q->where('account_code', 'like', '4%');
             })
             ->whereHas('journal', function($q) use ($awalBulan, $akhirBulan) {
                 $q->whereBetween('transaction_date', [$awalBulan, $akhirBulan]);
             })
-            ->sum('debit');
+            ->sum('credit');
 
     } elseif ($user->hasRole('Pemilik Lisensi')) {
         $licenses = $user->licenses;
