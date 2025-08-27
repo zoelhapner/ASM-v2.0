@@ -173,6 +173,20 @@ $(document).ready(function () {
 
     let accountsData = []; // cache akun sesuai lisensi aktif
 
+    function renderAccounts($select, licenseId) {
+        $select.empty().append('<option value="">-- Pilih Akun --</option>');
+        accountsData
+            .filter(acc => acc.license_id == licenseId)
+            .forEach(acc => {
+                $select.append(
+                    `<option value="${acc.id}" data-person-type="${acc.person_type}">
+                        ${acc.account_code} - ${acc.account_name}
+                    </option>`
+                );
+            });
+        $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
+    }
+
     // Render user options (student/employee/license)
     function renderUserOptions($select) {
         const personType = $select.find(':selected').data('person-type');
@@ -243,16 +257,12 @@ $(document).ready(function () {
     // Tambah baris baru
     $('#add-row').click(function () {
         const rowCount = $('#detail-rows tr').length;
+        const licenseId = $('#license_id').val();
         const newRow = `
             <tr>
                 <td>
                     <select name="details[${rowCount}][account_id]" class="form-select account-select select2" data-row="${rowCount}" required>
-                        <option value="account">-- Pilih Akun --</option>
-                        @foreach($accounts as $account)
-                            <option value="{{ $account->id }}" data-person-type="{{ $account->person_type }}">
-                                {{ $account->account_code }} - {{ $account->account_name }}
-                            </option>
-                        @endforeach
+                        
                     </select>
                 </td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
@@ -269,6 +279,9 @@ $(document).ready(function () {
         `;
 
         $('#detail-rows').append(newRow);
+        const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        const licenseId = $('#license_id').val();
+        renderAccounts($newAccountSelect, licenseId);
 
         $(`#detail-rows tr:last .select2`).select2({ placeholder: "-- Pilih --", width: '100%' });
     });
@@ -292,6 +305,12 @@ $(document).ready(function () {
    
 
     // Hapus baris
+    // <option value="account">-- Pilih Akun --</option>
+    //                     @foreach($accounts as $account)
+    //                         <option value="{{ $account->id }}" data-person-type="{{ $account->person_type }}">
+    //                             {{ $account->account_code }} - {{ $account->account_name }}
+    //                         </option>
+    //                     @endforeach
     
 
     // Hitung subtotal & cek balance
