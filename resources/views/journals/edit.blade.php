@@ -36,10 +36,10 @@
         <thead>
             <tr>
                 <th>Akun</th>
+                <th>Deskripsi</th>
                 <th>User</th>
                 <th>Debit</th>
                 <th>Kredit</th>
-                <th>Keterangan</th>
             </tr>
         </thead>
         <tbody id="detail-rows">

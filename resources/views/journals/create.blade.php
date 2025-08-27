@@ -233,11 +233,7 @@ $(document).ready(function () {
                 $('#journal_code').val('');
                 alert('Gagal mengambil kode jurnal');
             });  
-        } else {
-            // Reset kalau belum pilih lisensi
-            $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
-            $('#journal_code').val('');
-        }
+        } 
     });
 
     // Tambah baris baru
@@ -278,7 +274,7 @@ $(document).ready(function () {
                 </option>`
             );
         });
-        $(`#detail-rows tr:last .select2`).select2({ placeholder: "-- Pilih --", width: '100%' });
+
         $newAccountSelect.select2({ placeholder: "-- Pilih Akun --",  width: '100%'});
 
     $(document).on('click', '.remove-row', function () {
@@ -421,48 +417,6 @@ $(document).ready(function () {
         calculateSubtotals();
     });
 </script>
-
-<script>
-    $(document).ready(function () {
-        const $licenseSelect = $('select[name="license_id"]');
-        const $jurnalInput = $('input[name="journal_code"]');
-
-        // Fungsi AJAX untuk ambil NIS
-        function generateJurnal(licenseId) {
-            $.ajax({
-                url: `/journals/generate-jurnal/${licenseId}`, // pastikan endpoint ini sesuai
-                type: 'GET',
-                success: function (response) {
-                    if (response.jurnal) {
-                        $jurnalInput.val(response.jurnal);
-                    } else {
-                        $nisInput.val('');
-                    }
-                },
-                error: function () {
-                    console.error("Gagal mengambil Jurnal.");
-                    $jurnalInput.val('');
-                }
-            });
-        }
-
-        // Event saat lisensi dipilih
-        $licenseSelect.on('change', function () {
-            const licenseId = $(this).val();
-            if (licenseId) {
-                generateJurnal(licenseId);
-            } else {
-                $jurnalInput.val('');
-            }
-        });
-
-        // Untuk halaman edit: generate NIS hanya kalau input masih kosong
-        if ($licenseSelect.val() && !$jurnalInput.val()) {
-            generateJurnal($licenseSelect.val());
-        }
-
-    });
-</script> --}}
 
 {{-- // Fungsi toggle debit/credit
     // function toggleDebitCreditInputs($select) {
