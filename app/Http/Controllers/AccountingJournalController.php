@@ -105,45 +105,46 @@ class AccountingJournalController extends Controller
         ->select('id', 'name')
         ->get();
 
-    // $pusatLicense = License::where('name', 'AHA Right Brain')->first();
-
-    // $pusatUserId = null;
-    // $pusatUserName = null;
-
-    // if ($pusatLicense) {
-    //     // Ambil salah satu user yang punya license ini
-    //     $pusatUser = $pusatLicense->owners()->first(); // pastikan relasi users() ada di model License
-    //     if ($pusatUser) {
-    //         $pusatUserId = $pusatUser->id;
-    //         $pusatUserName = $pusatUser->name;
-    //     }
-    // }
-
     $pusatLicense = License::where('name', 'AHA Right Brain')->first();
 
     $pusatUserId   = $pusatLicense?->pusatUser()?->id;
     $pusatUserName = $pusatLicense?->pusatUser()?->name;
 
-    $journalCode = null; 
-    if ($activeLicenseId) { 
-        $license = License::find($activeLicenseId); 
-        if ($license) 
-            { 
-                $lastJournal = AccountingJournal::where('license_id', $license->id) ->orderBy('id', 'desc') ->first(); 
-                if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) 
-                    { 
-                        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT); 
-                    } else { 
-                        $nextNumber = '0001'; } 
-
-                    $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber; 
-                } 
-            }
+    $journalCode = $activeLicenseId
+    ? $this->generateNextJournalCode($activeLicenseId)
+    : null; 
 
         return view('journals.create', compact(
             'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
         ));
     }
+
+    private function generateNextJournalCode($licenseId)
+{
+    $license = License::findOrFail($licenseId);
+
+    $lastJournal = AccountingJournal::where('license_id', $license->id)
+        ->orderBy('id', 'desc')
+        ->first();
+
+    if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
+        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
+    } else {
+        $nextNumber = '0001';
+    }
+
+    return 'IJ-' . $license->license_id . '-' . $nextNumber;
+}
+
+public function getNextCode($licenseId)
+{
+    $nextCode = $this->generateNextJournalCode($licenseId);
+
+    return response()->json([
+        'next_code'  => $nextCode,
+        'license_id' => $licenseId,
+    ]);
+}
 
 public function store(StoreAccountingJournalRequest $request)
 {
@@ -178,30 +179,6 @@ public function store(StoreAccountingJournalRequest $request)
 
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
 }
-
-public function getNextCode($licenseId)
-{
-    // Ambil license dari UUID
-    $license = License::findOrFail($licenseId);
-
-    // Cari jurnal terakhir milik license ini
-    $lastJournal = AccountingJournal::where('license_id', $license->id)
-        ->orderBy('id', 'desc')
-        ->first();
-
-    if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
-        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
-    } else {
-        $nextNumber = '0001';
-    }
-
-    // Gunakan kolom license_id (string)
-    $nextCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
-
-    return response()->json(['next_code' => $nextCode, 'license_id' => $license->id,]);
-}
-
-
 
     public function show(Request $request, AccountingJournal $journal)
     {
