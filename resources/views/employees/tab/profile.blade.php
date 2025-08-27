@@ -10,7 +10,7 @@
                 @endif
                 <div>
                     <h3 class="card-title mb-1">{{ $employee->fullname }}</h3>
-                    <div class="text-muted">{{ $employee->position ?? 'No Job Title' }}</div>
+                    <div class="text-muted">{{ $employee->job ?? 'No Job Title' }}</div>
                 </div>
             </div>
 
