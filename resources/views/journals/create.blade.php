@@ -232,13 +232,12 @@ $(document).ready(function () {
             }).fail(function () {
                 $('#journal_code').val('');
                 alert('Gagal mengambil kode jurnal');
-            });
+            });  
+        } else {
+            // Reset kalau belum pilih lisensi
+            $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
+            $('#journal_code').val('');
         }
-        // } else {
-        //     // Reset kalau belum pilih lisensi
-        //     $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>');
-        //     $('#journal_code').val('');
-        // }
     });
 
     // Tambah baris baru
@@ -247,8 +246,13 @@ $(document).ready(function () {
         const newRow = `
             <tr>
                 <td>
-                    <select name="details[${rowCount}][account_id]" class="form-select account-select" data-row="${rowCount}" required>
+                    <select name="details[${rowCount}][account_id]" class="form-select account-select select2" data-row="${rowCount}" required>
                         <option value="">-- Pilih Akun --</option>
+                        @foreach($accounts as $account)
+                            <option value="{{ $account->id }}" data-person-type="{{ $account->person_type }}">
+                                {{ $account->account_code }} - {{ $account->account_name }}
+                            </option>
+                        @endforeach
                     </select>
                 </td>
                 <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
@@ -266,18 +270,21 @@ $(document).ready(function () {
 
         $('#detail-rows').append(newRow);
 
-        // Isi dropdown akun dengan cache
-        const $newAccountSelect = $('#detail-rows tr:last .account-select');
-        $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
-        $.each(accountsData, function (_, account) {
-            $newAccountSelect.append(
-                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                    ${account.account_code} - ${account.account_name}
-                </option>`
-            );
-        });
-        $newAccountSelect.select2({ placeholder: "-- Pilih Akun --",  width: '100%'});
+        $(`#detail-rows tr:last .select2`).select2({ placeholder: "-- Pilih --", width: '100%' });
     });
+
+        // Isi dropdown akun dengan cache
+        // const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        // $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
+        // $.each(accountsData, function (_, account) {
+        //     $newAccountSelect.append(
+        //         `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
+        //             ${account.account_code} - ${account.account_name}
+        //         </option>`
+        //     );
+        // });
+        // $newAccountSelect.select2({ placeholder: "-- Pilih Akun --",  width: '100%'});
+   
 
     // Hapus baris
     $(document).on('click', '.remove-row', function () {
