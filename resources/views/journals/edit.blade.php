@@ -31,11 +31,6 @@
                    value="{{ old('transaction_date', $journal->transaction_date) }}" required>
         </div>
 
-        <div class="col-md-6 mb-3">
-            <label for="description">Deskripsi Umum</label>
-            <textarea name="description" class="form-control">{{ old('description', $journal->description) }}</textarea>
-        </div>
-
         <h4>Detail Akun</h4>
         <table class="table table-bordered">
         <thead>
@@ -72,6 +67,12 @@
                         @endif
                     </td>
                     <td>
+                        <input type="text" 
+                               name="details[{{ $i }}][description]" 
+                               class="form-control"
+                               value="{{ old("details.$i.description", $detail->description) }}">
+                    </td>
+                    <td>
                         <select name="details[{{ $i }}][person]" 
                                 class="form-control select2 user-select" 
                                 data-row="{{ $i }}" 
@@ -79,12 +80,12 @@
                                 {{ $detail->person ? 'disabled' : '' }}>
                             <option value="">-- Pilih User --</option>
                             @php
-                                if ($detail->person_type === 'Siswa') {
+                                if ($detail->person_type === 'student') {
                                     $users = $students;
-                                } elseif ($detail->person_type === 'Karyawan') {
+                                } elseif ($detail->person_type === 'employee') {
                                     $users = $employees;
-                                } elseif ($detail->person_type === 'Pemilik Lisensi') {
-                                    $users = $licenseHolders;
+                                } elseif ($detail->person_type === 'license') {
+                                    $users = $licenseList;
                                 } else {
                                     $users = collect();
                                 }
@@ -113,12 +114,6 @@
                                value="{{ old("details.$i.credit", $detail->credit) }}"
                                {{ $detail->debit ? 'disabled' : '' }}>
                     </td>
-                    <td>
-                        <input type="text" 
-                               name="details[{{ $i }}][description]" 
-                               class="form-control"
-                               value="{{ old("details.$i.description", $detail->description) }}">
-                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -137,7 +132,12 @@
         </div>
     @endif
 
-        <button type="submit" class="btn btn-primary">Update</button>
+    <div class="col-md-6 mb-3">
+            <label for="description">Keterangan</label>
+            <textarea name="description" class="form-control">{{ old('description', $journal->description) }}</textarea>
+    </div>
+
+        <button type="submit" class="btn btn-primary text-white">Update</button>
     </form>
 </div>
 @endsection
@@ -157,10 +157,10 @@
             $userSelect.show().prop('disabled', true);
 
             let data = [];
-            if (source === 'Siswa') data = studentOptions;
-            if (source === 'Karyawan') data = employeeOptions;
+            if (source === 'student') data = studentOptions;
+            if (source === 'employee') data = employeeOptions;
             if (source === 'Pemilik Lisensi') data = licenseHolderOptions;
-            if (source === 'Lisensi') data = licenseOptions;
+            if (source === 'license') data = licenseOptions;
 
             if (data.length) {
                 $userSelect.append(`<option value="">-- Pilih User --</option>`);
@@ -208,7 +208,7 @@
         const $userSelect = $(`select.user-select[data-row="${row}"]`);
 
         // Render opsi user kalau personType cocok
-        if (['Siswa', 'Karyawan', 'Pemilik Lisensi', 'Lisensi'].includes(personType)) {
+        if (['student', 'employee', 'Pemilik Lisensi', 'license'].includes(personType)) {
             renderUserOptions(row, personType);
 
             // Set selected user jika ada value

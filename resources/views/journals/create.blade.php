@@ -85,7 +85,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="journal_code" class="required">No Transaksi</label>
                     <input type="text" id="journal_code" name="journal_code" 
-                        class="form-control" value="{{ $journalCode }}" readonly>
+                        class="form-control" readonly>
                 </div>
 
                 {{-- Tanggal Transaksi --}}

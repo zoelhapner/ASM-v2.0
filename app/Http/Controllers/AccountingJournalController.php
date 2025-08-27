@@ -266,6 +266,7 @@ public function getNextCode($licenseId)
         ->select('id', 'fullname')
         ->orderBy('fullname')
         ->get();
+        
     $licenseHolders = User::whereHas('licenses', function ($q) use ($licenseIds) {
             $q->whereIn('licenses.id', $licenseIds);
         })
