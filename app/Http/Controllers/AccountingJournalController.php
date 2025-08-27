@@ -123,17 +123,19 @@ class AccountingJournalController extends Controller
 {
     $license = License::findOrFail($licenseId);
 
-    $lastJournal = AccountingJournal::where('license_id', $license->id)
-        ->orderBy('id', 'desc')
-        ->first();
+    $lastJournalNumber = AccountingJournal::where('license_id', $license->id)
+        ->where('journal_code', 'LIKE', 'IJ-' . $license->license_id . '-%')
+        ->selectRaw("MAX(CAST(SUBSTRING(journal_code, LENGTH('IJ-' || ? || '-') + 1) AS INTEGER)) as last_number", [$license->license_id])
+        ->value('last_number');
 
-    if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
-        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
-    } else {
-        $nextNumber = '0001';
-    }
+    do {
+        $nextNumber = str_pad(($lastJournalNumber ?? 0) + 1, 4, '0', STR_PAD_LEFT);
+        $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
 
-    return 'IJ-' . $license->license_id . '-' . $nextNumber;
+        $exists = AccountingJournal::where('journal_code', $journalCode)->exists();
+        $lastJournalNumber++;
+    } while ($exists);
+
 }
 
 public function getNextCode($licenseId)
