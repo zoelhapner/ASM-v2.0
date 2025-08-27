@@ -247,7 +247,7 @@ $(document).ready(function () {
             <tr>
                 <td>
                     <select name="details[${rowCount}][account_id]" class="form-select account-select select2" data-row="${rowCount}" required>
-                        <option value="">-- Pilih Akun --</option>
+                        <option value="account">-- Pilih Akun --</option>
                         @foreach($accounts as $account)
                             <option value="{{ $account->id }}" data-person-type="{{ $account->person_type }}">
                                 {{ $account->account_code }} - {{ $account->account_name }}
@@ -273,6 +273,11 @@ $(document).ready(function () {
         $(`#detail-rows tr:last .select2`).select2({ placeholder: "-- Pilih --", width: '100%' });
     });
 
+    $(document).on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+        calculateSubtotals();
+    });
+
         // Isi dropdown akun dengan cache
         // const $newAccountSelect = $('#detail-rows tr:last .account-select');
         // $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
@@ -287,10 +292,7 @@ $(document).ready(function () {
    
 
     // Hapus baris
-    $(document).on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        calculateSubtotals();
-    });
+    
 
     // Hitung subtotal & cek balance
     function calculateSubtotals() {

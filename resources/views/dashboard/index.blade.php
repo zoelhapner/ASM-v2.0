@@ -106,11 +106,13 @@
                     <i class="bi bi-file-earmark-text"></i> Tambah Karyawan
                 </a>
             </div>
-            <div class="col-md-3">
-                <a href="{{ route('accounting.index') }}" class="btn btn-danger text-white w-100">
-                    <i class="bi bi-people-fill"></i> Akuntasi
-                </a>
-            </div>
+            @can('akun-akuntansi.lihat')
+                <div class="col-md-3">
+                    <a href="{{ route('accounting.index') }}" class="btn btn-danger text-white w-100">
+                        <i class="bi bi-people-fill"></i> Akuntasi
+                    </a>
+                </div>
+            @endcan
         </div>
 
         {{-- Top 3 Siswa Baru --}}
