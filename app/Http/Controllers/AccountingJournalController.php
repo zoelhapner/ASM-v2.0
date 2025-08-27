@@ -50,7 +50,6 @@ class AccountingJournalController extends Controller
 
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
-        $activeLicenseId = $request->get('license_id'); // Ambil dari filter form
     } else {
         $licenses = $user->hasRole('Pemilik Lisensi')
             ? $user->licenses
@@ -59,9 +58,10 @@ class AccountingJournalController extends Controller
         if (!$licenses || $licenses->isEmpty()) {
             abort(403, 'License tidak ditemukan untuk user ini.');
         }
-
-        $activeLicenseId = session('active_license_id');
     }
+
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+    
 
     // Tentukan daftar license_id untuk query
     $licenseIds = $activeLicenseId
@@ -82,8 +82,7 @@ class AccountingJournalController extends Controller
     // Accounts
     $accounts = AccountingAccount::where('is_parent', false)
         ->where('is_active', true)
-        ->when($activeLicenseId, fn ($q) => $q->where('license_id', $activeLicenseId))
-        ->when(!$user->hasRole('Super-Admin'), fn($q) => $q->whereIn('license_id', $licenseIds))
+        ->whereIn('license_id', $licenseIds)
         ->when(!empty($hiddenAccounts), function ($q) use ($hiddenAccounts) {
             $q->whereNotIn('account_code', $hiddenAccounts);
         })
@@ -102,7 +101,7 @@ class AccountingJournalController extends Controller
         ->select('id', 'fullname as name')
         ->get();
 
-    $licenseList = License::whereIn('license_id', $licenseIds)
+    $licenseList = License::whereIn('id', $licenseIds)
         ->select('id', 'name')
         ->get();
 
@@ -126,26 +125,25 @@ class AccountingJournalController extends Controller
     $pusatUserName = $pusatLicense?->pusatUser()?->name;
 
     $journalCode = null; 
-if ($activeLicenseId) { 
-    $license = License::find($activeLicenseId); 
-    if ($license) 
-        { 
-            $lastJournal = AccountingJournal::where('license_id', $license->id) ->orderBy('id', 'desc') ->first(); 
-            if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) 
-                { 
-                    $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT); 
-                } else { 
-                    $nextNumber = '0001'; } 
+    if ($activeLicenseId) { 
+        $license = License::find($activeLicenseId); 
+        if ($license) 
+            { 
+                $lastJournal = AccountingJournal::where('license_id', $license->id) ->orderBy('id', 'desc') ->first(); 
+                if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) 
+                    { 
+                        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT); 
+                    } else { 
+                        $nextNumber = '0001'; } 
 
-                $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber; 
-            } 
-        }
+                    $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber; 
+                } 
+            }
 
-    return view('journals.create', compact(
-        'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
-
-    ));
-}
+        return view('journals.create', compact(
+            'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
+        ));
+    }
 
 public function store(StoreAccountingJournalRequest $request)
 {
