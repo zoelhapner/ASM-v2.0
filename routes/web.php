@@ -113,7 +113,7 @@ Route::get('/get-accounts-by-license/{license}', function($licenseId) {
         ->get();
 });
 
-// Route::get('/journals/next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
+Route::get('/journals/next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
 
 
 

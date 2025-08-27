@@ -233,7 +233,11 @@ $(document).ready(function () {
                 $('#journal_code').val('');
                 alert('Gagal mengambil kode jurnal');
             }); 
-        } 
+        } else {
+            $('.account-select').empty().append('<option value="">-- Pilih Akun --</option>'); 
+            $('#journal_code').val('');
+            accountsData = [];
+        }
     });
 
     // Tambah baris baru

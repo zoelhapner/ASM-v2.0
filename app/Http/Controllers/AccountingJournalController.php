@@ -181,27 +181,27 @@ public function store(StoreAccountingJournalRequest $request)
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
 }
 
-// public function getNextCode($licenseId)
-// {
-//     // Ambil license dari UUID
-//     $license = License::findOrFail($licenseId);
+public function getNextCode($licenseId)
+{
+    // Ambil license dari UUID
+    $license = License::findOrFail($licenseId);
 
-//     // Cari jurnal terakhir milik license ini
-//     $lastJournal = AccountingJournal::where('license_id', $license->id)
-//         ->orderBy('id', 'desc')
-//         ->first();
+    // Cari jurnal terakhir milik license ini
+    $lastJournal = AccountingJournal::where('license_id', $license->id)
+        ->orderBy('id', 'desc')
+        ->first();
 
-//     if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
-//         $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
-//     } else {
-//         $nextNumber = '0001';
-//     }
+    if ($lastJournal && preg_match('/(\d+)$/', $lastJournal->journal_code, $matches)) {
+        $nextNumber = str_pad($matches[1] + 1, 4, '0', STR_PAD_LEFT);
+    } else {
+        $nextNumber = '0001';
+    }
 
-//     // Gunakan kolom license_id (string)
-//     $nextCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
+    // Gunakan kolom license_id (string)
+    $nextCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
 
-//     return response()->json(['next_code' => $nextCode, 'license_id' => $license->id,]);
-// }
+    return response()->json(['next_code' => $nextCode, 'license_id' => $license->id,]);
+}
 
 
 
