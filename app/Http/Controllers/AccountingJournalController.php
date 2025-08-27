@@ -125,17 +125,20 @@ class AccountingJournalController extends Controller
 
     $lastJournalNumber = AccountingJournal::where('license_id', $license->id)
         ->where('journal_code', 'LIKE', 'IJ-' . $license->license_id . '-%')
-        ->selectRaw("MAX(CAST(SUBSTRING(journal_code, LENGTH('IJ-' || ? || '-') + 1) AS INTEGER)) as last_number", [$license->license_id])
+        ->selectRaw("MAX(CAST(SUBSTRING(journal_code FROM LENGTH('IJ-' || license_id || '-') + 1) AS INTEGER)) AS last_number")
         ->value('last_number');
 
-    do {
-        $nextNumber = str_pad(($lastJournalNumber ?? 0) + 1, 4, '0', STR_PAD_LEFT);
-        $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
+    // Tentukan nomor berikutnya
+    $nextNumber = ($lastJournalNumber ?? 0) + 1;
+    $journalCode = 'IJ-' . $license->license_id . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
 
-        $exists = AccountingJournal::where('journal_code', $journalCode)->exists();
-        $lastJournalNumber++;
-    } while ($exists);
+    // Cek jika kode jurnal sudah ada, increment lagi
+    while (AccountingJournal::where('journal_code', $journalCode)->exists()) {
+        $nextNumber++;
+        $journalCode = 'IJ-' . $license->license_id . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    }
 
+    return $journalCode;
 }
 
 public function getNextCode($licenseId)
