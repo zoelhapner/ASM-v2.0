@@ -85,7 +85,7 @@
                 <div class="col-md-4 mb-3">
                     <label for="journal_code" class="required">No Transaksi</label>
                     <input type="text" id="journal_code" name="journal_code" 
-                        class="form-control" readonly>
+                        class="form-control" value="{{ $journalCode }}" readonly>
                 </div>
 
                 {{-- Tanggal Transaksi --}}
@@ -232,7 +232,7 @@ $(document).ready(function () {
             }).fail(function () {
                 $('#journal_code').val('');
                 alert('Gagal mengambil kode jurnal');
-            });  
+            }); 
         } 
     });
 
@@ -265,7 +265,6 @@ $(document).ready(function () {
 
         // Isi dropdown akun dengan cache
         const $newAccountSelect = $('#detail-rows tr:last .account-select select2');
-        const licenseId = $('#license_id').val();
         $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
         $.each(accountsData, function (_, account) {
             $newAccountSelect.append(
