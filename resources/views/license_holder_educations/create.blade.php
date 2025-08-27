@@ -66,7 +66,7 @@
                                         </select>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label required">Nama Sekolah</label>
                                     <input type="text" name="institution_name" class="form-control" value="{{ old('institution_name') }}" required>
                                 </div>
@@ -87,7 +87,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Status</label>
                                     <select name="is_graduated" class="form-select">
                                         <option value="1">Lulus</option>

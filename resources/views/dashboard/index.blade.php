@@ -15,12 +15,12 @@
         <p class="mb-0">Kini jadi lebih mudah dalam mengelola : <strong>{{ is_string($licenseName) ? $licenseName : '-' }}</strong></p>
 
         <small class="d-block mt-2">
-            Terakhir login:
-            @if (auth()->check() && auth()->user()->last_login_at)
+            Terakhir login: {{ now()->translatedFormat('d F Y H:i') }}
+            {{-- @if (auth()->check() && auth()->user()->last_login_at)
                 {{ auth()->user()->last_login_at->locale('id')->translatedFormat('l, d F Y H:i') }}
             @else
                 Belum pernah login
-            @endif
+            @endif --}}
         </small>
 
     </div>

@@ -60,13 +60,8 @@
             </tbody>
             <tfoot class="fw-bold">
                 <tr>
-                    <td colspan="4" class="text-end">Total Debit</td>
+                    <td colspan="4" class="text-end">Total</td>
                     <td class="text-end">Rp. {{ number_format($totalDebit, 2, ',', '.') }}</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-end">Total Kredit</td>
-                    <td></td>
                     <td class="text-end">Rp. {{ number_format($totalCredit, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>

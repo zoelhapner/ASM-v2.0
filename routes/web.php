@@ -113,7 +113,11 @@ Route::get('/get-accounts-by-license/{license}', function($licenseId) {
         ->get();
 });
 
-Route::get('/journals/next-code/{license}', [AccountingJournalController::class]);
+Route::get('/journals/next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
+
+
+
+
 
 Route::middleware(['auth', 'permission:siswa.tambah'])->group(function () {
     Route::resource('/students', StudentsController::class)->only(['create', 'store']);
@@ -162,12 +166,14 @@ Route::get('/accounts/by-license/{id}', function ($id) {
     return response()->json($accounts);
 })->name('accounts.byLicense');
 
+
 Route::patch('/notifications/{notification}/read', [LicenseNotificationController::class, 'markAsRead'])->name('notifications.read');
 
 Route::post('/notifications/read-all', [LicenseNotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
 
 Route::get('/periods/close', [AccountingClosingController::class, 'showCloseForm'])->name('periods.close.form');
 Route::post('/periods/close', [AccountingClosingController::class, 'close'])->name('periods.close');
+
 
 Route::middleware(['auth', 'role:Super-Admin'])->group(function () {
     Route::resource('roles', RoleController::class);
@@ -182,6 +188,8 @@ Route::get('/license_holders/{id}/profile', [LicenseHoldersController::class, 's
 Route::get('/license_holders/{id}/educations', [LicenseHoldersController::class, 'showTab'])->name('license_holders.educations');
 Route::get('/license_holders/{id}/workers', [LicenseHoldersController::class, 'showWorks'])->name('license_holders.workers');
 Route::get('/license_holders/{id}/families', [LicenseHoldersController::class, 'showFams'])->name('license_holders.families');
+
+
 
 route::resource('/license_holder_educations', LicenseHolderEducationController::class);
 route::resource('/license_holder_workers', LicenseHolderWorkExperience::class);
@@ -200,6 +208,7 @@ Route::get('/students/{id}/profile', [StudentsController::class, 'showProfile'])
 Route::get('/students/{id}/educations', [StudentsController::class, 'showTab'])->name('students.educations');
 
 Route::get('/kas/export/excel', [KasController::class, 'exportExcel'])->name('kas.export.excel');
+
 
 Route::get('/api/cities/{province_id}', function ($province_id) {
     return \App\Models\City::where('province_id', $province_id)->select('id', 'name')->get();
