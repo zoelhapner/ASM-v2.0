@@ -11,7 +11,7 @@
         
         <div class="row mb-3 align-items-center">
             @if(auth()->user()->hasRole('Super-Admin'))
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <label for="license_id" class="form-label">Pilih Lisensi</label>
                     <select name="license_id" id="license_id" class="form-select" disabled>
                         @foreach ($licenses as $license)
@@ -31,7 +31,7 @@
                     class="form-control" value="{{ old('journal_code', $journal->journal_code) }}" readonly>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label for="transaction_date">Tanggal Transaksi</label>
                 <input type="date" name="transaction_date" class="form-control"
                     value="{{ old('transaction_date', $journal->transaction_date) }}" required>
@@ -52,6 +52,7 @@
         <tbody id="detail-rows">
             @foreach ($journal->details as $i => $detail)
                 <tr>
+                    {{-- Pilih Akun --}}
                     <td>
                         <select name="details[{{ $i }}][account_id]" 
                                 class="form-select account-select" 
@@ -69,16 +70,21 @@
                             @endforeach
                         </select>
 
+                        {{-- Hidden input supaya tetap terkirim --}}
                         @if($detail->account_id)
                             <input type="hidden" name="details[{{ $i }}][account_id]" value="{{ $detail->account_id }}">
                         @endif
                     </td>
+
+                    {{-- Deskripsi --}}
                     <td>
                         <input type="text" 
-                               name="details[{{ $i }}][description]" 
-                               class="form-control"
-                               value="{{ old("details.$i.description", $detail->description) }}">
+                            name="details[{{ $i }}][description]" 
+                            class="form-control"
+                            value="{{ old("details.$i.description", $detail->description) }}">
                     </td>
+
+                    {{-- Pilih User --}}
                     <td>
                         <select name="details[{{ $i }}][person]" 
                                 class="form-control select2 user-select" 
@@ -103,27 +109,42 @@
                                 </option>
                             @endforeach
                         </select>
+
+                        {{-- Hidden input --}}
                         @if($detail->person)
                             <input type="hidden" name="details[{{ $i }}][person]" value="{{ $detail->person }}">
                         @endif
                     </td>
+
+                    {{-- Debit --}}
                     <td>
                         <input type="number" step="0.01" 
-                               name="details[{{ $i }}][debit]" 
-                               class="form-control debit-input" 
-                               value="{{ old("details.$i.debit", $detail->debit) }}"
-                               {{ $detail->credit ? 'disabled' : '' }}>
+                            name="details[{{ $i }}][debit]" 
+                            class="form-control debit-input" 
+                            value="{{ old("details.$i.debit", $detail->debit) }}"
+                            {{ $detail->credit ? 'disabled' : '' }}>
+
+                        @if($detail->credit)
+                            <input type="hidden" name="details[{{ $i }}][debit]" value="{{ $detail->debit }}">
+                        @endif
                     </td>
+
+                    {{-- Kredit --}}
                     <td>
                         <input type="number" step="0.01" 
-                               name="details[{{ $i }}][credit]" 
-                               class="form-control credit-input" 
-                               value="{{ old("details.$i.credit", $detail->credit) }}"
-                               {{ $detail->debit ? 'disabled' : '' }}>
+                            name="details[{{ $i }}][credit]" 
+                            class="form-control credit-input" 
+                            value="{{ old("details.$i.credit", $detail->credit) }}"
+                            {{ $detail->debit ? 'disabled' : '' }}>
+
+                        @if($detail->debit)
+                            <input type="hidden" name="details[{{ $i }}][credit]" value="{{ $detail->credit }}">
+                        @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
+
         <tfoot>
             <tr>
                 <th colspan="3">Subtotal</th>
@@ -150,7 +171,189 @@
 
 
 @section('js')
+
 <script>
+$(document).ready(function () {
+    $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
+
+    let accountsData = [];
+
+    /** 🔹 Ambil akun berdasarkan lisensi aktif / manual */
+    function loadAccountsByLicense() {
+        // Kalau Super Admin, ambil dari dropdown manual
+        let licenseId = $('#license_id').length
+            ? $('#license_id').val()
+            : $('#activeLicenseId').val(); // selain Super Admin, ambil dari session navbar
+
+        if (!licenseId) {
+            console.warn("⚠️ License ID tidak ditemukan!");
+            return;
+        }
+
+        // Ambil daftar akun sesuai lisensi aktif
+        $.get(`/get-accounts-by-license/${licenseId}`, function (data) {
+            accountsData = data;
+
+            // Render ulang semua dropdown akun yang sudah ada
+            $('.account-select').each(function () {
+                renderAccountOptions($(this));
+            });
+        });
+
+        // Ambil kode jurnal terbaru
+        $('#journal_code').val('Loading...');
+        $.get(`/journals/next-code/${licenseId}`, function (res) {
+            $('#journal_code').val(res.next_code);
+        }).fail(function () {
+            $('#journal_code').val('');
+            alert('Gagal mengambil kode jurnal');
+        });
+    }
+
+    /** 🔹 Render akun ke dropdown */
+    function renderAccountOptions($select) {
+        $select.empty().append('<option value="">-- Pilih Akun --</option>');
+        $.each(accountsData, function (_, account) {
+            $select.append(
+                `<option value="${account.id}" 
+                         data-code="${account.account_code}" 
+                         data-person-type="${account.person_type}">
+                    ${account.account_code} - ${account.account_name}
+                </option>`
+            );
+        });
+        $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
+    }
+
+    /** 🔹 Render user otomatis sesuai person_type */
+    function renderUserOptions($select, type) {
+        $select.empty().append('<option value="">-- Pilih User --</option>');
+
+        let url = '';
+        if (type === "student") url = '/get-students';
+        else if (type === "employee") url = '/get-employees';
+        else if (type === "license") url = '/get-licenses';
+
+        if (url) {
+            $.get(url, function (data) {
+                $.each(data, function (_, user) {
+                    $select.append(`<option value="${user.id}">${user.name}</option>`);
+                });
+                $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
+            });
+        } else {
+            $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
+        }
+    }
+
+    /** 🔹 Saat Super Admin ganti lisensi manual */
+    $('#license_id').on('change', function () {
+        $('#activeLicenseId').val($(this).val());
+        loadAccountsByLicense();
+    });
+
+    /** 🔹 Load akun awal sesuai lisensi aktif / session */
+    loadAccountsByLicense();
+
+    /** 🔹 Tambah baris baru */
+    // $('#add-row').click(function () {
+    //     const rowCount = $('#detail-rows tr').length;
+    //     const newRow = `
+    //         <tr>
+    //             <td>
+    //                 <select name="details[${rowCount}][account_id]" 
+    //                         class="form-select account-select" 
+    //                         data-row="${rowCount}" required></select>
+    //             </td>
+    //             <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+    //             <td>
+    //                 <select name="details[${rowCount}][person]" 
+    //                         class="form-select user-select" 
+    //                         data-row="${rowCount}"></select>
+    //             </td>
+    //             <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
+    //             <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
+    //             <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+    //                     <i class="ti ti-trash"></i>
+    //                 </button>
+    //             </td>
+    //         </tr>
+    //     `;
+
+    //     $('#detail-rows').append(newRow);
+
+    //     // Isi opsi akun
+    //     const $newAccountSelect = $('#detail-rows tr:last .account-select');
+    //     renderAccountOptions($newAccountSelect);
+    // });
+
+    // /** 🔹 Hapus baris */
+    // $(document).on('click', '.remove-row', function () {
+    //     $(this).closest('tr').remove();
+    //     calculateSubtotals();
+    // });
+
+    // /** 🔹 Saat ganti akun, render user otomatis */
+    // $(document).on('change', '.account-select', function () {
+    //     const personType = $(this).find(':selected').data('person-type');
+    //     const $row = $(this).closest('tr').find('.user-select');
+    //     renderUserOptions($row, personType);
+    // });
+
+    /** 🔹 Hitung subtotal otomatis */
+    function calculateSubtotals() {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            const debit  = parseFloat(($(this).find('.debit-input').val() || '0').replace(/,/g, '')) || 0;
+            const credit = parseFloat(($(this).find('.credit-input').val() || '0').replace(/,/g, '')) || 0;
+
+            totalDebit  += debit;
+            totalCredit += credit;
+        });
+
+        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
+        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+
+        if (totalDebit === totalCredit && totalDebit > 0) {
+            $('#balance-status').text('✅ Balance').css('color', 'green');
+        } else {
+            $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
+        }
+    }
+
+    /** 🔹 Event listener input debit/kredit */
+    $(document).on('input', '.debit-input, .credit-input', function() {
+        const val = parseFloat($(this).val());
+        if (val < 0) $(this).val('');
+        if ($(this).hasClass('debit-input')) {
+            $(this).closest('tr').find('.credit-input').val('');
+        } else {
+            $(this).closest('tr').find('.debit-input').val('');
+        }
+        calculateSubtotals();
+    });
+
+    /** 🔹 Validasi submit */
+    $('form').on('submit', function (e) {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+        });
+
+        if (totalDebit !== totalCredit) {
+            e.preventDefault();
+            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
+        }
+    });
+});
+</script>
+
+
+@endsection
+
+
+{{-- <script>
         const studentOptions = @json($students);
         const employeeOptions = @json($employees);
         const licenseHolderOptions = @json($licenseHolders);
@@ -277,6 +480,4 @@
     });
 
          });
-</script>
-
-@endsection
+</script> --}}
