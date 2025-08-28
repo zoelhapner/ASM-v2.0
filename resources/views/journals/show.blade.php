@@ -30,12 +30,12 @@
         <table class="table table-bordered align-middle">
             <thead class="table-light">
                 <tr>
-                    <th>No. Akun</th>
-                    <th>Nama Akun</th>
-                    <th>Deskripsi</th>
-                    <th>User</th>
-                    <th class="text-end">Debit</th>
-                    <th class="text-end">Kredit</th>
+                    <th style="width:20%">No. Akun</th>
+                    <th style="width:20%">Nama Akun</th>
+                    <th style="width:20%">Deskripsi</th>
+                    <th style="width:20%">User</th>
+                    <th style="width:20%">Debit</th>
+                    <th style="width:20%">Kredit</th>
                 </tr>
             </thead>
             <tbody>

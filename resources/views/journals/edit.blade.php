@@ -165,6 +165,11 @@
         <div class="text-end">
             <button type="submit" class="btn btn-primary text-white">Update</button>
         </div>
+        
+    @if(!auth()->user()->hasRole('Super-Admin'))
+            <input type="hidden" id="activeLicenseId" value="{{ $activeLicenseId }}">
+    @endif
+    
     </form>
 </div>
 @endsection

@@ -24,6 +24,7 @@ use App\Http\Controllers\LicenseImportController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\LicenseNotificationController;
 use App\Http\Controllers\KasController;
+use App\Http\Controllers\UserSelect2Controller;
 use App\Http\Controllers\Api\AccountingApiController;
 use App\Http\Controllers\Api\JournalApiController;
 use App\Http\Controllers\Api\LicenseSessionController;
@@ -212,6 +213,9 @@ Route::middleware(['auth'])->group(function () {
     // kode jurnal berikutnya
     Route::get('/journals/next-code/{licenseId?}', [JournalApiController::class, 'nextCode']);
 });
+
+// routes/web.php
+Route::post('/users/store-select2', [UserSelect2Controller::class, 'store']);
 
 
 // Route::get('/accounts/by-license/{id}', function ($id) {
