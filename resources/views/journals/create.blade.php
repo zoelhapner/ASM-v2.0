@@ -177,7 +177,7 @@
                 if (hiddenAccounts.includes(account.account_code)) {
                     return; // lanjut ke akun berikutnya
                 }
-                
+
                 $select.append(
                     `<option value="${account.id}" 
                             data-code="${account.account_code}" 
@@ -196,6 +196,7 @@
             let url = '';
             if (type === "student") url = '/get-students';
             else if (type === "employee") url = '/get-employees';
+            else if (type === "licenseholders") url = '/get-licenseholders';
             else if (type === "license") url = '/get-licenses';
 
             if (url) {

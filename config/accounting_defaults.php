@@ -14,7 +14,7 @@ return [
         ['category' => 'AKTIVA', 'account_code' => '110', 'account_name' => 'Persediaan Barang', 'sub_category' => 'Aset Lancar - Persediaan Barang'],
 
         ['category' => 'AKTIVA', 'account_code' => '120', 'account_name' => 'Piutang', 'sub_category' => 'Aset Lancar - Piutang', 'is_parent' => true],
-        ['category' => 'AKTIVA', 'account_code' => '121', 'account_name' => 'Piutang Usaha', 'sub_category' => 'Aset Lancar - Piutang'],
+        ['category' => 'AKTIVA', 'account_code' => '121', 'account_name' => 'Piutang Usaha', 'sub_category' => 'Aset Lancar - Piutang', 'person_type' => 'license'],
         ['category' => 'AKTIVA', 'account_code' => '122', 'account_name' => 'Piutang Karyawan', 'sub_category' => 'Aset Lancar - Piutang', 'person_type' => 'employee'],
         ['category' => 'AKTIVA', 'account_code' => '123', 'account_name' => 'Piutang Siswa', 'sub_category' => 'Aset Lancar - Piutang', 'person_type' => 'student'],
         ['category' => 'AKTIVA', 'account_code' => '124', 'account_name' => 'Piutang Lain - Lain', 'sub_category' => 'Aset Lancar - Piutang'],
@@ -62,10 +62,11 @@ return [
 
         ['category' => 'EKUITAS', 'account_code' => '3', 'account_name' => 'EKUITAS', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'Ekuitas', 'account_code' => '300', 'account_name' => 'Modal', 'sub_category' => 'Modal', 'is_parent' => true],
-        ['category' => 'Ekuitas', 'account_code' => '301', 'account_name' => 'Modal Saham', 'sub_category' => 'Modal'],
-        ['category' => 'Ekuitas', 'account_code' => '302', 'account_name' => 'Tambahan Modal Disetor', 'sub_category' => 'Modal'],
+        ['category' => 'Ekuitas', 'account_code' => '301', 'account_name' => 'Modal Saham', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '302', 'account_name' => 'Tambahan Modal Disetor', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
         ['category' => 'Ekuitas', 'account_code' => '303', 'account_name' => 'Laba Ditahan', 'sub_category' => 'Modal'],
-        ['category' => 'Ekuitas', 'account_code' => '304', 'account_name' => 'Deviden', 'sub_category' => 'Modal'],
+        ['category' => 'Ekuitas', 'account_code' => '304', 'account_name' => 'Deviden', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '305', 'account_name' => 'Prive', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
 
         ['category' => 'PENDAPATAN', 'account_code' => '4', 'account_name' => 'PENDAPATAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'Pendapatan', 'account_code' => '400', 'account_name' => 'Pendapatan Lisensi', 'sub_category' => 'Pendapatan Lisensi', 'is_parent' => true],
@@ -172,5 +173,8 @@ return [
         ['category' => 'Beban', 'account_code' => '625', 'account_name' => 'Biaya Parkir', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '626', 'account_name' => 'Biaya Donasi', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '627', 'account_name' => 'Biaya Lain-Lain', 'sub_category' => 'Beban Administrasi & Umum'],
+        ['category' => 'Beban', 'account_code' => '628', 'account_name' => 'Beban Penyusutan Bangunan', 'sub_category' => 'Beban Administrasi & Umum'],
+        ['category' => 'Beban', 'account_code' => '629', 'account_name' => 'Beban Penyusutan kendaraan', 'sub_category' => 'Beban Administrasi & Umum'],
+        ['category' => 'Beban', 'account_code' => '630', 'account_name' => 'Beban Penyusutan Perlengkapan Kantor', 'sub_category' => 'Beban Administrasi & Umum'],
     ],
 ];

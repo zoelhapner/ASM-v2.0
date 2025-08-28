@@ -49,7 +49,7 @@ public function getPersonNameAttribute()
             return \App\Models\Student::find($this->person)?->fullname ?? '-';
         case 'employee':
             return \App\Models\Employee::find($this->person)?->fullname ?? '-';
-        case 'Pemilik Lisensi':
+        case 'licenseholder':
             return \App\Models\LicenseHolder::find($this->person)?->fullname ?? '-';
         case 'license':
             return \App\Models\License::find($this->person)?->name ?? '-';

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{AccountingAccount, Student, Employee, License};
+use App\Models\{AccountingAccount, Student, Employee, LicenseHolder, License};
 
 class AccountingApiController extends Controller
 {
@@ -96,6 +96,22 @@ class AccountingApiController extends Controller
             ->get(['id','fullname']);
 
         return response()->json($employees->map(fn($e) => [
+            'id'   => $e->id,
+            'name' => $e->fullname,
+        ]));
+    }
+
+     public function licenseholders(Request $request)
+    {
+        $licenseIds = $this->resolveLicenseIds($request->get('license_id'));
+
+        $licenseholders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
+                $q->whereIn('user_license.license_id', $licenseIds);
+            })
+            ->orderBy('fullname')
+            ->get(['id','fullname']);
+
+        return response()->json($licenseholders->map(fn($e) => [
             'id'   => $e->id,
             'name' => $e->fullname,
         ]));

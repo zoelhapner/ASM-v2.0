@@ -101,6 +101,12 @@ class AccountingJournalController extends Controller
         ->select('id', 'fullname as name')
         ->get();
 
+    $licenseholders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('user_license.license_id', $licenseIds);
+        })
+        ->select('id', 'fullname as name')
+        ->get();
+
     $licenseList = License::whereIn('id', $licenseIds)
         ->select('id', 'name')
         ->get();
@@ -115,7 +121,7 @@ class AccountingJournalController extends Controller
     : null; 
 
         return view('journals.create', compact(
-            'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseList', 'pusatUserId', 'pusatUserName'
+            'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName'
         ));
     }
 
@@ -257,13 +263,20 @@ public function store(StoreAccountingJournalRequest $request)
         ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
-        
-    $licenseHolders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('licenses.id', $licenseIds);
+
+    $licenseHolders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('user_license.license_id', $licenseIds);
         })
-        ->select('id', 'name')
-        ->orderBy('name')
+        ->select('id', 'fullname as name')
+        ->orderBy('fullname')
         ->get();
+        
+    // $licenseHolders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+    //         $q->whereIn('licenses.id', $licenseIds);
+    //     })
+    //     ->select('id', 'name')
+    //     ->orderBy('name')
+    //     ->get();
 
     $licenseList = License::where(function ($q) use ($licenseIds, $journal) {
             $q->whereIn('id', $licenseIds)

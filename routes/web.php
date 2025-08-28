@@ -208,6 +208,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/get-accounts-by-license/{licenseId?}', [AccountingApiController::class, 'accounts']);
     Route::get('/get-students', [AccountingApiController::class, 'students']);
     Route::get('/get-employees', [AccountingApiController::class, 'employees']);
+    Route::get('/get-licenseholders', [AccountingApiController::class, 'licenseholders']);
     Route::get('/get-licenses', [AccountingApiController::class, 'licenses']); // utk person_type=license
 
     // kode jurnal berikutnya
