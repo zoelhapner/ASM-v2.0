@@ -107,7 +107,7 @@ class DashboardController extends Controller
         });
 
     // Lisensi dengan pendapatan terbanyak bulan ini
-    $topLicenseByRevenue = AccountingJournalDetail::selectRaw('accounting_journals.license_id, SUM(debit) as total_revenue')
+    $topLicenseByRevenue = AccountingJournalDetail::selectRaw('accounting_journals.license_id, SUM(credit) as total_revenue')
         ->join('accounting_journals', 'accounting_journals.id', '=', 'accounting_journal_details.journal_id')
         ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
         ->where('accounting_accounts.account_code', 'like', '4%')
@@ -123,7 +123,7 @@ class DashboardController extends Controller
             $license = License::with('owners')->find($item->license_id);
             return (object) [
                 'name' => $license?->name ?? '-',
-                 'owner_name' => $item->license?->owners?->pluck('name')->join(', ') ?? '-',
+                'owner_name' => $item->license?->owners?->pluck('name')->join(', ') ?? '-',
                 'revenue' => $item->total_revenue,
             ];
         });

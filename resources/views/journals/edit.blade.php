@@ -8,27 +8,34 @@
         @csrf
         @method('PUT')
 
-        <!-- Pilih lisensi jika mau diubah -->
+        
+        <div class="row mb-3 align-items-center">
+            @if(auth()->user()->hasRole('Super-Admin'))
+                <div class="col-md-6 mb-3">
+                    <label for="license_id" class="form-label">Pilih Lisensi</label>
+                    <select name="license_id" id="license_id" class="form-select" disabled>
+                        @foreach ($licenses as $license)
+                            <option value="{{ $license->id }}" 
+                                {{ $journal->license_id == $license->id ? 'selected' : '' }}>
+                                {{ $license->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="license_id" value="{{ $journal->license_id }}">
+                </div>
+            @endif
 
-        @if(auth()->user()->hasRole('Super-Admin'))
-            <div class="col-md-6 mb-3">
-                <label for="license_id" class="form-label">Pilih Lisensi</label>
-                <select name="license_id" id="license_id" class="form-select" disabled>
-                    @foreach ($licenses as $license)
-                        <option value="{{ $license->id }}" 
-                            {{ $journal->license_id == $license->id ? 'selected' : '' }}>
-                            {{ $license->name }}
-                        </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="license_id" value="{{ $journal->license_id }}">
+            <div class="col-md-4 mb-3">
+                <label for="journal_code" class="required">No Transaksi</label>
+                <input type="text" name="journal_code" 
+                    class="form-control" value="{{ old('journal_code', $journal->journal_code) }}" readonly>
             </div>
-        @endif
 
-        <div class="col-md-6 mb-3">
-            <label for="transaction_date">Tanggal Transaksi</label>
-            <input type="date" name="transaction_date" class="form-control"
-                   value="{{ old('transaction_date', $journal->transaction_date) }}" required>
+            <div class="col-md-6 mb-3">
+                <label for="transaction_date">Tanggal Transaksi</label>
+                <input type="date" name="transaction_date" class="form-control"
+                    value="{{ old('transaction_date', $journal->transaction_date) }}" required>
+            </div>
         </div>
 
         <h4>Detail Akun</h4>
@@ -119,18 +126,13 @@
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="2">Subtotal</th>
+                <th colspan="3">Subtotal</th>
                 <th id="subtotal-debit">{{ $journal->details->sum('debit') }}</th>
                 <th id="subtotal-credit">{{ $journal->details->sum('credit') }}</th>
-                <th colspan="2"></th>
+                <th colspan="3"></th>
             </tr>
         </tfoot>
     </table>
-    @if ($errors->has('total'))
-        <div class="alert alert-danger">
-            {{ $errors->first('total') }}
-        </div>
-    @endif
 
     <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Balance</div>
 
@@ -139,7 +141,9 @@
             <textarea name="description" class="form-control">{{ old('description', $journal->description) }}</textarea>
     </div>
 
-        <button type="submit" class="btn btn-primary text-white">Update</button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary text-white">Update</button>
+        </div>
     </form>
 </div>
 @endsection

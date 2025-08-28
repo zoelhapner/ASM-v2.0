@@ -24,6 +24,9 @@ use App\Http\Controllers\LicenseImportController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\LicenseNotificationController;
 use App\Http\Controllers\KasController;
+use App\Http\Controllers\Api\AccountingApiController;
+use App\Http\Controllers\Api\JournalApiController;
+use App\Http\Controllers\Api\LicenseSessionController;
 use App\Models\License;
 
 Route::get('/', function () {
@@ -113,11 +116,7 @@ Route::get('/get-accounts-by-license/{license}', function($licenseId) {
         ->get();
 });
 
-Route::get('/journals/next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
-
-
-
-
+Route::get('/journals/get-next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
 
 Route::middleware(['auth', 'permission:siswa.tambah'])->group(function () {
     Route::resource('/students', StudentsController::class)->only(['create', 'store']);
@@ -143,30 +142,6 @@ Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function 
     Route::resource('journals', AccountingJournalController::class);
 });
 
-Route::get('/accounts/by-license/{id}', function ($id) {
-    $user = Auth::user();
-
-    $licenseIds = $user->hasRole('Super-Admin')
-        ? License::pluck('id')
-        : ($user->licenses ?? $user->employee?->licenses ?? collect())->pluck('id');
-
-    // Ubah semua ke string agar perbandingan sukses
-    $licenseIds = $licenseIds->map(fn($i) => (string) $i);
-
-    if (! $licenseIds->contains((string) $id)) {
-        abort(403, 'Akses ditolak.');
-    }
-
-    $accounts = \App\Models\AccountingAccount::where('license_id', $id)
-        ->where('is_parent', false)
-        ->where('is_active', true)
-        ->orderBy('account_code')
-        ->get();
-
-    return response()->json($accounts);
-})->name('accounts.byLicense');
-
-
 Route::patch('/notifications/{notification}/read', [LicenseNotificationController::class, 'markAsRead'])->name('notifications.read');
 
 Route::post('/notifications/read-all', [LicenseNotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
@@ -188,8 +163,6 @@ Route::get('/license_holders/{id}/profile', [LicenseHoldersController::class, 's
 Route::get('/license_holders/{id}/educations', [LicenseHoldersController::class, 'showTab'])->name('license_holders.educations');
 Route::get('/license_holders/{id}/workers', [LicenseHoldersController::class, 'showWorks'])->name('license_holders.workers');
 Route::get('/license_holders/{id}/families', [LicenseHoldersController::class, 'showFams'])->name('license_holders.families');
-
-
 
 route::resource('/license_holder_educations', LicenseHolderEducationController::class);
 route::resource('/license_holder_workers', LicenseHolderWorkExperience::class);
@@ -225,6 +198,44 @@ Route::get('/api/sub_districts/{district_id}', function ($district_id) {
 Route::get('/api/postal_codes/{sub_district_id}', function ($sub_district_id) {
     return \App\Models\PostalCode::where('sub_district_id', $sub_district_id)->select('id', 'postal_code')->get();
 });
+
+Route::middleware(['auth'])->group(function () {
+    // sinkronisasi lisensi aktif dari navbar (POST dari form/navbar)
+    Route::post('/active-license', [LicenseSessionController::class, 'set'])->name('active-license.set');
+
+    // data untuk form jurnal
+    Route::get('/get-accounts-by-license/{licenseId?}', [AccountingApiController::class, 'accounts']);
+    Route::get('/get-students', [AccountingApiController::class, 'students']);
+    Route::get('/get-employees', [AccountingApiController::class, 'employees']);
+    Route::get('/get-licenses', [AccountingApiController::class, 'licenses']); // utk person_type=license
+
+    // kode jurnal berikutnya
+    Route::get('/journals/next-code/{licenseId?}', [JournalApiController::class, 'nextCode']);
+});
+
+
+// Route::get('/accounts/by-license/{id}', function ($id) {
+//     $user = Auth::user();
+
+//     $licenseIds = $user->hasRole('Super-Admin')
+//         ? License::pluck('id')
+//         : ($user->licenses ?? $user->employee?->licenses ?? collect())->pluck('id');
+
+//     // Ubah semua ke string agar perbandingan sukses
+//     $licenseIds = $licenseIds->map(fn($i) => (string) $i);
+
+//     if (! $licenseIds->contains((string) $id)) {
+//         abort(403, 'Akses ditolak.');
+//     }
+
+//     $accounts = \App\Models\AccountingAccount::where('license_id', $id)
+//         ->where('is_parent', false)
+//         ->where('is_active', true)
+//         ->orderBy('account_code')
+//         ->get();
+
+//     return response()->json($accounts);
+// })->name('accounts.byLicense');
 
 
 
