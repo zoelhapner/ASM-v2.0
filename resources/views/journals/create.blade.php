@@ -170,7 +170,8 @@
         /** 🔹 Render akun ke dropdown */
         const hiddenAccounts = ['1', '100', '110', '120', '130', '140', '150', '160', '2', '200', '210', '220', '3', '300', 
             '4', '400', '410', '420', '430', '450', '5', '500', '510', '520', '550', '560', '600', '610' 
-        ]
+        ];
+
         function renderAccountOptions($select) {
             $select.empty().append('<option value="">-- Pilih Akun --</option>');
             $.each(accountsData, function (_, account) {
@@ -241,23 +242,7 @@
                 let data = e.params.data;
 
                 if (data.newOption) {
-                    $.ajax({
-                        url: '/users/store-select2',
-                        type: 'POST',
-                        data: {
-                            name: data.text,
-                            type: type, // <-- student / employee / license
-                            _token: $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (res) {
-                            // replace option sementara dengan ID asli dari DB
-                            let newOption = new Option(res.name, res.id, true, true);
-                            $select.append(newOption).trigger('change');
-                        },
-                        error: function () {
-                            alert('Gagal menambahkan user baru');
-                        }
-                    });
+                    console.log("Person manual:", data.text);
                 }
             });
         }
