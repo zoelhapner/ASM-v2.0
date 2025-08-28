@@ -101,10 +101,10 @@ class AccountingJournalController extends Controller
         ->select('id', 'fullname as name')
         ->get();
 
-    $licenseholders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('user_license.license_id', $licenseIds);
+    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('licenses.id', $licenseIds);
         })
-        ->select('id', 'fullname as name')
+        ->select('id', 'name')
         ->get();
 
     $licenseList = License::whereIn('id', $licenseIds)
@@ -263,20 +263,13 @@ public function store(StoreAccountingJournalRequest $request)
         ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
-
-    $licenseHolders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('user_license.license_id', $licenseIds);
-        })
-        ->select('id', 'fullname as name')
-        ->orderBy('fullname')
-        ->get();
         
-    // $licenseHolders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-    //         $q->whereIn('licenses.id', $licenseIds);
-    //     })
-    //     ->select('id', 'name')
-    //     ->orderBy('name')
-    //     ->get();
+    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('licenses.id', $licenseIds);
+        })
+        ->select('id', 'name')
+        ->orderBy('name')
+        ->get();
 
     $licenseList = License::where(function ($q) use ($licenseIds, $journal) {
             $q->whereIn('id', $licenseIds)
@@ -285,7 +278,7 @@ public function store(StoreAccountingJournalRequest $request)
         ->select('id', 'name')
         ->get();
 
-    return view('journals.edit', compact('journal', 'activeLicenseId', 'licenses', 'accounts', 'students', 'employees', 'licenseHolders', 'licenseList'));
+    return view('journals.edit', compact('journal', 'activeLicenseId', 'licenses', 'accounts', 'students', 'employees', 'licenseholders', 'licenseList'));
 }
 
 
