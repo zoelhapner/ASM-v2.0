@@ -110,7 +110,7 @@ class DashboardController extends Controller
     $topLicenseByRevenue = AccountingJournalDetail::selectRaw('accounting_journals.license_id, SUM(debit) as total_revenue')
         ->join('accounting_journals', 'accounting_journals.id', '=', 'accounting_journal_details.journal_id')
         ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
-        ->where('accounting_accounts.account_code', 'like', 'D%')
+        ->where('accounting_accounts.account_code', 'like', '4%')
         ->whereBetween('accounting_journals.transaction_date', [$awalBulan, $akhirBulan])
         ->when($user->hasRole('Pemilik Lisensi'), function ($q) use ($licenses) {
             $q->whereIn('accounting_journals.license_id', $licenses->pluck('id'));

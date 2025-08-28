@@ -132,6 +132,8 @@
         </div>
     @endif
 
+    <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Balance</div>
+
     <div class="col-md-6 mb-3">
             <label for="description">Keterangan</label>
             <textarea name="description" class="form-control">{{ old('description', $journal->description) }}</textarea>
@@ -238,6 +240,12 @@
 
             $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
             $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+
+            if (totalDebit === totalCredit && totalDebit > 0) {
+                $('#balance-status').text('✅ Balance').css('color', 'green');
+            } else {
+                $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
+            }
         }
 
         // Aktifkan saat halaman load & saat ada perubahan
@@ -251,6 +259,19 @@
     // Hitung subtotal awal
     calculateSubtotals();
 });
+    $('form').on('submit', function (e) {
+        let totalDebit = 0, totalCredit = 0;
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+        });
+
+        if (totalDebit !== totalCredit) {
+            e.preventDefault();
+            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
+        }
+    });
+
          });
 </script>
 

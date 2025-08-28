@@ -123,22 +123,26 @@ class AccountingJournalController extends Controller
 {
     $license = License::findOrFail($licenseId);
 
-    $lastJournalNumber = AccountingJournal::where('license_id', $license->id)
+     $lastJournalNumber = AccountingJournal::where('license_id', $license->id)
         ->where('journal_code', 'LIKE', 'IJ-' . $license->license_id . '-%')
-        ->selectRaw("MAX(CAST(SUBSTRING(journal_code FROM LENGTH('IJ-' || license_id || '-') + 1) AS INTEGER)) AS last_number")
+        ->selectRaw("
+            MAX(
+                CAST(
+                    REGEXP_REPLACE(journal_code, '^IJ-' || ? || '-', '') AS INTEGER
+                )
+            ) as last_number
+        ", [$license->license_id])
         ->value('last_number');
 
-    // Tentukan nomor berikutnya
-    $nextNumber = ($lastJournalNumber ?? 0) + 1;
-    $journalCode = 'IJ-' . $license->license_id . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+        do {
+            $nextNumber = str_pad($lastJournalNumber + 1, 4, '0', STR_PAD_LEFT);
+            $journalCode = 'IJ-' . $license->license_id . '-' . $nextNumber;
 
-    // Cek jika kode jurnal sudah ada, increment lagi
-    while (AccountingJournal::where('journal_code', $journalCode)->exists()) {
-        $nextNumber++;
-        $journalCode = 'IJ-' . $license->license_id . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-    }
+            $exists = AccountingJournal::where('journal_code', $journalCode)->exists();
+            $lastJournalNumber++;
+        } while ($exists);
 
-    return $journalCode;
+        return $journalCode;
 }
 
 public function getNextCode($licenseId)
@@ -243,14 +247,14 @@ public function store(StoreAccountingJournalRequest $request)
         ->get();
 
     $students = Student::whereIn('license_id', $licenseIds)
-        ->select('id', 'fullname')
+        ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
     
     $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
             $q->whereIn('employee_license.license_id', $licenseIds);
         })
-        ->select('id', 'fullname')
+        ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
         

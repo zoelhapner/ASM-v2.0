@@ -86,11 +86,6 @@ public function pusatUser()
         : $this->name;
 }
 
-
-
-
-    // Di model License
-
     use HasFactory, HasUuid;
 
     protected $keyType = 'string';
