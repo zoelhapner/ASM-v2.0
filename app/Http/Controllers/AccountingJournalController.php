@@ -176,6 +176,13 @@ public function store(StoreAccountingJournalRequest $request)
         'transaction_date' => $request->transaction_date,
         'description' => $request->description,
         'created_by' => $user->id,
+        'enclosure'        => $request->hasFile('enclosure')
+            ? $request->file('enclosure')->storeAs(
+                'photos',
+                Str::uuid().'.'.$request->file('enclosure')->getClientOriginalExtension(),
+                'public'
+            )
+            : null,
     ]);
 
     foreach ($request->details as $detail) {
@@ -187,11 +194,6 @@ public function store(StoreAccountingJournalRequest $request)
             'credit' => $detail['credit'] ?? 0,
             'description' => $detail['description'] ?? null,
         ]);
-    }
-
-    if ($request->hasFile('enclosure')) {
-        $validated['enclosure'] = $request->file('enclosure')
-            ->storeAs('photos', Str::uuid() . '.' . $request->file('enclosure')->getClientOriginalExtension(), 'public');
     }
 
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');

@@ -25,7 +25,7 @@
 
 
     {{-- Form --}}
-    <form action="{{ route('journals.store') }}" method="POST">
+    <form action="{{ route('journals.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
             <div class="row mb-3 align-items-center">
@@ -337,7 +337,7 @@ $(document).ready(function () {
     $(document).on('change', '.account-select', function () {
         const $row = $(this).closest('tr');
         const personType = $(this).find(':selected').data('person-type');
-        const accountCode = $(this).find(':selected').data('code') || "";
+        const accountCode = String($(this).find(':selected').data('code') || "");
 
         // Render user sesuai type
         renderUserOptions($row.find('.user-select'), personType);

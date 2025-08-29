@@ -68,9 +68,11 @@
         </table>
     </div>
 
-    <div class="col-md-4 mb-3">
-        <label class="form-label fw-bold">Keterangan</label>
-        <div>{{ $journal->description}}</div>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Keterangan</label>
+            <div>{{ $journal->description}}</div>
+        </div>
     </div>
 
     {{-- Tombol --}}
