@@ -73,6 +73,44 @@
             <label class="form-label fw-bold">Keterangan</label>
             <div>{{ $journal->description}}</div>
         </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold">Keterangan</label>
+            <div>{{ $journal->description}}</div>
+            @if ($journal->enclosure)
+                <div class="card mt-4">
+                    <div class="card-header fw-bold">
+                        Lampiran Jurnal
+                    </div>
+                    <div class="card-body">
+                        @php
+                            $ext = pathinfo($journal->enclosure, PATHINFO_EXTENSION);
+                        @endphp
+
+                        @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif']))
+                            <img src="{{ asset('storage/' . $journal->enclosure) }}" 
+                                alt="Lampiran" 
+                                class="img-fluid rounded shadow-sm">
+                        @elseif(strtolower($ext) === 'pdf')
+                            <embed src="{{ asset('storage/' . $journal->enclosure) }}" 
+                                type="application/pdf" 
+                                width="100%" 
+                                height="500px" 
+                                class="border rounded" />
+                            <div class="mt-2">
+                                <a href="{{ asset('storage/' . $journal->enclosure) }}" target="_blank" class="btn btn-sm btn-primary">
+                                    Buka PDF
+                                </a>
+                            </div>
+                        @else
+                            <a href="{{ asset('storage/' . $journal->enclosure) }}" target="_blank" class="btn btn-sm btn-secondary">
+                                Download Lampiran
+                            </a>
+                        @endif
+                    </div>
+                </div>
+            @endif
+
+        </div>
     </div>
 
     {{-- Tombol --}}

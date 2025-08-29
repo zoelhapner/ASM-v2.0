@@ -169,6 +169,16 @@ public function store(StoreAccountingJournalRequest $request)
     $totalDebit = collect($request->details)->sum('debit');
     $totalCredit = collect($request->details)->sum('credit');
 
+    $enclosurePath = null;
+    if ($request->hasFile('enclosure')) {
+        $file = $request->file('enclosure');
+        $enclosurePath = $file->storeAs(
+            'attachments',  // 📌 bisa ganti "photos" → "attachments" biar general (karena bisa pdf/img/doc)
+            Str::uuid().'.'.$file->getClientOriginalExtension(),
+            'public'
+        );
+    }
+
     // 1. Simpan jurnal di CABANG
     $journal = AccountingJournal::create([
         'license_id' => $licenseId,
@@ -176,13 +186,7 @@ public function store(StoreAccountingJournalRequest $request)
         'transaction_date' => $request->transaction_date,
         'description' => $request->description,
         'created_by' => $user->id,
-        'enclosure'        => $request->hasFile('enclosure')
-            ? $request->file('enclosure')->storeAs(
-                'photos',
-                Str::uuid().'.'.$request->file('enclosure')->getClientOriginalExtension(),
-                'public'
-            )
-            : null,
+        'enclosure' => $enclosurePath,
     ]);
 
     foreach ($request->details as $detail) {

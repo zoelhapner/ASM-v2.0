@@ -126,7 +126,7 @@
 
         <div class="col-md-4 mb-3">
             <label for="enclosure" class="form-label">Lampiran</label>
-            <input type="file" name="enclosure" class="form-control" accept="image/*">
+            <input type="file" name="enclosure" class="form-control">
             @error('enclosure')
                 <small class="text-danger">{{ $message }}</small>
             @enderror
@@ -357,7 +357,7 @@ $(document).ready(function () {
             const firstDigit = accountCode.charAt(0);
             if (firstDigit === "2" || firstDigit === "4") {
                 $debit.prop('disabled', true).val('');
-            } else if (firstDigit === "5") {
+            } else if (firstDigit === "5" || firstDigit === "6") {
                 $credit.prop('disabled', true).val('');
             }
         }

@@ -146,7 +146,7 @@
             $('#account_id').html('<option value="">Memuat...</option>').prop('disabled', true);
 
             if (licenseId) {
-                $.get(`/accounts/by-license/${licenseId}`, function (data) {
+                $.get(`/get-accounts-by-license/${licenseId}`, function (data) {
                     let options = '<option value="">-- Semua Akun --</option>';
                     data.forEach(function (account) {
                         options += `<option value="${account.id}">[${account.account_code}] ${account.account_name}</option>`;
