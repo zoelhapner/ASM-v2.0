@@ -45,6 +45,7 @@ class UpdateAccountingJournalRequest extends FormRequest
             'details.*.account_id' => 'required|uuid|exists:accounting_accounts,id',
             'details.*.debit' => 'nullable|numeric',
             'details.*.credit' => 'nullable|numeric',
+            'enclosure' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ];
     }
 }

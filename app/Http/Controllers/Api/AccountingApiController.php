@@ -101,12 +101,13 @@ class AccountingApiController extends Controller
         $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
                 $q->whereIn('licenses.id', $licenseIds);
             })
+            ->with('licenseholder')
             ->orderBy('name')
             ->get(['id','name']);
 
         return response()->json($licenseholders->map(fn($e) => [
             'id'   => $e->id,
-            'name' => $e->name,
+            'name' => $e->licenseholder->name ?? $e->name,
         ]));
     }
 

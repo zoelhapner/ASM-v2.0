@@ -203,9 +203,19 @@ return [
                     'url' => '/journals',
                     'icon' => 'ti ti-report-analytics',
                 ],
-                 [
+                [
                     'text' => 'Kas',
                     'url' => '/journals/report',
+                    'icon' => 'ti ti-report-analytics',
+                ],
+                [
+                    'text' => 'Buku Besar',
+                    'url' => '#',
+                    'icon' => 'ti ti-report-analytics',
+                ],
+                [
+                    'text' => 'Neraca',
+                    'url' => '#',
                     'icon' => 'ti ti-report-analytics',
                 ],
             ],
