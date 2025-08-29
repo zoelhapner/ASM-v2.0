@@ -83,7 +83,7 @@
                     <i class="bi bi-currency-dollar" style="font-size: 1.5rem; font-family: 'Poppins', sans-serif;"></i>
                 </div>
                 <h6 class="card-title">Pendapatan Bulan Ini</h6>
-                <h3 class="card-text">Rp {{ number_format($monthlyRevenue, 0, ',', '.') }}</h3>
+                <h3 class="card-text">Rp {{ number_format($monthlyRevenue, 2, ',', '.') }}</h3>
             </div>
         </div>
     </div>

@@ -44,18 +44,13 @@ public function getPersonNameAttribute()
     }
 
     // Kalau ada data person di DB, langsung proses sesuai type
-    switch ($this->account->person_type) {
-        case 'student':
-            return \App\Models\Student::find($this->person)?->fullname ?? '-';
-        case 'employee':
-            return \App\Models\Employee::find($this->person)?->fullname ?? '-';
-        case 'licenseholder':
-            return \App\Models\LicenseHolder::find($this->person)?->fullname ?? '-';
-        case 'license':
-            return \App\Models\License::find($this->person)?->name ?? '-';
-        default:
-            return 'person';
-    }
+     return match ($this->account->person_type) {
+        'student'       => \App\Models\Student::find($this->person)?->fullname ?? '-',
+        'employee'      => \App\Models\Employee::find($this->person)?->fullname ?? '-',
+        'licenseholder' => \App\Models\LicenseHolder::find($this->person)?->fullname ?? '-',
+        'license'       => \App\Models\License::find($this->person)?->name ?? '-',
+         default         => $this->person ?? '-', // ⬅️ fallback ke kolom langsung
+    };
 }
 
 

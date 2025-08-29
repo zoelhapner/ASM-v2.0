@@ -307,11 +307,64 @@
             calculateSubtotals();
         });
 
+        const debitOnlyAccounts = [
+            "151", // Prive
+            "152",
+            "153", // Prive
+            "154",
+            "155", // Prive
+            "121",
+            "122", // Prive
+            "123",
+            "124", // Prive
+            "110",
+            "131", // Prive
+            "132",
+            "141", // Prive
+            "142",
+            "144", // Prive
+            "144",
+            "304", // Prive
+            "305",
+        ];
+
+        const creditOnlyAccounts = [
+            "301", // Modal Disetor
+            "302", // Laba Ditahan
+            "303",
+            "161", // Modal Disetor
+            "162", // Laba Ditahan
+            "163",
+        ];
+
         /** 🔹 Saat ganti akun, render user otomatis */
         $(document).on('change', '.account-select', function () {
+            const $row = $(this).closest('tr');
             const personType = $(this).find(':selected').data('person-type');
-            const $row = $(this).closest('tr').find('.user-select');
-            renderUserOptions($row, personType);
+            const accountCode = $(this).find(':selected').data('code') || "";
+
+            // Render user sesuai type
+            renderUserOptions($row.find('.user-select'), personType);
+
+            // Reset input debit & kredit
+            $row.find('.debit-input').prop('disabled', false).val('');
+            $row.find('.credit-input').prop('disabled', false).val('');
+
+            if (debitOnlyAccounts.includes(accountCode)) {
+                $row.find('.credit-input').prop('disabled', true).val('');
+            } 
+            else if (creditOnlyAccounts.includes(accountCode)) {
+                $row.find('.debit-input').prop('disabled', true).val('');
+            } 
+            else {
+                // fallback pakai digit pertama
+                const firstDigit = accountCode.charAt(0);
+                if (firstDigit === "2", "4") {
+                    $row.find('.debit-input').prop('disabled', true).val('');
+                } else if (firstDigit === "5") {
+                    $row.find('.credit-input').prop('disabled', true).val('');
+                }
+            }
         });
 
         /** 🔹 Hitung subtotal otomatis */
