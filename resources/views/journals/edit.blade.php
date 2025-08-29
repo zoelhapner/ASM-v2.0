@@ -4,7 +4,7 @@
 <div class="container">
     <h1>Edit Jurnal</h1>
 
-    <form action="{{ route('journals.update', $journal->id) }}" method="POST">
+    <form action="{{ route('journals.update', $journal->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -162,6 +162,22 @@
             <textarea name="description" class="form-control">{{ old('description', $journal->description) }}</textarea>
     </div>
 
+    <div class="col-md-6 mb-3">
+        <label for="enclosure" class="form-label">Lampiran (PDF / Gambar)</label>
+        <input type="file" name="enclosure" class="form-control">
+
+        @if($journal->enclosure)
+            <div class="mt-2">
+                <p>File saat ini:</p>
+                @if(\Illuminate\Support\Str::endsWith($journal->enclosure, ['.jpg', '.jpeg', '.png']))
+                    <img src="{{ asset('storage/'.$journal->enclosure) }}" alt="Enclosure" width="200">
+                @elseif(\Illuminate\Support\Str::endsWith($journal->enclosure, ['.pdf']))
+                    <a href="{{ asset('storage/'.$journal->enclosure) }}" target="_blank">Lihat PDF</a>
+                @endif
+            </div>
+        @endif
+    </div>
+
         <div class="text-end">
             <button type="submit" class="btn btn-primary text-white">Update</button>
         </div>
@@ -183,35 +199,19 @@ $(document).ready(function () {
 
     let accountsData = [];
 
-    /** 🔹 Ambil akun berdasarkan lisensi aktif / manual */
-    function loadAccountsByLicense() {
-        // Kalau Super Admin, ambil dari dropdown manual
-        let licenseId = $('#license_id').length
-            ? $('#license_id').val()
-            : $('#activeLicenseId').val(); // selain Super Admin, ambil dari session navbar
+    /** 🔹 Ambil akun berdasarkan lisensi aktif */
+    function loadAccountsByLicense(licenseId) {
+        if (!licenseId) return;
 
-        if (!licenseId) {
-            console.warn("⚠️ License ID tidak ditemukan!");
-            return;
-        }
-
-        // Ambil daftar akun sesuai lisensi aktif
         $.get(`/get-accounts-by-license/${licenseId}`, function (data) {
             accountsData = data;
 
-            // Render ulang semua dropdown akun yang sudah ada
+            // Update semua select akun yang kosong (bukan edit)
             $('.account-select').each(function () {
-                renderAccountOptions($(this));
+                if (!$(this).val()) {
+                    renderAccountOptions($(this));
+                }
             });
-        });
-
-        // Ambil kode jurnal terbaru
-        $('#journal_code').val('Loading...');
-        $.get(`/journals/next-code/${licenseId}`, function (res) {
-            $('#journal_code').val(res.next_code);
-        }).fail(function () {
-            $('#journal_code').val('');
-            alert('Gagal mengambil kode jurnal');
         });
     }
 
@@ -222,43 +222,73 @@ $(document).ready(function () {
             $select.append(
                 `<option value="${account.id}" 
                          data-code="${account.account_code}" 
+                         data-name="${account.account_name}"
                          data-person-type="${account.person_type}">
                     ${account.account_code} - ${account.account_name}
-                </option>`
+                 </option>`
             );
         });
-        $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
     }
 
-    /** 🔹 Render user otomatis sesuai person_type */
-    function renderUserOptions($select, type) {
+    /** 🔹 Render user sesuai person_type */
+    function renderUserOptions($select, personType, selected = null) {
         $select.empty().append('<option value="">-- Pilih User --</option>');
 
-        let url = '';
-        if (type === "student") url = '/get-students';
-        else if (type === "employee") url = '/get-employees';
-        else if (type === "license") url = '/get-licenses';
+        if (!personType) return;
 
-        if (url) {
-            $.get(url, function (data) {
-                $.each(data, function (_, user) {
-                    $select.append(`<option value="${user.id}">${user.name}</option>`);
-                });
-                $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
+        let urlMap = {
+            student: '/get-students',
+            employee: '/get-employees',
+            license: '/get-licenses'
+        };
+
+        if (!urlMap[personType]) return;
+
+        $.get(urlMap[personType], function (data) {
+            $.each(data, function (_, user) {
+                $select.append(
+                    `<option value="${user.id}" ${selected == user.id ? 'selected' : ''}>
+                        ${user.name}
+                     </option>`
+                );
             });
-        } else {
-            $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
-        }
+        });
     }
 
-    /** 🔹 Saat Super Admin ganti lisensi manual */
-    $('#license_id').on('change', function () {
-        $('#activeLicenseId').val($(this).val());
-        loadAccountsByLicense();
+    /** 🔹 Change event: pilih akun → render user sesuai person_type */
+    $(document).on('change', '.account-select', function () {
+        let row = $(this).data('row');
+        let personType = $(this).find(':selected').data('person-type');
+        let $userSelect = $(`.user-select[data-row="${row}"]`);
+
+        renderUserOptions($userSelect, personType);
     });
 
-    /** 🔹 Load akun awal sesuai lisensi aktif / session */
-    loadAccountsByLicense();
+    /** 🔹 Lock account & user kalau data lama (edit mode) */
+    $('.account-select').each(function () {
+        let selectedVal = $(this).val();
+        let row = $(this).data('row');
+        let $userSelect = $(`.user-select[data-row="${row}"]`);
+        let selectedUser = $userSelect.data('selected');
+
+        if (selectedVal) {
+            $(this).prop('disabled', true);
+            $(this).after(
+                `<input type="hidden" name="${$(this).attr('name')}" value="${selectedVal}">`
+            );
+        }
+
+        if (selectedUser) {
+            $userSelect.prop('disabled', true);
+            $userSelect.after(
+                `<input type="hidden" name="${$userSelect.attr('name')}" value="${selectedUser}">`
+            );
+        }
+    });
+
+    /** 🔹 Inisialisasi awal */
+    let licenseId = $('#license_id').val();
+    loadAccountsByLicense(licenseId);
 
     /** 🔹 Tambah baris baru */
     // $('#add-row').click(function () {

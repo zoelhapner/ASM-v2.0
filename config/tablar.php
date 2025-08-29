@@ -210,12 +210,12 @@ return [
                 ],
                 [
                     'text' => 'Buku Besar',
-                    'url' => '#',
+                    'url' => '/bukubesar',
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
                     'text' => 'Neraca',
-                    'url' => '#',
+                    'url' => '/neraca',
                     'icon' => 'ti ti-report-analytics',
                 ],
             ],

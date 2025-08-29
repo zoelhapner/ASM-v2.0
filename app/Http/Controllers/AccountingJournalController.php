@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AccountingJournalController extends Controller
 {
@@ -315,8 +316,26 @@ public function store(StoreAccountingJournalRequest $request)
         // Akuntan tidak boleh ganti license_id, hanya data lain
     }
 
+    $enclosurePath = $journal->enclosure; // default: tetap file lama
+    if ($request->hasFile('enclosure')) {
+        $file = $request->file('enclosure');
+
+        // Hapus file lama kalau ada
+        if ($journal->enclosure && Storage::disk('public')->exists($journal->enclosure)) {
+            Storage::disk('public')->delete($journal->enclosure);
+        }
+
+        // Simpan file baru
+        $enclosurePath = $file->storeAs(
+            'attachments',
+            Str::uuid().'.'.$file->getClientOriginalExtension(),
+            'public'
+        );
+    }
+
     $journal->transaction_date = $request->transaction_date;
     $journal->description = $request->description;
+    $journal->enclosure = $enclosurePath;
     $journal->save();
 
     // Hapus semua detail lama
@@ -339,6 +358,9 @@ public function store(StoreAccountingJournalRequest $request)
     public function destroy($id)
     {
         $journal = AccountingJournal::findOrFail($id);
+         if ($journal->enclosure && Storage::disk('public')->exists($journal->enclosure)) {
+            Storage::disk('public')->delete($journal->enclosure);
+        }
         $journal->details()->delete();
         $journal->delete();
 
