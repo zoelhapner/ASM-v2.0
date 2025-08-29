@@ -49,17 +49,10 @@ class AccountingApiController extends Controller
     {
         $licenseIds = $this->resolveLicenseIds($licenseId);
 
-        // hidden accounts by role
-        $hidden = [];
-        foreach (Auth::user()->getRoleNames() as $role) {
-            $hidden = array_merge($hidden, config('accounting.hidden_accounts')[$role] ?? []);
-        }
-
         $accounts = AccountingAccount::query()
             ->where('is_parent', false)
             ->where('is_active', true)
             ->whereIn('license_id', $licenseIds)
-            ->when(!empty($hidden), fn($q) => $q->whereNotIn('account_code', $hidden))
             ->orderBy('account_code')
             ->get(['id','license_id','account_code','account_name','person_type']);
 

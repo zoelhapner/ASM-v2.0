@@ -83,9 +83,6 @@ class AccountingJournalController extends Controller
     $accounts = AccountingAccount::where('is_parent', false)
         ->where('is_active', true)
         ->whereIn('license_id', $licenseIds)
-        ->when(!empty($hiddenAccounts), function ($q) use ($hiddenAccounts) {
-            $q->whereNotIn('account_code', $hiddenAccounts);
-        })
         ->orderBy('account_code')
         ->get();
 
@@ -121,7 +118,7 @@ class AccountingJournalController extends Controller
     : null; 
 
         return view('journals.create', compact(
-            'accounts', 'licenses', 'journalCode', 'hiddenAccounts', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName'
+            'accounts', 'licenses', 'journalCode', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName'
         ));
     }
 
@@ -178,7 +175,6 @@ public function store(StoreAccountingJournalRequest $request)
         'journal_code' => $request->journal_code,
         'transaction_date' => $request->transaction_date,
         'description' => $request->description,
-        'enclosure' => $request->enclosure,
         'created_by' => $user->id,
     ]);
 
@@ -191,6 +187,11 @@ public function store(StoreAccountingJournalRequest $request)
             'credit' => $detail['credit'] ?? 0,
             'description' => $detail['description'] ?? null,
         ]);
+    }
+
+    if ($request->hasFile('enclosure')) {
+        $validated['enclosure'] = $request->file('enclosure')
+            ->storeAs('photos', Str::uuid() . '.' . $request->file('enclosure')->getClientOriginalExtension(), 'public');
     }
 
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');

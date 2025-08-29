@@ -126,7 +126,7 @@
 
         <div class="col-md-4 mb-3">
             <label for="enclosure" class="form-label">Lampiran</label>
-            <input type="file" name="enclosure" class="form-control" accept="application/pdf" required>
+            <input type="file" name="enclosure" class="form-control" accept="image/*">
             @error('enclosure')
                 <small class="text-danger">{{ $message }}</small>
             @enderror
@@ -147,6 +147,286 @@
 @section('js')
 
 <script>
+$(document).ready(function () {
+    /** 🔹 Inisialisasi Select2 global */
+    $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
+
+    let accountsData = [];
+
+    /** ======================================================
+     *  1. Ambil akun & kode jurnal berdasarkan lisensi aktif
+     * ====================================================== */
+    function loadAccountsByLicense(licenseId) {
+        if (!licenseId) return;
+
+        // Ambil akun
+        $.get(`/get-accounts-by-license/${licenseId}`, function (data) {
+            accountsData = data;
+
+            // Update semua dropdown akun yang sudah ada
+            $('.account-select').each(function () {
+                renderAccountOptions($(this));
+            });
+        });
+
+        // Ambil kode jurnal terbaru
+        $('#journal_code').val('Loading...');
+        $.get(`/journals/next-code/${licenseId}`)
+            .done(function (res) {
+                $('#journal_code').val(res.next_code);
+            })
+            .fail(function () {
+                $('#journal_code').val('');
+                alert('Gagal mengambil kode jurnal');
+            });
+    }
+
+    /** ======================================================
+     *  2. Render akun ke dropdown
+     * ====================================================== */
+    function renderAccountOptions($select) {
+        $select.empty().append('<option value="">-- Pilih Akun --</option>');
+
+        $.each(accountsData, function (_, account) {
+            $select.append(`
+                <option value="${account.id}" 
+                        data-code="${account.account_code}" 
+                        data-person-type="${account.person_type}">
+                    ${account.account_code} - ${account.account_name}
+                </option>
+            `);
+        });
+
+        $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
+    }
+
+    /** ======================================================
+     *  3. Render dropdown user sesuai person_type
+     * ====================================================== */
+    function renderUserOptions($select, type) {
+        $select.empty().append('<option value="">-- Pilih User --</option>');
+
+        let url = '';
+        if (type === "student") url = '/get-students';
+        else if (type === "employee") url = '/get-employees';
+        else if (type === "licenseholders") url = '/get-licenseholders';
+        else if (type === "license") url = '/get-licenses';
+
+        if (url) {
+            $.get(url, function (data) {
+                $.each(data, function (_, user) {
+                    $select.append(`<option value="${user.id}">${user.name}</option>`);
+                });
+                initSelect2WithCreate($select, type);
+            });
+        } else {
+            // Jika person_type tidak cocok, tetap aktifkan fitur input manual
+            initSelect2WithCreate($select, type);
+        }
+    }
+
+    /** ======================================================
+     *  4. Select2 user dengan fitur input manual
+     * ====================================================== */
+    function initSelect2WithCreate($select, type) {
+        $select.select2({
+            placeholder: "-- Input manual jika tidak ada User --",
+            width: '100%',
+            tags: true,
+            createTag: function (params) {
+                let term = $.trim(params.term);
+                if (term === '') return null;
+                return { id: term, text: term, newOption: true };
+            },
+            templateResult: function (data) {
+                let $result = $("<span></span>").text(data.text);
+                if (data.newOption) {
+                    $result.append(" <em>(tekan Enter)</em>");
+                }
+                return $result;
+            }
+        });
+
+        $select.on('select2:select', function (e) {
+            let data = e.params.data;
+            if (data.newOption) {
+                console.log("Input manual user:", data.text);
+            }
+        });
+    }
+
+    /** ======================================================
+     *  5. Saat ganti lisensi → refresh akun & kode jurnal
+     * ====================================================== */
+    $('#license_id').on('change', function () {
+        const licenseId = $(this).val();
+        $('#activeLicenseId').val(licenseId);
+        loadAccountsByLicense(licenseId);
+    });
+
+    /** ======================================================
+     *  6. Load awal saat halaman dibuka
+     * ====================================================== */
+    const selectedLicense = $('#license_id').length
+        ? $('#license_id').val()
+        : $('#activeLicenseId').val();
+    loadAccountsByLicense(selectedLicense);
+
+    /** ======================================================
+     *  7. Tambah baris baru
+     * ====================================================== */
+    $('#add-row').click(function () {
+        const rowCount = $('#detail-rows tr').length;
+        const newRow = `
+            <tr>
+                <td>
+                    <select name="details[${rowCount}][account_id]" 
+                            class="form-select account-select" 
+                            data-row="${rowCount}" required></select>
+                </td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                <td>
+                    <select name="details[${rowCount}][person]" 
+                            class="form-select user-select" 
+                            data-row="${rowCount}"></select>
+                </td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+
+        $('#detail-rows').append(newRow);
+
+        // Render opsi akun
+        const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        renderAccountOptions($newAccountSelect);
+
+        // Siapkan select user manual
+        const $newUserSelect = $('#detail-rows tr:last .user-select');
+        initSelect2WithCreate($newUserSelect, null);
+    });
+
+    /** ======================================================
+     *  8. Hapus baris
+     * ====================================================== */
+    $(document).on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+        calculateSubtotals();
+    });
+
+    /** ======================================================
+     *  9. Daftar akun debit & kredit only
+     * ====================================================== */
+    const debitOnlyAccounts = new Set([
+        "151","152","153","154","155","121","122","123","124","110",
+        "131","132","141","142","144","304","305"
+    ]);
+
+    const creditOnlyAccounts = new Set([
+        "301","302","303","161","162","163"
+    ]);
+
+    /** ======================================================
+     * 10. Saat ganti akun → render user + disable debit/kredit
+     * ====================================================== */
+    $(document).on('change', '.account-select', function () {
+        const $row = $(this).closest('tr');
+        const personType = $(this).find(':selected').data('person-type');
+        const accountCode = $(this).find(':selected').data('code') || "";
+
+        // Render user sesuai type
+        renderUserOptions($row.find('.user-select'), personType);
+
+        // Reset input debit & kredit
+        const $debit = $row.find('.debit-input');
+        const $credit = $row.find('.credit-input');
+        $debit.prop('disabled', false).val('');
+        $credit.prop('disabled', false).val('');
+
+        if (debitOnlyAccounts.has(accountCode)) {
+            $credit.prop('disabled', true).val('');
+        } else if (creditOnlyAccounts.has(accountCode)) {
+            $debit.prop('disabled', true).val('');
+        } else {
+            // Fallback by digit pertama
+            const firstDigit = accountCode.charAt(0);
+            if (firstDigit === "2" || firstDigit === "4") {
+                $debit.prop('disabled', true).val('');
+            } else if (firstDigit === "5") {
+                $credit.prop('disabled', true).val('');
+            }
+        }
+    });
+
+    /** ======================================================
+     * 11. Hitung subtotal otomatis
+     * ====================================================== */
+    function calculateSubtotals() {
+        let totalDebit = 0, totalCredit = 0;
+
+        $('#detail-rows tr').each(function() {
+            const debit  = parseFloat($(this).find('.debit-input').val()) || 0;
+            const credit = parseFloat($(this).find('.credit-input').val()) || 0;
+
+            totalDebit  += debit;
+            totalCredit += credit;
+        });
+
+        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
+        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
+
+        if (totalDebit === totalCredit && totalDebit > 0) {
+            $('#balance-status').text('✅ Balance').css('color', 'green');
+        } else {
+            $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
+        }
+    }
+
+    /** ======================================================
+     * 12. Event listener input debit/kredit
+     * ====================================================== */
+    $(document).on('input', '.debit-input, .credit-input', function() {
+        let val = parseFloat($(this).val()) || 0;
+        $(this).val(Math.abs(val));
+
+        // Pastikan hanya satu kolom terisi
+        if ($(this).hasClass('debit-input')) {
+            $(this).closest('tr').find('.credit-input').val('');
+        } else {
+            $(this).closest('tr').find('.debit-input').val('');
+        }
+
+        calculateSubtotals();
+    });
+
+    /** ======================================================
+     * 13. Validasi submit form
+     * ====================================================== */
+    $('form').on('submit', function (e) {
+        let totalDebit = 0, totalCredit = 0;
+
+        $('#detail-rows tr').each(function() {
+            totalDebit  += parseFloat($(this).find('.debit-input').val()) || 0;
+            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
+        });
+
+        if (totalDebit !== totalCredit) {
+            e.preventDefault();
+            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
+        }
+    });
+});
+</script>
+
+
+@endsection
+
+{{-- <script>
     $(document).ready(function () {
         $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
 
@@ -414,174 +694,6 @@
             }
         });
     });
-</script>
-
-@endsection
-
-
-
-{{-- <script>
-$(document).ready(function () {
-    $('.select2').select2({ placeholder: "-- Pilih --", width: '100%' });
-
-    let accountsData = [];
-
-    // Ambil akun berdasarkan lisensi aktif
-    function loadAccountsByLicense(licenseId) {
-        if (!licenseId) return;
-
-        $.get('/get-accounts-by-license/' + licenseId, function (data) {
-            accountsData = data;
-
-            // Update semua select akun
-            $('.account-select').each(function () {
-                const $select = $(this);
-                $select.empty().append('<option value="">-- Pilih Akun --</option>');
-                $.each(accountsData, function (_, account) {
-                    $select.append(
-                        `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                            ${account.account_code} - ${account.account_name}
-                        </option>`
-                    );
-                });
-                $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
-            });
-        });
-
-        // Update kode jurnal
-        $.get('/journals/next-code/' + licenseId, function (res) {
-            $('#journal_code').val(res.next_code);
-        }).fail(function () {
-            $('#journal_code').val('');
-            alert('Gagal mengambil kode jurnal');
-        });
-    }
-
-    // Saat Super Admin ganti lisensi manual
-    $('#license_id').on('change', function () {
-        const licenseId = $(this).val();
-        $('#activeLicenseId').val(licenseId); // Sync ke hidden input
-        loadAccountsByLicense(licenseId);
-    });
-
-    // Load akun awal sesuai lisensi aktif
-    const selectedLicense = $('#license_id').length
-        ? $('#license_id').val()
-        : $('#activeLicenseId').val();
-    loadAccountsByLicense(selectedLicense);
-
-    // Tambah baris baru
-    $('#add-row').click(function () {
-        const rowCount = $('#detail-rows tr').length;
-        const newRow = `
-            <tr>
-                <td>
-                    <select name="details[${rowCount}][account_id]" 
-                            class="form-select account-select" 
-                            data-row="${rowCount}" required>
-                    </select>
-                </td>
-                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-                <td>
-                    <select name="details[${rowCount}][person]" class="form-select user-select" data-row="${rowCount}"></select>
-                </td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
-                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
-                <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
-                        <i class="ti ti-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-
-        $('#detail-rows').append(newRow);
-
-        // Isi opsi akun dari cache
-        const $newAccountSelect = $('#detail-rows tr:last .account-select');
-        $newAccountSelect.empty().append('<option value="">-- Pilih Akun --</option>');
-        $.each(accountsData, function (_, account) {
-            $newAccountSelect.append(
-                `<option value="${account.id}" data-code="${account.account_code}" data-person-type="${account.person_type}">
-                    ${account.account_code} - ${account.account_name}
-                </option>`
-            );
-        });
-        $newAccountSelect.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
-    });
-
-    // Hapus baris
-    $(document).on('click', '.remove-row', function () {
-        $(this).closest('tr').remove();
-        calculateSubtotals();
-    });
-
-    // Render user otomatis
-    $(document).on('change', '.account-select', function () {
-        const personType = $(this).find(':selected').data('person-type');
-        const row = $(this).closest('tr');
-        const userSelect = row.find('.user-select');
-
-        userSelect.empty();
-        if (personType === "student") {
-            @foreach($students as $student)
-                userSelect.append('<option value="{{ $student->id }}">{{ $student->name }}</option>');
-            @endforeach
-        } else if (personType === "employee") {
-            @foreach($employees as $employee)
-                userSelect.append('<option value="{{ $employee->id }}">{{ $employee->name }}</option>');
-            @endforeach
-        } else if (personType === "license") {
-            @foreach($licenses as $license)
-                userSelect.append('<option value="{{ $license->id }}">{{ $license->name }}</option>');
-            @endforeach
-        }
-        userSelect.select2({ placeholder: "-- Pilih User --", width: '100%' });
-    });
-
-    // Hitung subtotal otomatis
-    function calculateSubtotals() {
-        let totalDebit = 0, totalCredit = 0;
-        $('#detail-rows tr').each(function() {
-            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
-            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
-        });
-
-        $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
-        $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
-
-        if (totalDebit === totalCredit && totalDebit > 0) {
-            $('#balance-status').text('✅ Balance').css('color', 'green');
-        } else {
-            $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
-        }
-    }
-
-    // Event listener input debit/kredit
-    $(document).on('input', '.debit-input, .credit-input', function() {
-        const val = parseFloat($(this).val());
-        if (val < 0) $(this).val('');
-        if ($(this).hasClass('debit-input')) {
-            $(this).closest('tr').find('.credit-input').val('');
-        } else {
-            $(this).closest('tr').find('.debit-input').val('');
-        }
-        calculateSubtotals();
-    });
-
-    // Validasi submit
-    $('form').on('submit', function (e) {
-        let totalDebit = 0, totalCredit = 0;
-        $('#detail-rows tr').each(function() {
-            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
-            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
-        });
-
-        if (totalDebit !== totalCredit) {
-            e.preventDefault();
-            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
-        }
-    });
-});
 </script> --}}
 
 

@@ -111,11 +111,11 @@ Route::get('/employees/generate-nik/{licenseId}', [EmployeeController::class, 'g
 
 Route::get('/students/generate-nis/{licenseId}', [StudentsController::class, 'generateNisAjax']);
 
-Route::get('/get-accounts-by-license/{license}', function($licenseId) {
-    return \App\Models\AccountingAccount::where('license_id', $licenseId)
-        ->orderBy('account_code')
-        ->get();
-});
+// Route::get('/get-accounts-by-license/{license}', function($licenseId) {
+//     return \App\Models\AccountingAccount::where('license_id', $licenseId)
+//         ->orderBy('account_code')
+//         ->get();
+// });
 
 Route::get('/journals/get-next-code/{license}', [AccountingJournalController::class, 'getNextCode']);
 

@@ -68,6 +68,11 @@
         </table>
     </div>
 
+    <div class="col-md-4 mb-3">
+        <label class="form-label fw-bold">Keterangan</label>
+        <div>{{ $journal->description}}</div>
+    </div>
+
     {{-- Tombol --}}
     <div class="d-flex justify-content-start gap-2 mt-3">
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
