@@ -204,6 +204,11 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
+                    'text' => 'Jurnal Umum',
+                    'url' => '/journals/general',
+                    'icon' => 'ti ti-report-analytics',
+                ],
+                [
                     'text' => 'Kas',
                     'url' => '/journals/report',
                     'icon' => 'ti ti-report-analytics',

@@ -436,6 +436,30 @@ public function store(StoreAccountingJournalRequest $request)
     ));
 }
 
+public function generalJournal(Request $request)
+    {
+        // ambil input filter (default bulan berjalan)
+        $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+        // query jurnal sesuai periode
+        $journals = AccountingJournal::with(['details.account'])
+            ->whereBetween('date', [$startDate, $endDate])
+            ->orderBy('date')
+            ->get();
+
+        $totalDebit = 0;
+    $totalCredit = 0;
+
+    foreach ($journals as $journal) {
+        foreach ($journal->details as $detail) {
+            $totalDebit += $detail->debit;
+            $totalCredit += $detail->credit;
+        }
+    }
+
+        return view('journals.general-journal', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
+    }
 }
 
 
