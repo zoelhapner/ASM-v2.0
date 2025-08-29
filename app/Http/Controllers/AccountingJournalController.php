@@ -69,15 +69,15 @@ class AccountingJournalController extends Controller
         : $licenses->pluck('id')->toArray();
 
     // Ambil akun yang disembunyikan sesuai role user
-    // $hiddenAccounts = [];
-    // foreach ($user->getRoleNames() as $role) {
-    //     if (isset(config('accounting.hidden_accounts')[$role])) {
-    //         $hiddenAccounts = array_merge(
-    //             $hiddenAccounts,
-    //             config('accounting.hidden_accounts')[$role]
-    //         );
-    //     }
-    // }
+    $hiddenAccounts = [];
+    foreach ($user->getRoleNames() as $role) {
+        if (isset(config('accounting.hidden_accounts')[$role])) {
+            $hiddenAccounts = array_merge(
+                $hiddenAccounts,
+                config('accounting.hidden_accounts')[$role]
+            );
+        }
+    }
 
     // Accounts
     $accounts = AccountingAccount::where('is_parent', false)
