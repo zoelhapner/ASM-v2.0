@@ -69,47 +69,47 @@ class AccountingJournalController extends Controller
         : $licenses->pluck('id')->toArray();
 
     // Ambil akun yang disembunyikan sesuai role user
-    $hiddenAccounts = [];
-    foreach ($user->getRoleNames() as $role) {
-        if (isset(config('accounting.hidden_accounts')[$role])) {
-            $hiddenAccounts = array_merge(
-                $hiddenAccounts,
-                config('accounting.hidden_accounts')[$role]
-            );
-        }
-    }
+    // $hiddenAccounts = [];
+    // foreach ($user->getRoleNames() as $role) {
+    //     if (isset(config('accounting.hidden_accounts')[$role])) {
+    //         $hiddenAccounts = array_merge(
+    //             $hiddenAccounts,
+    //             config('accounting.hidden_accounts')[$role]
+    //         );
+    //     }
+    // }
 
-    // Accounts
-    $accounts = AccountingAccount::where('is_parent', false)
-        ->where('is_active', true)
-        ->whereIn('license_id', $licenseIds)
-        ->when(!empty($hiddenAccounts), function ($q) use ($hiddenAccounts) {
-            $q->whereNotIn('account_code', $hiddenAccounts);
-        })
-        ->orderBy('account_code')
-        ->get();
+    // // // Accounts
+    // // $accounts = AccountingAccount::where('is_parent', false)
+    // //     ->where('is_active', true)
+    // //     ->whereIn('license_id', $licenseIds)
+    // //     ->when(!empty($hiddenAccounts), function ($q) use ($hiddenAccounts) {
+    // //         $q->whereNotIn('account_code', $hiddenAccounts);
+    // //     })
+    // //     ->orderBy('account_code')
+    // //     ->get();
 
-    // Students
-    $students = Student::whereIn('license_id', $licenseIds)
-        ->select('id', 'fullname as name')
-        ->get();
+    // // // Students
+    // // $students = Student::whereIn('license_id', $licenseIds)
+    // //     ->select('id', 'fullname as name')
+    // //     ->get();
 
-    // Employees
-    $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('employee_license.license_id', $licenseIds);
-        })
-        ->select('id', 'fullname as name')
-        ->get();
+    // // // Employees
+    // // $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
+    // //         $q->whereIn('employee_license.license_id', $licenseIds);
+    // //     })
+    // //     ->select('id', 'fullname as name')
+    // //     ->get();
 
-    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('licenses.id', $licenseIds);
-        })
-        ->select('id', 'name')
-        ->get();
+    // // $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+    // //         $q->whereIn('licenses.id', $licenseIds);
+    // //     })
+    // //     ->select('id', 'name')
+    // //     ->get();
 
-    $licenseList = License::whereIn('id', $licenseIds)
-        ->select('id', 'name')
-        ->get();
+    // // $licenseList = License::whereIn('id', $licenseIds)
+    // //     ->select('id', 'name')
+    // //     ->get();
 
     $pusatLicense = License::where('name', 'AHA Right Brain')->first();
 
@@ -178,6 +178,7 @@ public function store(StoreAccountingJournalRequest $request)
         'journal_code' => $request->journal_code,
         'transaction_date' => $request->transaction_date,
         'description' => $request->description,
+        'enclosure' => $request->enclosure,
         'created_by' => $user->id,
     ]);
 

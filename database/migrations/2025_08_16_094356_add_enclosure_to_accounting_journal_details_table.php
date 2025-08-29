@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('accounting_accounts', function (Blueprint $table) {
-            //
+        Schema::table('accounting_journals', function (Blueprint $table) {
+            $table->string('enclosure')->after('description');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('accounting_accounts', function (Blueprint $table) {
-            //
+        Schema::table('accounting_journals', function (Blueprint $table) {
+            $table->dropColumn('enclosure');
         });
     }
 };

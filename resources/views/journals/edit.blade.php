@@ -57,7 +57,7 @@
                         <select name="details[{{ $i }}][account_id]" 
                                 class="form-select account-select" 
                                 data-row="{{ $i }}" required
-                                {{ $detail->account_id ? 'disabled' : '' }}>
+                                {{ $detail->account_id ? ''}}>
                             <option value="">-- Pilih Akun --</option>
                             @foreach ($accounts as $account)
                                 <option value="{{ $account->id }}"

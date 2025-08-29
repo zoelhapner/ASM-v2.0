@@ -54,7 +54,7 @@ public function getPersonNameAttribute()
         case 'license':
             return \App\Models\License::find($this->person)?->name ?? '-';
         default:
-            return '-';
+            return 'person';
     }
 }
 

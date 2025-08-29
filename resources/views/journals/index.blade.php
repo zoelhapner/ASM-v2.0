@@ -16,8 +16,8 @@
                 <th>Tipe Lisensi</th>
                 <th>Nama Lisensi</th>
                 <th>No. Transaksi</th>
-                <th>Tanggal</th>
-                <th>Deskripsi</th>
+                <th>Tanggal Dibuat</th>
+                {{-- <th>Deskripsi</th> --}}
                 <th>PIC</th>
                 <th>Aksi</th>
             </tr>
@@ -34,13 +34,13 @@
                     </a>
                 </td>
                 <td>{{ $journal->transaction_date }}</td>
-                <td>
-                    {{-- ambil deskripsi pertama --}}
-                    {{ $journal->details->first()?->description ?? '-' }}
+                {{-- <td>
+                    
+                    $journal->details->first()?->description ?? '-'
 
-                    {{-- atau kalau mau semua deskripsi digabung koma --}}
-                    {{-- $journal->details->pluck('description')->implode(', ') --}}
-                </td>
+                    
+                    {{-- $journal->details->pluck('description')->implode(', ') 
+                </td> --}}
                 <td>
                     @if($journal->creator)
                         {{ $journal->creator->name }}

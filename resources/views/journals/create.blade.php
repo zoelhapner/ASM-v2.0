@@ -123,6 +123,14 @@
             <label for="description">Keterangan</label>
             <textarea name="description" class="form-control"></textarea>
         </div>
+
+        <div class="col-md-4 mb-3">
+            <label for="enclosure" class="form-label">Lampiran</label>
+            <input type="file" name="enclosure" class="form-control" accept="application/pdf" required>
+            @error('enclosure')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+        </div>
         
         <div class="text-end">
             <button type="submit" class="btn btn-success text-white">Simpan</button>
@@ -168,16 +176,16 @@
         }
 
         /** 🔹 Render akun ke dropdown */
-        const hiddenAccounts = ['1', '100', '110', '120', '130', '140', '150', '160', '2', '200', '210', '220', '3', '300', 
-            '4', '400', '410', '420', '430', '450', '5', '500', '510', '520', '550', '560', '600', '610' 
-        ];
+        // const hiddenAccounts = ['1', '100', '110', '120', '130', '140', '150', '160', '2', '200', '210', '220', '3', '300', 
+        //     '4', '400', '410', '420', '430', '450', '5', '500', '510', '520', '550', '560', '600', '610' 
+        // ];
 
         function renderAccountOptions($select) {
             $select.empty().append('<option value="">-- Pilih Akun --</option>');
             $.each(accountsData, function (_, account) {
-                if (hiddenAccounts.includes(account.account_code)) {
-                    return; // lanjut ke akun berikutnya
-                }
+                // if (hiddenAccounts.includes(account.account_code)) {
+                //     return; // lanjut ke akun berikutnya
+                // }
 
                 $select.append(
                     `<option value="${account.id}" 
@@ -216,7 +224,7 @@
 
         function initSelect2WithCreate($select, type) {
             $select.select2({
-                placeholder: "-- Pilih User --",
+                placeholder: "-- Input manual jika tidak ada User --",
                 width: '100%',
                 tags: true,
                 createTag: function (params) {
@@ -232,7 +240,7 @@
                 templateResult: function (data) {
                     let $result = $("<span></span>").text(data.text);
                     if (data.newOption) {
-                        $result.append(" <em>(buat baru)</em>");
+                        $result.append(" <em>(tekan Enter)</em>");
                     }
                     return $result;
                 }
