@@ -101,6 +101,7 @@ class AccountingJournalController extends Controller
     $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
             $q->whereIn('licenses.id', $licenseIds);
         })
+        ->with('licenseholder')
         ->select('id', 'name')
         ->get();
 

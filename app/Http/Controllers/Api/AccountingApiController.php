@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{AccountingAccount, Student, Employee, LicenseHolder, License};
+use App\Models\{AccountingAccount, Student, Employee, User, License};
 
 class AccountingApiController extends Controller
 {

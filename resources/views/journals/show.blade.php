@@ -74,8 +74,6 @@
             <div>{{ $journal->description}}</div>
         </div>
         <div class="col-md-3">
-            <label class="form-label fw-bold">Keterangan</label>
-            <div>{{ $journal->description}}</div>
             @if ($journal->enclosure)
                 <div class="card mt-4">
                     <div class="card-header fw-bold">
@@ -109,7 +107,6 @@
                     </div>
                 </div>
             @endif
-
         </div>
     </div>
 

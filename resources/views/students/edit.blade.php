@@ -357,6 +357,8 @@
         const $licenseSelect = $('select[name="license_id"]');
         const $nisInput = $('input[name="nis"]');
 
+        const activeLicenseId = "{{ session('active_license_id') }}";
+
         // Inisialisasi select2 jika belum
         if (!$licenseSelect.hasClass("select2-hidden-accessible")) {
             $licenseSelect.select2();
@@ -391,6 +393,15 @@
                 $nisInput.val('');
             }
         });
+
+        // 🔹 Kalau ada activeLicenseId dari navbar → jalankan otomatis
+        if (activeLicenseId) {
+            // set value select (optional kalau kamu ingin select ikut terisi)
+            $licenseSelect.val(activeLicenseId).trigger('change');
+
+            // atau langsung generate tanpa ubah dropdown
+            generateNis(activeLicenseId);
+        }
 
     });
 </script>
