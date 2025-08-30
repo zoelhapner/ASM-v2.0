@@ -291,14 +291,14 @@ class EmployeeController extends Controller
 
     // Validasi bersyarat: kalau ada "Instruktur" → sertifikat wajib
     if (in_array('Instruktur', $request->input('unit', []))) {
-        $rules['instructure_certificate'] = 'required|file|mimes:pdf|max:2048';
+        $rules['instructure_certificate'] = 'nullable|file|mimes:pdf|max:2048';
     } else {
         $rules['instructure_certificate'] = 'nullable|file|mimes:pdf|max:2048';
     }
 
      // Validasi bersyarat: kalau ada "Instruktur" → sertifikat wajib
     if (in_array('Instruktur', $request->input('unit', []))) {
-        $rules['expired_date_certificate'] = 'required|date_format:Y-m-d';
+        $rules['expired_date_certificate'] = 'nullable|date_format:Y-m-d';
     } else {
         $rules['expired_date_certificate'] = 'nullable|date_format:Y-m-d';
     }

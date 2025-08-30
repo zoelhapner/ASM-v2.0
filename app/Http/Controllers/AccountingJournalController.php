@@ -494,7 +494,7 @@ public function ledger(Request $request)
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
     // 🔹 Base query
-    $query = AccountingJournalDetail::with(['journal', 'account']);
+    $query = AccountingJournalDetail::with(['accounting_journal', 'account']);
 
     // 🔹 Filter role user
     if (!$user->hasRole('Super-Admin')) {
@@ -504,25 +504,25 @@ public function ledger(Request $request)
 
         abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
 
-        $query->whereHas('journal', function ($q) use ($licenses) {
+        $query->whereHas('accounting_journal', function ($q) use ($licenses) {
             $q->whereIn('license_id', $licenses->pluck('id'));
         });
     }
 
     // 🔹 Filter lisensi aktif
     if (session()->has('active_license_id')) {
-        $query->whereHas('journal', function ($q) {
+        $query->whereHas('accounting_journal', function ($q) {
             $q->where('license_id', session('active_license_id'));
         });
     }
 
     // 🔹 Filter periode
-    $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
+    $query->whereHas('accounting_journal', function ($q) use ($startDate, $endDate) {
         $q->whereBetween('transaction_date', [$startDate, $endDate]);
     });
 
     $details = $query->orderBy('account_id')
-        ->orderBy('journal.transaction_date')
+        ->orderBy('accounting_journal.transaction_date')
         ->get();
 
     // 🔹 Kelompokkan per akun
@@ -542,7 +542,7 @@ public function ledger(Request $request)
 
         // update saldo berjalan (balance)
         $ledger[$accountId]['transactions'][] = [
-            'date' => $detail->journal->transaction_date,
+            'transaction_date' => $detail->journal->transaction_date,
             'description' => $detail->journal->description,
             'debit' => $detail->debit,
             'credit' => $detail->credit,
