@@ -215,7 +215,7 @@ return [
                 ],
                 [
                     'text' => 'Buku Besar',
-                    'url' => '/bukubesar',
+                    'url' => '/giantledger',
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [

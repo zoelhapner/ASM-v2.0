@@ -10,7 +10,7 @@
     </div>
 
     {{-- Filter --}}
-    <form method="GET" action="{{ route('general-journal') }}" class="row g-2 mb-3">
+    <form method="GET" action="{{ route('general') }}" class="row g-2 mb-3">
         <div class="col-auto">
             <label class="form-label">Dari</label>
             <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">
