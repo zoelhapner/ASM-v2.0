@@ -35,7 +35,7 @@
                 @php( $setting_url = $setting_url ? url($setting_url) : '' )
             @endif
 
-            <a href="{{$profile_url}}" class="dropdown-item">Edit Profil</a>
+            <a href="{{ route('profile.edit') }}" class="dropdown-item">Edit Profil</a>
             <a class="dropdown-item"
                href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="ti ti-logout"></i>
