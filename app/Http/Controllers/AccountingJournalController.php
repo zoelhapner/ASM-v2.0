@@ -100,10 +100,10 @@ class AccountingJournalController extends Controller
         ->get();
 
     $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('licenses.id', $licenseIds);
+            $q->whereIn('license_user.license_id', $licenseIds);
         })
-        ->with('licenseholder')
-        ->select('id', 'name')
+        
+        ->select('id', 'fullname as name')
         ->get();
 
     $licenseList = License::whereIn('id', $licenseIds)
@@ -274,7 +274,7 @@ public function store(StoreAccountingJournalRequest $request)
         ->orderBy('fullname')
         ->get();
         
-    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+    $licenseholders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
             $q->whereIn('licenses.id', $licenseIds);
         })
         ->select('id', 'name')

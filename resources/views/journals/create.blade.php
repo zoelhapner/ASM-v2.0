@@ -207,10 +207,10 @@ $(document).ready(function () {
         $select.empty().append('<option value="">-- Pilih User --</option>');
 
         let url = '';
-        if (type === "student") url = '/get-students';
-        else if (type === "employee") url = '/get-employees';
-        else if (type === "licenseholders") url = '/get-licenseholders';
-        else if (type === "license") url = '/get-licenses';
+        if (type === "student") url = '/students';
+        else if (type === "employee") url = '/employees';
+        else if (type === "licenseholders") url = '/licenseholders';
+        else if (type === "license") url = '/licenses';
 
         if (url) {
             $.get(url, function (data) {

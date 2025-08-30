@@ -140,6 +140,7 @@ Route::get('/journals/report', [AccountingJournalController::class, 'report'])
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
 
 Route::get('/general-journal', [AccountingJournalController::class, 'generalJournal'])
+    ->name('journals.general-journal')
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
 
 Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
@@ -209,10 +210,10 @@ Route::middleware(['auth'])->group(function () {
 
     // data untuk form jurnal
     Route::get('/get-accounts-by-license/{licenseId?}', [AccountingApiController::class, 'accounts']);
-    Route::get('/get-students', [AccountingApiController::class, 'students']);
-    Route::get('/get-employees', [AccountingApiController::class, 'employees']);
-    Route::get('/get-licenseholders', [AccountingApiController::class, 'licenseholders']);
-    Route::get('/get-licenses', [AccountingApiController::class, 'licenses']); // utk person_type=license
+    Route::get('/students', [AccountingApiController::class, 'students']);
+    Route::get('/employees', [AccountingApiController::class, 'employees']);
+    Route::get('/licenseholders', [AccountingApiController::class, 'licenseholders']);
+    Route::get('/licenses', [AccountingApiController::class, 'licenses']); // utk person_type=license
 
     // kode jurnal berikutnya
     Route::get('/journals/next-code/{licenseId?}', [JournalApiController::class, 'nextCode']);

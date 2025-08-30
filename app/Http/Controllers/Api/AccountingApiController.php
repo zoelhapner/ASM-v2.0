@@ -99,11 +99,10 @@ class AccountingApiController extends Controller
         $licenseIds = $this->resolveLicenseIds($request->get('license_id'));
 
         $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-                $q->whereIn('licenses.id', $licenseIds);
+                $q->whereIn('license_user.license_id', $licenseIds);
             })
-            ->with('licenseholder')
-            ->orderBy('name')
-            ->get(['id','name']);
+            ->orderBy('fullname')
+            ->get(['id','fullname']);
 
         return response()->json($licenseholders->map(fn($e) => [
             'id'   => $e->id,
