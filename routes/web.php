@@ -140,7 +140,7 @@ Route::prefix('journals')->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi
     Route::get('/general', [AccountingJournalController::class, 'generalJournal'])->name('journals.general');
 
     Route::resource('/', AccountingJournalController::class)->parameters([
-        '' => 'journal'
+        '' => 'journals'
     ]);
 });
 
