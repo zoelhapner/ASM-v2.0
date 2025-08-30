@@ -103,7 +103,7 @@
             </div>
             <div class="col-md-3">
                 <a href="{{ route('employees.create') }}" class="btn btn-secondary text-white w-100">
-                    <i class="ti ti-file-earmark-text"></i> Tambah Karyawan
+                    <i class="ti ti-user-plus"></i> Tambah Karyawan
                 </a>
             </div>
             @can('akun-akuntansi.lihat')

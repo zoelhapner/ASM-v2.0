@@ -5,39 +5,37 @@
     <h2>Buku Besar</h2>
     <p>Periode: {{ $start }} s/d {{ $end }}</p>
 
-    @foreach($accounts as $account)
-        @if($account->journalDetails->isNotEmpty())
-            <h4>{{ $account->code }} - {{ $account->name }}</h4>
-
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Tanggal</th>
-                        <th>No. Transaksi</th>
-                        <th>Keterangan</th>
-                        <th>Debit</th>
-                        <th>Kredit</th>
-                        <th>Saldo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php $saldo = 0; @endphp
-                    @foreach($account->journalDetails as $detail)
-                        @php
-                            $saldo += $detail->debit - $detail->credit;
-                        @endphp
-                        <tr>
-                            <td>{{ $detail->journal->transaction_date }}</td>
-                            <td>{{ $detail->journal->transaction_number }}</td>
-                            <td>{{ $detail->journal->description }}</td>
-                            <td>{{ number_format($detail->debit,0,',','.') }}</td>
-                            <td>{{ number_format($detail->credit,0,',','.') }}</td>
-                            <td>{{ number_format($saldo,0,',','.') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    @endforeach
+    @foreach($ledger as $data)
+    <h3>{{ $data['account']->code }} - {{ $data['account']->name }}</h3>
+    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Deskripsi</th>
+                <th>Debit</th>
+                <th>Kredit</th>
+                <th>Saldo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($data['transactions'] as $trx)
+                <tr>
+                    <td>{{ $trx['transaction_date'] }}</td>
+                    <td>{{ $trx['description'] }}</td>
+                    <td>{{ number_format($trx['debit'],0,',','.') }}</td>
+                    <td>{{ number_format($trx['credit'],0,',','.') }}</td>
+                    <td>{{ number_format($trx['balance'],0,',','.') }}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <td colspan="2"><b>Total</b></td>
+                <td><b>{{ number_format($data['total_debit'],0,',','.') }}</b></td>
+                <td><b>{{ number_format($data['total_credit'],0,',','.') }}</b></td>
+                <td><b>{{ number_format($data['balance'],0,',','.') }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+@endforeach
 </div>
 @endsection

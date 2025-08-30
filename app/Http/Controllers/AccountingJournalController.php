@@ -485,36 +485,78 @@ public function store(StoreAccountingJournalRequest $request)
 }
 
 
-    public function ledger(Request $request)
+public function ledger(Request $request)
 {
     $user = Auth::user();
 
-    // Ambil periode dari request (default bulan ini)
-    $start = $request->start_date ?? now()->startOfMonth()->toDateString();
-    $end   = $request->end_date ?? now()->endOfMonth()->toDateString();
+    // 🔹 Default filter tanggal: bulan berjalan
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
-    // Ambil semua akun yg punya transaksi
-    $accounts = \App\Models\AccountingAccount::with(['journalDetails' => function($q) use ($start, $end, $user) {
-        $q->whereHas('journal', function($query) use ($start, $end, $user) {
-            $query->whereBetween('transaction_date', [$start, $end]);
+    // 🔹 Base query
+    $query = AccountingJournalDetail::with(['journal', 'account']);
 
-            // Filter role / lisensi
-            if (!$user->hasRole('Super-Admin')) {
-                $licenses = $user->hasRole('Pemilik Lisensi')
-                    ? $user->licenses
-                    : $user->employee?->licenses;
+    // 🔹 Filter role user
+    if (!$user->hasRole('Super-Admin')) {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
 
-                $query->whereIn('license_id', $licenses->pluck('id'));
-            }
+        abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
 
-            if (session()->has('active_license_id')) {
-                $query->where('license_id', session('active_license_id'));
-            }
+        $query->whereHas('journal', function ($q) use ($licenses) {
+            $q->whereIn('license_id', $licenses->pluck('id'));
         });
-    }])->get();
+    }
 
-    return view('journals.ledger', compact('accounts', 'start', 'end'));
+    // 🔹 Filter lisensi aktif
+    if (session()->has('active_license_id')) {
+        $query->whereHas('journal', function ($q) {
+            $q->where('license_id', session('active_license_id'));
+        });
+    }
+
+    // 🔹 Filter periode
+    $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
+        $q->whereBetween('transaction_date', [$startDate, $endDate]);
+    });
+
+    $details = $query->orderBy('account_id')
+        ->orderBy('journal.transaction_date')
+        ->get();
+
+    // 🔹 Kelompokkan per akun
+    $ledger = [];
+    foreach ($details as $detail) {
+        $accountId = $detail->account_id;
+
+        if (!isset($ledger[$accountId])) {
+            $ledger[$accountId] = [
+                'account' => $detail->account,
+                'transactions' => [],
+                'total_debit' => 0,
+                'total_credit' => 0,
+                'balance' => 0,
+            ];
+        }
+
+        // update saldo berjalan (balance)
+        $ledger[$accountId]['transactions'][] = [
+            'date' => $detail->journal->transaction_date,
+            'description' => $detail->journal->description,
+            'debit' => $detail->debit,
+            'credit' => $detail->credit,
+            'balance' => ($ledger[$accountId]['balance'] + $detail->debit - $detail->credit),
+        ];
+
+        $ledger[$accountId]['balance'] += $detail->debit - $detail->credit;
+        $ledger[$accountId]['total_debit'] += $detail->debit;
+        $ledger[$accountId]['total_credit'] += $detail->credit;
+    }
+
+    return view('journals.ledger', compact('ledger', 'startDate', 'endDate'));
 }
+
 
 }
 
