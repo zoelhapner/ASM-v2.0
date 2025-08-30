@@ -41,7 +41,7 @@
                     @foreach ($journals as $journal)
                         @foreach ($journal->details as $detail)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</td>
                                 <td>{{ $journal->journal_code ?? '-' }}</td>
                                 <td>{{ $detail->description }}</td>
                                 <td>{{ $detail->account->account_code }} - {{ $detail->account->account_name }}</td>

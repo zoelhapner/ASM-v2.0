@@ -251,7 +251,7 @@
                                         <div class="col-md-6 mb-3">
                                             <label class="required" for="role">Role:</label>
 
-                                            @if(auth()->user()->hasRole('Pemilik Lisensi'))
+                                            @if(auth()->user()->hasAnyRole(['Pemilik Lisensi', 'Akuntan']))
                                                 {{-- Hidden input supaya tetap kirim value --}}
                                                 <input type="hidden" name="role" value="Karyawan">
 
