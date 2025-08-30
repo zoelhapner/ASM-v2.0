@@ -103,7 +103,7 @@ class AccountingJournalController extends Controller
             $q->whereIn('license_user.license_id', $licenseIds);
         })
         
-        ->select('id', 'fullname as name')
+        ->select('id', 'name')
         ->get();
 
     $licenseList = License::whereIn('id', $licenseIds)

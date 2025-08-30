@@ -36,7 +36,7 @@
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
                     <div class="mb-2">
-                        <i class="bi bi-building" style="font-size: 1.5rem;"></i>
+                        <i class="ti ti-building" style="font-size: 1.5rem;"></i>
                     </div>
                     <h6 class="card-title">Total Lisensi</h6>
                     <h3 class="card-text">{{ is_numeric($licensesCount) ? number_format($licensesCount) : '-' }}</h3>
@@ -51,7 +51,7 @@
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
                     <div class="mb-2">
-                        <i class="bi bi-people-fill" style="font-size: 1.5rem;"></i>
+                        <i class="ti ti-people-fill" style="font-size: 1.5rem;"></i>
                     </div>
                     <h6 class="card-title">Total Siswa</h6>
                     <h3 class="card-text">{{ is_numeric($studentsCount) ? number_format($studentsCount) : '-' }}</h3>
@@ -66,7 +66,7 @@
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
                     <div class="mb-2">
-                        <i class="bi bi-person-badge" style="font-size: 1.5rem;"></i>
+                        <i class="ti ti-person-badge" style="font-size: 1.5rem;"></i>
                     </div>
                     <h6 class="card-title">Total Karyawan</h6>
                     <h3 class="card-text">{{ is_numeric($employeesCount) ? number_format($employeesCount) : '-' }}</h3>
@@ -80,7 +80,7 @@
         <div class="card text-center shadow-sm h-100">
             <div class="card-body">
                 <div class="mb-2">
-                    <i class="bi bi-currency-dollar" style="font-size: 1.5rem; font-family: 'Poppins', sans-serif;"></i>
+                    <i class="ti ti-currency-dollar" style="font-size: 1.5rem; font-family: 'Poppins', sans-serif;"></i>
                 </div>
                 <h6 class="card-title">Pendapatan Bulan Ini</h6>
                 <h3 class="card-text">Rp {{ number_format($monthlyRevenue, 2, ',', '.') }}</h3>
@@ -93,23 +93,23 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <a href="{{ route('licenses.create') }}" class="btn btn-primary text-white w-100">
-                    <i class="bi bi-plus-circle"></i> Tambah Lisensi
+                    <i class="ti ti-plus-circle"></i> Tambah Lisensi
                 </a>
             </div>
             <div class="col-md-3">
                 <a href="{{ route('students.create') }}" class="btn btn-success text-white w-100">
-                    <i class="bi bi-person-plus-fill"></i> Daftarkan Siswa
+                    <i class="ti ti-person-plus-fill"></i> Daftarkan Siswa
                 </a>
             </div>
             <div class="col-md-3">
                 <a href="{{ route('employees.create') }}" class="btn btn-secondary text-white w-100">
-                    <i class="bi bi-file-earmark-text"></i> Tambah Karyawan
+                    <i class="ti ti-file-earmark-text"></i> Tambah Karyawan
                 </a>
             </div>
             @can('akun-akuntansi.lihat')
                 <div class="col-md-3">
                     <a href="{{ route('accounting.index') }}" class="btn btn-danger text-white w-100">
-                        <i class="bi bi-people-fill"></i> Akuntasi
+                        <i class="ti ti-people-fill"></i> Akuntasi
                     </a>
                 </div>
             @endcan
@@ -118,7 +118,7 @@
         {{-- Top 3 Siswa Baru --}}
         <div class="card shadow-sm mb-4 mt-4">
             <div class="card-body">
-                <h5 class="card-title mb-3"><i class="bi bi-trophy-fill"></i> Top 3 Cabang (Siswa Baru)</h5>
+                <h5 class="card-title mb-3"><i class="ti ti-trophy-fill"></i> Top 3 Cabang (Siswa Baru)</h5>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -144,7 +144,7 @@
         {{-- Top 3 Pendapatan --}}
         <div class="card shadow-sm mb-4 mt-4">
             <div class="card-body">
-                <h5 class="card-title mb-3"><i class="bi bi-cash-stack"></i> Top 3 Cabang (Pendapatan)</h5>
+                <h5 class="card-title mb-3"><i class="ti ti-cash-stack"></i> Top 3 Cabang (Pendapatan)</h5>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
