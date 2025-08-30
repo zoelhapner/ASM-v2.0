@@ -122,7 +122,7 @@ class AccountingJournalController extends Controller
         return view('journals.create', compact(
             'accounts', 'licenses', 'journalCode', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName'
         ));
-    }
+}
 
     private function generateNextJournalCode($licenseId)
 {
@@ -274,8 +274,8 @@ public function store(StoreAccountingJournalRequest $request)
         ->orderBy('fullname')
         ->get();
         
-    $licenseholders = LicenseHolder::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('licenses.id', $licenseIds);
+    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
+            $q->whereIn('license_user.license_id', $licenseIds);
         })
         ->select('id', 'name')
         ->orderBy('name')
@@ -458,7 +458,7 @@ public function generalJournal(Request $request)
         }
     }
 
-        return view('journals.general-journal', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
+        return view('journals.general', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
     }
 }
 

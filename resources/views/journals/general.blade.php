@@ -37,20 +37,21 @@
             <th>Kredit</th>
         </tr>
             </thead>
-            <tbody>
-        @foreach ($journals as $journal)
-            @foreach ($journal->details as $detail)
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
-                    <td>{{ $detail->description }}</td>
-                    <td>{{ $detail->journal_code }}</td>
-                    <td>{{ $detail->account->account_code }} - {{ $detail->account->account_name }}</td>
-                    <td class="text-end">{{ number_format($detail->debit, 0, ',', '.') }}</td>
-                    <td class="text-end">{{ number_format($detail->credit, 0, ',', '.') }}</td>
-                </tr>
-            @endforeach
-        @endforeach
-    </tbody>
+                <tbody>
+                    @foreach ($journals as $journal)
+                        @foreach ($journal->details as $detail)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($journal->date)->format('d/m/Y') }}</td>
+                                <td>{{ $journal->journal_code ?? '-' }}</td>
+                                <td>{{ $detail->description }}</td>
+                                <td>{{ $detail->account->account_code }} - {{ $detail->account->account_name }}</td>
+                                <td class="text-end">{{ number_format($detail->debit, 0, ',', '.') }}</td>
+                                <td class="text-end">{{ number_format($detail->credit, 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+                </tbody>
+
 
             <tfoot class="fw-bold">
                 <tr>

@@ -243,6 +243,8 @@ $(document).ready(function () {
      *  4. Select2 user dengan fitur input manual
      * ====================================================== */
     function initSelect2WithCreate($select, type) {
+        if ($select.hasClass("select2-hidden-accessible")) return;
+        
         $select.select2({
             placeholder: "-- Input manual jika tidak ada User --",
             width: '100%',
@@ -490,30 +492,6 @@ $(document).ready(function () {
                 );
             });
             $select.select2({ placeholder: "-- Pilih Akun --", width: '100%' });
-        }
-
-        /** 🔹 Render user otomatis sesuai person_type */
-        function renderUserOptions($select, type) {
-            $select.empty().append('<option value="">-- Pilih User --</option>');
-
-            let url = '';
-            if (type === "student") url = '/get-students';
-            else if (type === "employee") url = '/get-employees';
-            else if (type === "licenseholders") url = '/get-licenseholders';
-            else if (type === "license") url = '/get-licenses';
-
-            if (url) {
-                $.get(url, function (data) {
-                    $.each(data, function (_, user) {
-                        $select.append(`<option value="${user.id}">${user.name}</option>`);
-                    });
-                    initSelect2WithCreate($select, type);
-                    // $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
-                });
-            } else {
-                initSelect2WithCreate($select, type);
-                // $select.select2({ placeholder: "-- Pilih User --", width: '100%' });
-            }
         }
 
         function initSelect2WithCreate($select, type) {
