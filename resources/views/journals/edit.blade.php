@@ -253,6 +253,15 @@ $(document).ready(function () {
                 );
             });
         });
+
+        $('.user-select').each(function () {
+            let $select = $(this);
+            let personType = $select.closest('tr').find('.person-type').val();
+            let selected = $select.data('selected'); // 🔹 ambil id user lama dari blade
+
+            renderUserOptions($select, personType, selected);
+        });
+
     }
 
     /** 🔹 Change event: pilih akun → render user sesuai person_type */
