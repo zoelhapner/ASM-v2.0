@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <h2>Buku Besar</h2>
-    <p>Periode: {{ $start }} s/d {{ $end }}</p>
+    <p>Periode: {{ $startDate }} s/d {{ $endDate }}</p>
 
     @foreach($ledger as $data)
     <h3>{{ $data['account']->code }} - {{ $data['account']->name }}</h3>
