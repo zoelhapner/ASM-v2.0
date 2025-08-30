@@ -138,10 +138,8 @@ Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
 Route::prefix('journals')->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
     Route::get('/report', [AccountingJournalController::class, 'report'])->name('journals.report');
     Route::get('/general', [AccountingJournalController::class, 'generalJournal'])->name('journals.general');
-
-    Route::resource('/', AccountingJournalController::class)->parameters([
-        '' => 'journals'
-    ]);
+    
+    Route::resource('journals', AccountingJournalController::class);
 });
 
 

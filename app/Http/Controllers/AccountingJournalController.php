@@ -444,8 +444,8 @@ public function generalJournal(Request $request)
 
         // query jurnal sesuai periode
         $journals = AccountingJournal::with(['details.account'])
-            ->whereBetween('date', [$startDate, $endDate])
-            ->orderBy('date')
+            ->whereBetween('transaction_date', [$startDate, $endDate])
+            ->orderBy('transaction_date')
             ->get();
 
         $totalDebit = 0;

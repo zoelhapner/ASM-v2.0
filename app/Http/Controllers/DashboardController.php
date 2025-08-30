@@ -123,7 +123,7 @@ class DashboardController extends Controller
             $license = License::with('owners')->find($item->license_id);
             return (object) [
                 'name' => $license?->name ?? '-',
-                'owner_name' => $item->license?->owners?->pluck('name')->join(', ') ?? '-',
+                'owner_name' => $license->owners?->pluck('name')->join(', ') ?? '-',
                 'revenue' => $item->total_revenue,
             ];
         });
