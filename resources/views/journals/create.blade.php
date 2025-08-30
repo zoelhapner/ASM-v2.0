@@ -203,24 +203,38 @@ $(document).ready(function () {
     /** ======================================================
      *  3. Render dropdown user sesuai person_type
      * ====================================================== */
+    const userCache = {};
+
     function renderUserOptions($select, type) {
+        if ($select.hasClass("select2-hidden-accessible")) {
+            $select.select2("destroy");
+        }
+
         $select.empty().append('<option value="">-- Pilih User --</option>');
 
         let url = '';
         if (type === "student") url = '/get-students';
         else if (type === "employee") url = '/get-employees';
-        else if (type === "licenseholders") url = '/get-licenseholders';
+        else if (type === "licenseholder") url = '/get-licenseholders';
         else if (type === "license") url = '/get-licenses';
 
         if (url) {
-            $.get(url, function (data) {
-                $.each(data, function (_, user) {
+            if (userCache[type]) {
+                // Pakai cache kalau sudah ada
+                $.each(userCache[type], function (_, user) {
                     $select.append(`<option value="${user.id}">${user.name}</option>`);
                 });
                 initSelect2WithCreate($select, type);
-            });
+            } else {
+                $.get(url, function (data) {
+                    userCache[type] = data;
+                    $.each(data, function (_, user) {
+                        $select.append(`<option value="${user.id}">${user.name}</option>`);
+                    });
+                    initSelect2WithCreate($select, type);
+                });
+            }
         } else {
-            // Jika person_type tidak cocok, tetap aktifkan fitur input manual
             initSelect2WithCreate($select, type);
         }
     }

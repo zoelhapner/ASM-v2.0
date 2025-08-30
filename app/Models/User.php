@@ -56,17 +56,6 @@ public function getNameAttribute()
     return $this->attributes['name'] ?? 'User';
 }
 
-
-
-
-
-
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',

@@ -48,7 +48,7 @@ return [
         ['category' => 'KEWAJIBAN', 'account_code' => '202', 'account_name' => 'Hutang Gaji', 'sub_category' => 'Hutang'],
         ['category' => 'KEWAJIBAN', 'account_code' => '203', 'account_name' => 'Hutang Deviden', 'sub_category' => 'Hutang'],
         ['category' => 'KEWAJIBAN', 'account_code' => '204', 'account_name' => 'Hutang Pemegang Saham', 'sub_category' => 'Hutang'],
-        ['category' => 'KEWAJIBAN', 'account_code' => '205', 'account_name' => 'Hutang Lain-Lain', 'sub_category' => 'Hutang'],
+        ['category' => 'KEWAJIBAN', 'account_code' => '205', 'account_name' => 'Hutang Lain-Lain', 'sub_category' => 'Hutang', 'person_type' => 'employee', 'licenseholder', 'student', 'license'],
 
         ['category' => 'KEWAJIBAN', 'account_code' => '210', 'account_name' => 'Uang Muka Penjualan', 'sub_category' => 'Uang Muka Penjualan', 'is_parent' => true],
         ['category' => 'KEWAJIBAN', 'account_code' => '211', 'account_name' => 'Uang Muka Penjualan', 'sub_category' => 'Uang Muka Penjualan'],
@@ -99,7 +99,7 @@ return [
 
         ['category' => 'Pendapatan', 'account_code' => '450', 'account_name' => 'Pendapatan Lainnya', 'sub_category' => 'Pendapatan Lainnya', 'is_parent' => true],
         ['category' => 'Pendapatan', 'account_code' => '451', 'account_name' => 'Training Instruktur', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
-        ['category' => 'Pendapatan', 'account_code' => '452', 'account_name' => 'Pendapatan Lain-Lain', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
+        ['category' => 'Pendapatan', 'account_code' => '452', 'account_name' => 'Pendapatan Lain-Lain', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license', 'employee', 'licenseholder', 'student'],
         ['category' => 'Pendapatan', 'account_code' => '453', 'account_name' => 'Diskon Penjualan', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
         ['category' => 'Pendapatan', 'account_code' => '454', 'account_name' => 'Retur Penjualan', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
 
@@ -172,7 +172,7 @@ return [
         ['category' => 'Beban', 'account_code' => '624', 'account_name' => 'Biaya Perbaikan', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '625', 'account_name' => 'Biaya Parkir', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '626', 'account_name' => 'Biaya Donasi', 'sub_category' => 'Beban Administrasi & Umum'],
-        ['category' => 'Beban', 'account_code' => '627', 'account_name' => 'Biaya Lain-Lain', 'sub_category' => 'Beban Administrasi & Umum'],
+        ['category' => 'Beban', 'account_code' => '627', 'account_name' => 'Biaya Lain-Lain', 'sub_category' => 'Beban Administrasi & Umum', 'person_type' => 'employee', 'licenseholder', 'student', 'license'],
         ['category' => 'Beban', 'account_code' => '628', 'account_name' => 'Beban Penyusutan Bangunan', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '629', 'account_name' => 'Beban Penyusutan kendaraan', 'sub_category' => 'Beban Administrasi & Umum'],
         ['category' => 'Beban', 'account_code' => '630', 'account_name' => 'Beban Penyusutan Perlengkapan Kantor', 'sub_category' => 'Beban Administrasi & Umum'],
