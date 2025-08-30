@@ -239,6 +239,7 @@ $(document).ready(function () {
         let urlMap = {
             student: '/get-students',
             employee: '/get-employees',
+            licenseholder: 'get-licenseholders'
             license: '/get-licenses'
         };
 

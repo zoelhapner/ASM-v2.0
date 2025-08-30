@@ -1,5 +1,6 @@
 @extends('tablar::page')
 
+@section('title', 'Informasi Profil')
 @section('content')
 <div class="container-fluid mt-3">
     <div class="row">
@@ -193,7 +194,7 @@
 
 
                         <!-- Tombol Simpan -->
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary text-white">Simpan</button>
 
                         @if (session('status') === 'profile-updated')
                             <div class="alert alert-success mt-3">

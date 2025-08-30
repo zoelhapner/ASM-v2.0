@@ -262,20 +262,20 @@ public function store(StoreAccountingJournalRequest $request)
         ->orderBy('account_code')
         ->get();
 
-    $students = Student::whereIn('license_id', $licenseIds)
+    $students = Student::whereIn('license_id', array_merge($licenseIds, [$journal->license_id]))
         ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
     
-    $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('employee_license.license_id', $licenseIds);
+    $employees = Employee::whereHas('licenses', function ($q) use ($licenseIds, $journal) {
+            $q->whereIn('employee_license.license_id', array_merge($licenseIds, [$journal->license_id]));
         })
         ->select('id', 'fullname as name')
         ->orderBy('fullname')
         ->get();
         
-    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds) {
-            $q->whereIn('license_user.license_id', $licenseIds);
+    $licenseholders = User::whereHas('licenses', function ($q) use ($licenseIds, $journal) {
+            $q->whereIn('license_user.license_id', array_merge($licenseIds, [$journal->license_id]));
         })
         ->select('id', 'name')
         ->orderBy('name')
@@ -287,6 +287,8 @@ public function store(StoreAccountingJournalRequest $request)
         })
         ->select('id', 'name')
         ->get();
+
+    $journal->load('details');
 
     return view('journals.edit', compact('journal', 'activeLicenseId', 'licenses', 'accounts', 'students', 'employees', 'licenseholders', 'licenseList'));
 }
@@ -436,19 +438,40 @@ public function store(StoreAccountingJournalRequest $request)
     ));
 }
 
-public function generalJournal(Request $request)
-    {
-        // ambil input filter (default bulan berjalan)
-        $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
-        $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+   public function generalJournal(Request $request)
+{
+    $user = Auth::user();
 
-        // query jurnal sesuai periode
-        $journals = AccountingJournal::with(['details.account'])
-            ->whereBetween('transaction_date', [$startDate, $endDate])
-            ->orderBy('transaction_date')
-            ->get();
+    // 🔹 Default filter tanggal: bulan berjalan
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
-        $totalDebit = 0;
+    // 🔹 Base query
+    $journals = AccountingJournal::with(['details.account']);
+
+    // 🔹 Filter role user
+    if (!$user->hasRole('Super-Admin')) {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
+
+        abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
+
+        $journals->whereIn('license_id', $licenses->pluck('id'));
+    }
+
+    // 🔹 Filter lisensi aktif (dari navbar/session)
+    if (session()->has('active_license_id')) {
+        $journals->where('license_id', session('active_license_id'));
+    }
+
+    // 🔹 Filter tanggal
+    $journals = $journals->whereBetween('transaction_date', [$startDate, $endDate])
+        ->orderBy('transaction_date')
+        ->get();
+
+    // 🔹 Hitung total debit & kredit
+    $totalDebit = 0;
     $totalCredit = 0;
 
     foreach ($journals as $journal) {
@@ -458,8 +481,41 @@ public function generalJournal(Request $request)
         }
     }
 
-        return view('journals.general', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
-    }
+    return view('journals.general', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
+}
+
+
+    public function ledger(Request $request)
+{
+    $user = Auth::user();
+
+    // Ambil periode dari request (default bulan ini)
+    $start = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $end   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+    // Ambil semua akun yg punya transaksi
+    $accounts = \App\Models\AccountingAccount::with(['journalDetails' => function($q) use ($start, $end, $user) {
+        $q->whereHas('journal', function($query) use ($start, $end, $user) {
+            $query->whereBetween('transaction_date', [$start, $end]);
+
+            // Filter role / lisensi
+            if (!$user->hasRole('Super-Admin')) {
+                $licenses = $user->hasRole('Pemilik Lisensi')
+                    ? $user->licenses
+                    : $user->employee?->licenses;
+
+                $query->whereIn('license_id', $licenses->pluck('id'));
+            }
+
+            if (session()->has('active_license_id')) {
+                $query->where('license_id', session('active_license_id'));
+            }
+        });
+    }])->get();
+
+    return view('journals.ledger', compact('accounts', 'start', 'end'));
+}
+
 }
 
 

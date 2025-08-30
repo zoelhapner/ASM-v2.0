@@ -29,9 +29,6 @@ public function store(LoginRequest $request): RedirectResponse
     $request->session()->regenerate();
 
     $user = auth()->user();
-    $user->update([
-        'last_login_at' => now('Asia/Jakarta'),
-    ]);
     
     $user->load(['licenses', 'employee.licenses']);
 
