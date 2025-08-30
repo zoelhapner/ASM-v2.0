@@ -135,11 +135,16 @@ Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
         ->resource('accounting', AccountingAccountController::class)
          ->parameters(['accounting' => 'account']);
 
-Route::prefix('/journals')->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
-    Route::get('/report', [AccountingJournalController::class, 'report'])->name('journals.report');
-    Route::get('/general', [AccountingJournalController::class, 'generalJournal'])->name('journals.general');
-    
-    Route::resource('/journals', AccountingJournalController::class);
+Route::get('/journals/report', [AccountingJournalController::class, 'report'])
+    ->name('journals.report')
+    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+
+Route::get('/general', [AccountingJournalController::class, 'generalJournal'])
+    ->name('journals.general')
+    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+
+Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
+    Route::resource('journals', AccountingJournalController::class);
 });
 
 
