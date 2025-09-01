@@ -450,7 +450,7 @@ public function store(StoreAccountingJournalRequest $request)
     $journals = AccountingJournal::with(['details.account']);
 
     // 🔹 Filter role user
-    if (!$user->hasRole('Super-Admin')) {
+    if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
     } else {     
         $licenses = $user->hasRole('Pemilik Lisensi')
@@ -458,17 +458,15 @@ public function store(StoreAccountingJournalRequest $request)
             : $user->employee?->licenses;
 
         abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
-
-        $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-
-    // 🔹 Filter lisensi aktif (dari navbar/session)
-    // if (session()->has('active_license_id')) {
-    //     $journals->where('license_id', session('active_license_id'));
-    // }
+    if ($activeLicenseId) {
+        $journals->where('license_id', $activeLicenseId);
+    } else {
+        $journals->whereIn('license_id', $licenses->pluck('id'));
+    }
 
     // 🔹 Filter tanggal
     $journals = $journals->whereBetween('transaction_date', [$startDate, $endDate])
@@ -502,7 +500,7 @@ public function ledger(Request $request)
     $query = AccountingJournalDetail::with(['journal', 'account']);
 
     // 🔹 Filter role user
-    if (!$user->hasRole('Super-Admin')) {
+    if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
     } else {
         $licenses = $user->hasRole('Pemilik Lisensi')
@@ -518,12 +516,11 @@ public function ledger(Request $request)
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    // 🔹 Filter lisensi aktif
-    // if (session()->has('active_license_id')) {
-    //     $query->whereHas('journal', function ($q) {
-    //         $q->where('license_id', session('active_license_id'));
-    //     });
-    // }
+    if ($activeLicenseId) {
+    $query->whereHas('journal', function ($q) use ($activeLicenseId) {
+        $q->where('license_id', $activeLicenseId);
+    });
+}
 
     // 🔹 Filter periode
     $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
@@ -609,7 +606,7 @@ public function trialBalance(Request $request)
     $totalDebit  = $accounts->sum('debit');
     $totalCredit = $accounts->sum('credit');
 
-    return view('accounting.trial-balance', compact(
+    return view('journals.trialbalance', compact(
         'accounts',
         'totalDebit',
         'totalCredit',
@@ -619,8 +616,6 @@ public function trialBalance(Request $request)
         'activeLicenseId'
     ));
 }
-
-
 
 }
 

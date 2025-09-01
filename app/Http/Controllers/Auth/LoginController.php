@@ -32,7 +32,7 @@ class LoginController extends Controller
 {
     $user = auth()->user();
 
-    if ($user->hasRole('Super-Admin') || $user->hasRole('Pemilik Lisensi') || $user->hasRole('Karyawan')) {
+    if ($user->hasRole('Super-Admin') || $user->hasRole('Pemilik Lisensi') || $user->hasRole('Akuntan')) {
         return '/dashboard';
     }
 
