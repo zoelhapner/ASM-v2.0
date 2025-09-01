@@ -91,7 +91,7 @@
 
             <tfoot class="fw-bold">
                 <tr>
-                    <td colspan="4">Total</td>
+                    <td colspan="5">Total</td>
                     <td class="text-end">Rp. {{ number_format($totalDebit, 2, ',', '.') }}</td>
                     <td class="text-end">Rp. {{ number_format($totalCredit, 2, ',', '.') }}</td>
                 </tr>

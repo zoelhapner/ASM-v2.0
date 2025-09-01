@@ -30,7 +30,7 @@
                 <div class="col-md-3">
                     <label class="form-label">Periode Akhir</label>
                     <input type="date" name="end_date" 
-                        value="{{ $endtDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : '' }}">
+                        value="{{ $endDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">

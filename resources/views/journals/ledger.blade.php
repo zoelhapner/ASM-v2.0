@@ -46,23 +46,38 @@
 @section('content')
 <div class="container">
     <h4>Buku Besar ({{ $startDate }} s/d {{ $endDate }})</h4>
-    @if(auth()->user()->hasRole('Super-Admin'))
-        <div class="col-md-4 mb-3">
-            <label for="license_id" class="form-label required">Filter Lisensi</label>
-            <select name="license_id" id="license_id" class="form-select select2" required>
-                <option value="">-- Pilih Lisensi --</option>
-                @foreach ($licenses as $license)
-                    <option value="{{ $license->id }}" 
-                        {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
-                        {{ $license->name }}
-                    </option>
-                @endforeach
-            </select>
+    <form method="GET" action="{{ route('journals.ledger') }}" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="start_date" class="form-label">Dari Tanggal</label>
+            <input type="date" name="start_date" id="start_date" 
+                class="form-control" value="{{ $startDate }}">
         </div>
-    @else
-        {{-- Kalau bukan Super Admin, tetap pakai hidden --}}
-        <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
-    @endif
+        <div class="col-md-3">
+            <label for="end_date" class="form-label">Sampai Tanggal</label>
+            <input type="date" name="end_date" id="end_date" 
+                class="form-control" value="{{ $endDate }}">
+        </div>
+        @if(auth()->user()->hasRole('Super-Admin'))
+            <div class="col-md-3">
+                <label for="license_id" class="form-label">Lisensi</label>
+                <select name="license_id" id="license_id" class="form-select select2">
+                    @foreach ($licenses as $license)
+                        <option value="{{ $license->id }}" 
+                            {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                            {{ $license->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+        @endif
+
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary w-100">Filter</button>
+        </div>
+    </form>
+
 
     @foreach($ledger as $accountId => $data)
         <div class="card mt-4">
