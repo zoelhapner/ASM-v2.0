@@ -527,11 +527,14 @@ public function ledger(Request $request)
         $q->whereBetween('transaction_date', [$startDate, $endDate]);
     });
 
-    $details = $query->orderBy('account_id')
+    $details = $query
+        ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
+        ->orderByRaw('CAST(accounting_accounts.account_code AS UNSIGNED) ASC')
         ->orderBy(
             AccountingJournal::select('transaction_date')
-            ->whereColumn('id', 'accounting_journal_details.journal_id')
+                ->whereColumn('id', 'accounting_journal_details.journal_id')
         )
+        ->select('accounting_journal_details.*') // supaya tetap dapat detail utuh
         ->get();
 
     // 🔹 Kelompokkan per akun
@@ -546,6 +549,7 @@ public function ledger(Request $request)
 
             $rows[] = [
                 'transaction_date'  => $detail->journal->transaction_date,
+                'journal_code' => $detail->journal->journal_code,
                 'description' => $detail->journal->description,
                 'debit'       => $detail->debit,
                 'credit'      => $detail->credit,

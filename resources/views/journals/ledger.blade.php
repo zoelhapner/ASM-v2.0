@@ -45,7 +45,7 @@
 
 @section('content')
 <div class="container">
-    <h4>Buku Besar ({{ $startDate }} s/d {{ $endDate }})</h4>
+    <h4>Buku Besar</h4>
     <form method="GET" action="{{ route('journals.ledger') }}" class="row g-3 mb-4">
         <div class="col-md-3">
             <label for="start_date" class="form-label">Dari Tanggal</label>
@@ -89,7 +89,8 @@
                     <thead>
                         <tr>
                             <th>Tanggal</th>
-                            <th>Keterangan</th>
+                            <th>Deskripsi</th>
+                            <th>Transaksi</th>
                             <th class="text-end">Debit</th>
                             <th class="text-end">Kredit</th>
                             <th class="text-end">Saldo</th>
@@ -100,9 +101,15 @@
                         <tr>
                             <td>{{ $row['transaction_date'] }}</td>
                             <td>{{ $row['description'] }}</td>
-                            <td class="text-end">{{ number_format($row['debit'], 0, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($row['credit'], 0, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($row['balance'], 0, ',', '.') }}</td>
+                            <td>{{ $row['journal_code'] }}
+                                <a href="{{ route('journals.show', $row->id) }}" 
+                                    class="text-decoration-none fw-bold text-primary">
+                                    {{ $row->journal_code }}
+                                </a>
+                            </td>
+                            <td class="text-end">{{ number_format($row['debit'], 2, ',', '.') }}</td>
+                            <td class="text-end">{{ number_format($row['credit'], 2, ',', '.') }}</td>
+                            <td class="text-end">{{ number_format($row['balance'], 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>
