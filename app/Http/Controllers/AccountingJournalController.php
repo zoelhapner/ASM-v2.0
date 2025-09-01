@@ -545,7 +545,7 @@ public function ledger(Request $request)
             $balance += ($detail->debit - $detail->credit);
 
             $rows[] = [
-                'transaction_date'        => $detail->journal->transaction_date,
+                'transaction_date'  => $detail->journal->transaction_date,
                 'description' => $detail->journal->description,
                 'debit'       => $detail->debit,
                 'credit'      => $detail->credit,
@@ -596,8 +596,8 @@ public function trialBalance(Request $request)
         $balance = $debit - $credit;
 
         return [
-            'code'   => $account->account_code,
-            'name'   => $account->account_name,
+            'account_code'   => $account->account_code,
+            'account_name'   => $account->account_name,
             'debit'  => $balance > 0 ? $balance : 0,
             'credit' => $balance < 0 ? abs($balance) : 0,
         ];

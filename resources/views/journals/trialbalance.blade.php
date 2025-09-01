@@ -76,12 +76,12 @@
             {{-- 🔹 Status keseimbangan --}}
             @if($totalDebit === $totalCredit)
                 <div class="alert alert-success mt-3">
-                    ✅ Neraca Saldo seimbang (Debit: {{ number_format($totalDebit, 0, ',', '.') }} | 
+                    ✅ Neraca Saldo seimbang (Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
                     Kredit: {{ number_format($totalCredit, 0, ',', '.') }})
                 </div>
             @else
                 <div class="alert alert-warning mt-3">
-                    ⚠️ Neraca Saldo tidak seimbang! Debit: {{ number_format($totalDebit, 0, ',', '.') }} | 
+                    ⚠️ Neraca Saldo tidak seimbang! Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
                     Kredit: {{ number_format($totalCredit, 0, ',', '.') }}
                 </div>
             @endif

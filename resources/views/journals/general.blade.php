@@ -11,11 +11,11 @@
 
     {{-- Filter --}}
     <form method="GET" action="{{ route('journals.general') }}" class="row g-2 mb-3">
-        <div class="col-auto">
+        <div class="col-md-3">
             <label class="form-label">Dari</label>
             <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">
         </div>
-        <div class="col-auto">
+        <div class="col-md-3">
             <label class="form-label">Sampai</label>
             <input type="date" name="end_date" value="{{ $endDate }}" class="form-control">
         </div>
@@ -39,7 +39,7 @@
             <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
         @endif
 
-        <div class="col-auto">
+        <div class="col-md-3 align-self-end">
             <button type="submit" class="btn btn-primary text-white">Filter</button>
         </div>
     </form>

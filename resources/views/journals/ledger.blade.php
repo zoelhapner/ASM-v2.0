@@ -74,7 +74,7 @@
         @endif
 
         <div class="col-md-3 align-self-end">
-            <button type="submit" class="btn btn-primary w-100">Filter</button>
+            <button type="submit" class="btn btn-primary text-white">Filter</button>
         </div>
     </form>
 
@@ -98,7 +98,7 @@
                     <tbody>
                         @foreach($data['rows'] as $row)
                         <tr>
-                            <td>{{ $row['date'] }}</td>
+                            <td>{{ $row['transaction_date'] }}</td>
                             <td>{{ $row['description'] }}</td>
                             <td class="text-end">{{ number_format($row['debit'], 0, ',', '.') }}</td>
                             <td class="text-end">{{ number_format($row['credit'], 0, ',', '.') }}</td>
