@@ -102,9 +102,9 @@
                             <td>{{ $row['transaction_date'] }}</td>
                             <td>{{ $row['description'] }}</td>
                             <td>{{ $row['journal_code'] }}
-                                <a href="{{ route('journals.show', $row->id) }}" 
+                                <a href="{{ route('journals.show', $journal->id) }}" 
                                     class="text-decoration-none fw-bold text-primary">
-                                    {{ $row->journal_code }}
+                                    {{ $journal->journal_code }}
                                 </a>
                             </td>
                             <td class="text-end">{{ number_format($row['debit'], 2, ',', '.') }}</td>

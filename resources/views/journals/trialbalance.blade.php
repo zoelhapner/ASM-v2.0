@@ -55,9 +55,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($groupedAccounts as $category => $data)
+                    @foreach($groupedAccounts as $sub_category => $data)
                         <tr class="bg-light">
-                            <td colspan="4"><strong>{{ $category }}</strong></td>
+                            <td colspan="4"><strong>{{ $sub_category }}</strong></td>
                         </tr>
                         @foreach($data['accounts'] as $acc)
                             <tr>
@@ -69,7 +69,7 @@
                         @endforeach
 
                         <tr class="table-secondary fw-bold">
-                            <td colspan="2" class="text-end">Subtotal {{ $category }}</td>
+                            <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
                             <td class="text-end">{{ number_format($data['subtotalDebit']) }}</td>
                             <td class="text-end">{{ number_format($data['subtotalCredit']) }}</td>
                         </tr>

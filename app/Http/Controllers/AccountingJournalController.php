@@ -603,14 +603,14 @@ public function trialBalance(Request $request)
         return [
             'account_code'   => $account->account_code,
             'account_name'   => $account->account_name,
-            'category'     => $account->category,
+            'sub_category'     => $account->sub_category,
             'debit'  => $balance > 0 ? $balance : 0,
             'credit' => $balance < 0 ? abs($balance) : 0,
         ];
     });
 
     // 🔹 Grouping berdasarkan kategori
-    $groupedAccounts = $accounts->groupBy('category')->map(function ($group) {
+    $groupedAccounts = $accounts->groupBy('sub_category')->map(function ($group) {
         return [
             'accounts' => $group,
             'subtotalDebit' => $group->sum('debit'),
