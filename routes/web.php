@@ -147,6 +147,10 @@ Route::get('/journals/ledger', [AccountingJournalController::class, 'ledger'])
     ->name('journals.ledger')
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
 
+Route::get('/journals/trialbalance', [AccountingJournalController::class, 'trialBalance'])
+    ->name('journals.trialbalance')
+    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+
 Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
     Route::resource('journals', AccountingJournalController::class);
 });

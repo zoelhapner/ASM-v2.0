@@ -35,9 +35,6 @@
         <a href="{{ route('licenses.index') }}" class="text-decoration-none">
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <div class="mb-2">
-                        <i class="ti ti-building" style="font-size: 1.5rem;"></i>
-                    </div>
                     <h6 class="card-title">Total Lisensi</h6>
                     <h3 class="card-text">{{ is_numeric($licensesCount) ? number_format($licensesCount) : '-' }}</h3>
                 </div>
@@ -50,9 +47,6 @@
         <a href="{{ route('students.index') }}" class="text-decoration-none">
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <div class="mb-2">
-                        <i class="ti ti-people-fill" style="font-size: 1.5rem;"></i>
-                    </div>
                     <h6 class="card-title">Total Siswa</h6>
                     <h3 class="card-text">{{ is_numeric($studentsCount) ? number_format($studentsCount) : '-' }}</h3>
                 </div>
@@ -65,9 +59,6 @@
         <a href="{{ route('employees.index') }}" class="text-decoration-none">
             <div class="card text-center shadow-sm h-100">
                 <div class="card-body">
-                    <div class="mb-2">
-                        <i class="ti ti-person-badge" style="font-size: 1.5rem;"></i>
-                    </div>
                     <h6 class="card-title">Total Karyawan</h6>
                     <h3 class="card-text">{{ is_numeric($employeesCount) ? number_format($employeesCount) : '-' }}</h3>
                 </div>
@@ -79,9 +70,6 @@
     <div class="col-md-3 mb-3">
         <div class="card text-center shadow-sm h-100">
             <div class="card-body">
-                <div class="mb-2">
-                    <i class="ti ti-currency-dollar" style="font-size: 1.5rem; font-family: 'Poppins', sans-serif;"></i>
-                </div>
                 <h6 class="card-title">Pendapatan Bulan Ini</h6>
                 <h3 class="card-text">Rp {{ number_format($monthlyRevenue, 2, ',', '.') }}</h3>
             </div>

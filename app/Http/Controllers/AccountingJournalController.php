@@ -530,31 +530,27 @@ public function ledger(Request $request)
 
     // 🔹 Kelompokkan per akun
     $ledger = [];
-    foreach ($details as $detail) {
-        $accountId = $detail->account_id;
+    foreach ($details->groupBy('account_id') as $accountId => $items) {
+        $balance = 0;
+        $rows = [];
 
-        if (!isset($ledger[$accountId])) {
-            $ledger[$accountId] = [
-                'account' => $detail->account,
-                'transactions' => [],
-                'total_debit' => 0,
-                'total_credit' => 0,
-                'balance' => 0,
+        foreach ($items as $detail) {
+            // saldo berjalan = saldo + (debit - kredit)
+            $balance += ($detail->debit - $detail->credit);
+
+            $rows[] = [
+                'transaction_date'        => $detail->journal->transaction_date,
+                'description' => $detail->journal->description,
+                'debit'       => $detail->debit,
+                'credit'      => $detail->credit,
+                'balance'     => $balance,
             ];
         }
 
-        // update saldo berjalan (balance)
-        $ledger[$accountId]['transactions'][] = [
-            'transaction_date' => $detail->journal->transaction_date,
-            'description' => $detail->journal->description,
-            'debit' => $detail->debit,
-            'credit' => $detail->credit,
-            'balance' => ($ledger[$accountId]['balance'] + $detail->debit - $detail->credit),
+        $ledger[$accountId] = [
+            'account' => $items->first()->account,
+            'rows'    => $rows,
         ];
-
-        $ledger[$accountId]['balance'] += $detail->debit - $detail->credit;
-        $ledger[$accountId]['total_debit'] += $detail->debit;
-        $ledger[$accountId]['total_credit'] += $detail->credit;
     }
 
     return view('journals.ledger', compact('ledger', 'startDate', 'endDate'));

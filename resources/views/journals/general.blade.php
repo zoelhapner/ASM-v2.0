@@ -30,21 +30,37 @@
             <thead class="table-light">
                 <tr>
             <th>Tanggal</th>
-            <th>No Bukti</th>
-            <th>Keterangan</th>
-            <th>Akun</th>
-            <th>Debit</th>
-            <th>Kredit</th>
+            <th>No Jurnal</th>
+            <th>Deskripsi</th>
+            <th>No. Akun</th>
+            <th>Nama Akun</th>
+            <th class="text-end">Debit</th>
+            <th clas="text-end">Kredit</th>
         </tr>
             </thead>
                 <tbody>
                     @foreach ($journals as $journal)
-                        @foreach ($journal->details as $detail)
+                        @php
+                            $rowCount = $journal->details->count();
+                        @endphp
+                        @foreach ($journal->details as $i=>$detail)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</td>
-                                <td>{{ $journal->journal_code ?? '-' }}</td>
+                                @if($i == 0)
+                                    {{-- Merge kolom tanggal --}}
+                                    <td rowspan="{{ $rowCount }}">
+                                        {{ $journal->transaction_date->format('d-m-Y') }}
+                                    </td>
+                                    {{-- Merge kolom kode jurnal --}}
+                                    <td rowspan="{{ $rowCount }}">
+                                        <a href="{{ route('journals.show', $journal->id) }}" 
+                                            class="text-decoration-none fw-bold text-primary">
+                                            {{ $journal->journal_code }}
+                                        </a>
+                                    </td>
+                                @endif
                                 <td>{{ $detail->description }}</td>
-                                <td>{{ $detail->account->account_code }} - {{ $detail->account->account_name }}</td>
+                                <td>{{ $detail->account->account_code }}</td>
+                                <td>{{ $detail->account->account_name }}</td>
                                 <td class="text-end">{{ number_format($detail->debit, 0, ',', '.') }}</td>
                                 <td class="text-end">{{ number_format($detail->credit, 0, ',', '.') }}</td>
                             </tr>
@@ -63,7 +79,11 @@
         </table>
     </div>
 
-    {{-- Tombol --}}
+    
+</div>
+@endsection
+
+{{-- Tombol --}}
     {{-- <div class="d-flex justify-content-start gap-2 mt-3">
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
             <i class="bi bi-pencil"></i> Ubah
@@ -78,5 +98,3 @@
         Terakhir diubah oleh <strong>{{ $journal->creator->name ?? 'Sistem' }}</strong> 
         pada {{ \Carbon\Carbon::parse($journal->updated_at)->translatedFormat('d F Y H:i') }} GMT+7
     </div> --}}
-</div>
-@endsection

@@ -1,4 +1,4 @@
-@extends('tablar::page')
+{{-- @extends('tablar::page')
 
 @section('content')
 <div class="container">
@@ -37,5 +37,46 @@
     </table>
     <br>
 @endforeach
+</div>
+@endsection --}}
+
+
+@extends('tablar::page')
+
+@section('content')
+<div class="container">
+    <h4>Buku Besar ({{ $startDate }} s/d {{ $endDate }})</h4>
+
+    @foreach($ledger as $accountId => $data)
+        <div class="card mt-4">
+            <div class="card-header">
+                <strong>{{ $data['account']->account_code }} - {{ $data['account']->account_name }}</strong>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-sm mb-0">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th class="text-end">Debit</th>
+                            <th class="text-end">Kredit</th>
+                            <th class="text-end">Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($data['rows'] as $row)
+                        <tr>
+                            <td>{{ $row['date'] }}</td>
+                            <td>{{ $row['description'] }}</td>
+                            <td class="text-end">{{ number_format($row['debit'], 0, ',', '.') }}</td>
+                            <td class="text-end">{{ number_format($row['credit'], 0, ',', '.') }}</td>
+                            <td class="text-end">{{ number_format($row['balance'], 0, ',', '.') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endforeach
 </div>
 @endsection

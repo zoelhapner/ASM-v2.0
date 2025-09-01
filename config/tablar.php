@@ -165,6 +165,11 @@ return [
                     'icon' => 'ti ti-users',
                 ],
                 [
+                    'text' => 'Lokasi',
+                    'url' => '/office',
+                    'icon' => 'ti ti-building',
+                ],
+                [
                     'text' => 'Starter Pack',
                     'url' => '/starters',
                     'icon' => 'ti ti-users',
@@ -219,8 +224,8 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
-                    'text' => 'Neraca',
-                    'url' => '/neraca',
+                    'text' => 'Neraca Saldo',
+                    'url' => '/journals/trialbalance',
                     'icon' => 'ti ti-report-analytics',
                 ],
             ],

@@ -33,7 +33,7 @@
                         {{ $journal->journal_code }}
                     </a>
                 </td>
-                <td>{{ $journal->transaction_date }}</td>
+                <td>{{ $journal->transaction_date->format('d-m-Y')}}</td>
                 {{-- <td>
                     
                     $journal->details->first()?->description ?? '-'
