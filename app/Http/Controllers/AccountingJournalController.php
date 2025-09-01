@@ -596,8 +596,8 @@ public function trialBalance(Request $request)
         $balance = $debit - $credit;
 
         return [
-            'code'   => $account->code,
-            'name'   => $account->name,
+            'code'   => $account->account_code,
+            'name'   => $account->account_name,
             'debit'  => $balance > 0 ? $balance : 0,
             'credit' => $balance < 0 ? abs($balance) : 0,
         ];

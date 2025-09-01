@@ -39,7 +39,7 @@
             <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
         @endif
 
-        <div class="col-auto align-self-end">
+        <div class="col-auto">
             <button type="submit" class="btn btn-primary text-white">Filter</button>
         </div>
     </form>
