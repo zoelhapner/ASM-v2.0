@@ -85,6 +85,18 @@ label.required::after {
     white-space: nowrap;
 }
 
+.table th.tanggal-column,
+.table td.tanggal-column {
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+.table th.kode-column,
+.table td.kode-column {
+    min-width: 200px;
+    white-space: nowrap;
+}
+
 
 /* Hilangkan bayangan untuk kolom yang di-fixed di kiri */
 table.dataTable th.dtfc-fixed-left,

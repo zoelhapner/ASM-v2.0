@@ -11,7 +11,7 @@
                 @if(auth()->user()->hasRole('Super-Admin'))
                     <div class="col-md-4">
                         <label class="form-label">Lisensi</label>
-                        <select name="license_id" class="form-select">
+                        <select name="license_id" class="form-select select2">
                             <option value="">-- Semua Lisensi --</option>
                             @foreach($licenses as $license)
                                 <option value="{{ $license->id }}" 
@@ -23,18 +23,18 @@
                     </div>
                 @endif
                 <div class="col-md-3">
-                    <label class="form-label">Periode Awal</label>
+                    <label for="start_date" class="form-label">Periode Awal</label>
                     <input type="date" name="start_date" 
                         value="{{ $startDate ? \Carbon\Carbon::parse($startDate)->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Periode Akhir</label>
+                    <label for="end_date" class="form-label">Periode Akhir</label>
                     <input type="date" name="end_date" 
                         value="{{ $endDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : '' }}">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-funnel"></i> Filter
+                    <button type="submit" class="btn btn-primary text-white w-100">
+                        <i class="ti ti-funnel"></i> Filter
                     </button>
                 </div>
 
@@ -70,8 +70,8 @@
 
                         <tr class="table-secondary fw-bold">
                             <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
-                            <td class="text-end">{{ number_format($data['subtotalDebit']) }}</td>
-                            <td class="text-end">{{ number_format($data['subtotalCredit']) }}</td>
+                            <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
+                            <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
                         </tr>
                     @endforeach
                 </tbody>

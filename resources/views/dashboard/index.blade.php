@@ -81,12 +81,12 @@
         <div class="row g-3">
             <div class="col-md-3">
                 <a href="{{ route('licenses.create') }}" class="btn btn-primary text-white w-100">
-                    <i class="ti ti-plus-circle"></i> Tambah Lisensi
+                    <i class="ti ti-building-plus"></i> Tambah Lisensi
                 </a>
             </div>
             <div class="col-md-3">
                 <a href="{{ route('students.create') }}" class="btn btn-success text-white w-100">
-                    <i class="ti ti-person-plus-fill"></i> Daftarkan Siswa
+                    <i class="ti ti-person-plus"></i> Daftarkan Siswa
                 </a>
             </div>
             <div class="col-md-3">
@@ -97,7 +97,7 @@
             @can('akun-akuntansi.lihat')
                 <div class="col-md-3">
                     <a href="{{ route('accounting.index') }}" class="btn btn-danger text-white w-100">
-                        <i class="ti ti-people-fill"></i> Akuntasi
+                        <i class="ti ti-people-"></i> Akuntasi
                     </a>
                 </div>
             @endcan

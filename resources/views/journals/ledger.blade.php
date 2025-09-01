@@ -44,7 +44,7 @@
 @extends('tablar::page')
 
 @section('content')
-<div class="container">
+<div class="container-fluid-mt-3">
     <h4>Buku Besar</h4>
     <form method="GET" action="{{ route('journals.ledger') }}" class="row g-3 mb-4">
         <div class="col-md-3">
@@ -102,9 +102,9 @@
                             <td>{{ $row['transaction_date'] }}</td>
                             <td>{{ $row['description'] }}</td>
                             <td>{{ $row['journal_code'] }}
-                                <a href="{{ route('journals.show', $journal->id) }}" 
+                                <a href="{{ route('journals.show', $row['journal_id']) }}" 
                                     class="text-decoration-none fw-bold text-primary">
-                                    {{ $journal->journal_code }}
+                                    {{ $row['journal_code'] }}
                                 </a>
                             </td>
                             <td class="text-end">{{ number_format($row['debit'], 2, ',', '.') }}</td>

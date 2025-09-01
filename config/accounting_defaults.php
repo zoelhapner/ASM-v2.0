@@ -61,12 +61,12 @@ return [
         ['category' => 'KEWAJIBAN', 'account_code' => '224', 'account_name' => 'Hutang Pajak Lainnya', 'sub_category' => 'Pajak'],
 
         ['category' => 'EKUITAS', 'account_code' => '3', 'account_name' => 'EKUITAS', 'sub_category' => '-', 'is_parent' => true],
-        ['category' => 'Ekuitas', 'account_code' => '300', 'account_name' => 'Modal', 'sub_category' => 'Modal', 'is_parent' => true],
-        ['category' => 'Ekuitas', 'account_code' => '301', 'account_name' => 'Modal Saham', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
-        ['category' => 'Ekuitas', 'account_code' => '302', 'account_name' => 'Tambahan Modal Disetor', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
-        ['category' => 'Ekuitas', 'account_code' => '303', 'account_name' => 'Laba Ditahan', 'sub_category' => 'Modal'],
-        ['category' => 'Ekuitas', 'account_code' => '304', 'account_name' => 'Deviden', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
-        ['category' => 'Ekuitas', 'account_code' => '305', 'account_name' => 'Prive', 'sub_category' => 'Modal', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '300', 'account_name' => 'Modal', 'sub_category' => 'Ekuitas', 'is_parent' => true],
+        ['category' => 'Ekuitas', 'account_code' => '301', 'account_name' => 'Modal Saham', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '302', 'account_name' => 'Tambahan Modal Disetor', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '303', 'account_name' => 'Laba Ditahan', 'sub_category' => 'Ekuitas'],
+        ['category' => 'Ekuitas', 'account_code' => '304', 'account_name' => 'Deviden', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
+        ['category' => 'Ekuitas', 'account_code' => '305', 'account_name' => 'Prive', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
 
         ['category' => 'PENDAPATAN', 'account_code' => '4', 'account_name' => 'PENDAPATAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'Pendapatan', 'account_code' => '400', 'account_name' => 'Pendapatan Lisensi', 'sub_category' => 'Pendapatan Lisensi', 'is_parent' => true],

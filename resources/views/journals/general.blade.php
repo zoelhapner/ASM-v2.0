@@ -48,9 +48,9 @@
     <div class="table-responsive">
         <table class="table table-bordered align-middle">
             <thead class="table-light">
-                <tr>
-            <th>Tanggal</th>
-            <th>No Jurnal</th>
+        <tr>
+            <th class="tanggal-column">Tanggal</th>
+            <th class="kode-column">No Jurnal</th>
             <th>Deskripsi</th>
             <th>No. Akun</th>
             <th>Nama Akun</th>
@@ -68,7 +68,7 @@
                                 @if($i == 0)
                                     {{-- Merge kolom tanggal --}}
                                     <td rowspan="{{ $rowCount }}">
-                                        {{ \Carbon\Carbon::parse($journal->transaction_date)->format('d-m-Y') }}
+                                        {{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}
                                     </td>
                                     {{-- Merge kolom kode jurnal --}}
                                     <td rowspan="{{ $rowCount }}">
