@@ -451,6 +451,8 @@ public function store(StoreAccountingJournalRequest $request)
 
     // 🔹 Filter role user
     if (!$user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } else {     
         $licenses = $user->hasRole('Pemilik Lisensi')
             ? $user->licenses
             : $user->employee?->licenses;
@@ -460,10 +462,13 @@ public function store(StoreAccountingJournalRequest $request)
         $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+
+
     // 🔹 Filter lisensi aktif (dari navbar/session)
-    if (session()->has('active_license_id')) {
-        $journals->where('license_id', session('active_license_id'));
-    }
+    // if (session()->has('active_license_id')) {
+    //     $journals->where('license_id', session('active_license_id'));
+    // }
 
     // 🔹 Filter tanggal
     $journals = $journals->whereBetween('transaction_date', [$startDate, $endDate])
@@ -481,7 +486,7 @@ public function store(StoreAccountingJournalRequest $request)
         }
     }
 
-    return view('journals.general', compact('journals', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
+    return view('journals.general', compact('journals', 'licenses', 'activeLicenseId', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
 }
 
 
@@ -498,6 +503,8 @@ public function ledger(Request $request)
 
     // 🔹 Filter role user
     if (!$user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } else {
         $licenses = $user->hasRole('Pemilik Lisensi')
             ? $user->licenses
             : $user->employee?->licenses;
@@ -509,12 +516,14 @@ public function ledger(Request $request)
         });
     }
 
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+
     // 🔹 Filter lisensi aktif
-    if (session()->has('active_license_id')) {
-        $query->whereHas('journal', function ($q) {
-            $q->where('license_id', session('active_license_id'));
-        });
-    }
+    // if (session()->has('active_license_id')) {
+    //     $query->whereHas('journal', function ($q) {
+    //         $q->where('license_id', session('active_license_id'));
+    //     });
+    // }
 
     // 🔹 Filter periode
     $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
@@ -553,7 +562,7 @@ public function ledger(Request $request)
         ];
     }
 
-    return view('journals.ledger', compact('ledger', 'startDate', 'endDate'));
+    return view('journals.ledger', compact('ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'));
 }
 
 public function trialBalance(Request $request)
