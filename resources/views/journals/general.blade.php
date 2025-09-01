@@ -22,6 +22,24 @@
         <div class="col-auto align-self-end">
             <button type="submit" class="btn btn-primary">Filter</button>
         </div>
+
+        @if(auth()->user()->hasRole('Super-Admin'))
+            <div class="col-md-4 mb-3">
+                <label for="license_id" class="form-label required">Filter Lisensi</label>
+                <select name="license_id" id="license_id" class="form-select select2" required>
+                    <option value="">-- Pilih Lisensi --</option>
+                    @foreach ($licenses as $license)
+                        <option value="{{ $license->id }}" 
+                            {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                            {{ $license->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        @else
+            {{-- Kalau bukan Super Admin, tetap pakai hidden --}}
+            <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+        @endif
     </form>
 
     {{-- Tabel --}}
@@ -48,7 +66,7 @@
                                 @if($i == 0)
                                     {{-- Merge kolom tanggal --}}
                                     <td rowspan="{{ $rowCount }}">
-                                        {{ $journal->transaction_date->format('d-m-Y') }}
+                                        {{ \Carbon\Carbon::parse($journal->transaction_date)->format('d-m-Y') }}
                                     </td>
                                     {{-- Merge kolom kode jurnal --}}
                                     <td rowspan="{{ $rowCount }}">

@@ -46,6 +46,23 @@
 @section('content')
 <div class="container">
     <h4>Buku Besar ({{ $startDate }} s/d {{ $endDate }})</h4>
+    @if(auth()->user()->hasRole('Super-Admin'))
+        <div class="col-md-4 mb-3">
+            <label for="license_id" class="form-label required">Filter Lisensi</label>
+            <select name="license_id" id="license_id" class="form-select select2" required>
+                <option value="">-- Pilih Lisensi --</option>
+                @foreach ($licenses as $license)
+                    <option value="{{ $license->id }}" 
+                        {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                        {{ $license->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+    @else
+        {{-- Kalau bukan Super Admin, tetap pakai hidden --}}
+        <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+    @endif
 
     @foreach($ledger as $accountId => $data)
         <div class="card mt-4">

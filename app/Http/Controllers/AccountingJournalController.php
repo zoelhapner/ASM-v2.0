@@ -556,6 +556,62 @@ public function ledger(Request $request)
     return view('journals.ledger', compact('ledger', 'startDate', 'endDate'));
 }
 
+public function trialBalance(Request $request)
+{
+    $user = auth()->user();
+
+    // default periode (bulan berjalan)
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+    // 🔹 Filter lisensi sesuai role
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } elseif ($user->hasRole('Pemilik Lisensi')) {
+        $licenses = $user->licenses;
+    } else {
+        $licenses = $user->employee?->licenses;
+    }
+
+    // Lisensi aktif
+    $activeLicenseId = $request->license_id ?? $licenses->first()?->id;
+
+    // Ambil akun + transaksi di periode & lisensi
+    $query = AccountingAccount::with(['details' => function ($q) use ($startDate, $endDate, $activeLicenseId) {
+        $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $activeLicenseId) {
+            $jq->whereBetween('transaction_date', [$startDate, $endDate])
+               ->where('license_id', $activeLicenseId);
+        });
+    }]);
+
+    $accounts = $query->get()->map(function ($account) {
+        $debit  = $account->details->sum('debit');
+        $credit = $account->details->sum('credit');
+        $balance = $debit - $credit;
+
+        return [
+            'code'   => $account->code,
+            'name'   => $account->name,
+            'debit'  => $balance > 0 ? $balance : 0,
+            'credit' => $balance < 0 ? abs($balance) : 0,
+        ];
+    });
+
+    $totalDebit  = $accounts->sum('debit');
+    $totalCredit = $accounts->sum('credit');
+
+    return view('accounting.trial-balance', compact(
+        'accounts',
+        'totalDebit',
+        'totalCredit',
+        'startDate',
+        'endDate',
+        'licenses',
+        'activeLicenseId'
+    ));
+}
+
+
 
 }
 
