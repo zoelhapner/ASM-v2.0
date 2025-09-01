@@ -55,20 +55,31 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($accounts as $acc)
-                        <tr>
-                            <td class="text-center">{{ $acc['account_code'] }}</td>
-                            <td>{{ $acc['account_name'] }}</td>
-                            <td class="text-end">{{ number_format($acc['debit'], 0, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($acc['credit'], 0, ',', '.') }}</td>
+                    @foreach($groupedAccounts as $category => $data)
+                        <tr class="bg-light">
+                            <td colspan="4"><strong>{{ $category }}</strong></td>
+                        </tr>
+                        @foreach($data['accounts'] as $acc)
+                            <tr>
+                                <td class="text-center">{{ $acc['account_code'] }}</td>
+                                <td>{{ $acc['account_name'] }}</td>
+                                <td class="text-end">{{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                                <td class="text-end">{{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+
+                        <tr class="table-secondary fw-bold">
+                            <td colspan="2" class="text-end">Subtotal {{ $category }}</td>
+                            <td class="text-end">{{ number_format($data['subtotalDebit']) }}</td>
+                            <td class="text-end">{{ number_format($data['subtotalCredit']) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr class="fw-bold">
                         <td colspan="2" class="text-end">Total</td>
-                        <td class="text-end">{{ number_format($totalDebit, 0, ',', '.') }}</td>
-                        <td class="text-end">{{ number_format($totalCredit, 0, ',', '.') }}</td>
+                        <td class="text-end">{{ number_format($totalDebit, 2, ',', '.') }}</td>
+                        <td class="text-end">{{ number_format($totalCredit, 2, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>

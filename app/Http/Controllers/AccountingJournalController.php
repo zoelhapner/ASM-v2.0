@@ -529,7 +529,7 @@ public function ledger(Request $request)
 
     $details = $query
         ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
-        ->orderByRaw('CAST(accounting_accounts.account_code AS UNSIGNED) ASC')
+        ->orderByRaw('CAST(accounting_accounts.account_code AS INTEGER) ASC')
         ->orderBy(
             AccountingJournal::select('transaction_date')
                 ->whereColumn('id', 'accounting_journal_details.journal_id')
@@ -603,16 +603,28 @@ public function trialBalance(Request $request)
         return [
             'account_code'   => $account->account_code,
             'account_name'   => $account->account_name,
+            'category'     => $account->category,
             'debit'  => $balance > 0 ? $balance : 0,
             'credit' => $balance < 0 ? abs($balance) : 0,
         ];
     });
+
+    // 🔹 Grouping berdasarkan kategori
+    $groupedAccounts = $accounts->groupBy('category')->map(function ($group) {
+        return [
+            'accounts' => $group,
+            'subtotalDebit' => $group->sum('debit'),
+            'subtotalCredit' => $group->sum('credit'),
+        ];
+    });
+
 
     $totalDebit  = $accounts->sum('debit');
     $totalCredit = $accounts->sum('credit');
 
     return view('journals.trialbalance', compact(
         'accounts',
+        'groupedAccounts',
         'totalDebit',
         'totalCredit',
         'startDate',
