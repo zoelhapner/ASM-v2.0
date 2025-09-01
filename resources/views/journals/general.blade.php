@@ -19,9 +19,7 @@
             <label class="form-label">Sampai</label>
             <input type="date" name="end_date" value="{{ $endDate }}" class="form-control">
         </div>
-        <div class="col-auto align-self-end">
-            <button type="submit" class="btn btn-primary">Filter</button>
-        </div>
+        
 
         @if(auth()->user()->hasRole('Super-Admin'))
             <div class="col-md-4 mb-3">
@@ -40,6 +38,10 @@
             {{-- Kalau bukan Super Admin, tetap pakai hidden --}}
             <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
         @endif
+
+        <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary text-white">Filter</button>
+        </div>
     </form>
 
     {{-- Tabel --}}
@@ -100,6 +102,15 @@
     
 </div>
 @endsection
+
+@push('js')
+<script>
+ $('.select2').select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
+</script>
+@endpush
 
 {{-- Tombol --}}
     {{-- <div class="d-flex justify-content-start gap-2 mt-3">

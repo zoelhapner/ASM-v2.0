@@ -40,7 +40,6 @@ public function store(LoginRequest $request): RedirectResponse
 
         if ($licenses->count() === 1) {
             $license = $licenses->first();
-            session()->put('active_license_id', $license->id);
             session()->put('active_license_name', $license->name);
         }
     }
