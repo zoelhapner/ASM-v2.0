@@ -583,10 +583,11 @@ public function trialBalance(Request $request)
     $activeLicenseId = $request->license_id ?? $licenses->first()?->id;
 
     // Ambil akun + transaksi di periode & lisensi
-    $query = AccountingAccount::with(['details' => function ($q) use ($startDate, $endDate, $activeLicenseId) {
-        $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $activeLicenseId) {
-            $jq->whereBetween('transaction_date', [$startDate, $endDate])
-               ->where('license_id', $activeLicenseId);
+    $query = AccountingAccount::where('license_id', $activeLicenseId)
+        ->with(['details' => function ($q) use ($startDate, $endDate, $activeLicenseId) {
+            $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $activeLicenseId) {
+                $jq->whereBetween('transaction_date', [$startDate, $endDate])
+                    ->where('license_id', $activeLicenseId);
         });
     }]);
 
