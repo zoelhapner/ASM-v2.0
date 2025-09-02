@@ -44,7 +44,7 @@
 @extends('tablar::page')
 
 @section('content')
-<div class="container-fluid-mt-3">
+<div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Buku Besar</h2>
             <button>
@@ -114,17 +114,22 @@
                     <tbody>
                         @php
                             $lastJournal = null;
+                            $lastDate = null;
                         @endphp
                         
                         @foreach($data['rows'] as $row)
                         <tr>
-                            <td>{{ \Carbon\Carbon::parse($row['transaction_date'])->format('d/m/Y') }}</td>
+                            <td>
+                                @if($lastDate !== $row['transaction_date'])
+                                    {{ \Carbon\Carbon::parse($row['transaction_date'])->format('d/m/Y') }}
+                                    @php $lastDate = $row['transaction_date']; @endphp
+                                @endif
+                            </td>
                             <td>
                                 @if($lastJournal !== $row['journal_code'])
-                                    Jurnal Entry
                                     <a href="{{ route('journals.show', $row['journal_id']) }}" 
-                                       class="text-decoration-none fw-bold text-primary">
-                                        {{ $row['journal_code'] }}
+                                       class="text-decoration-none fw-bold text-primary" title="{{ $row['journal_code'] }}">
+                                        Jurnal Entry
                                     </a>
                                     @php $lastJournal = $row['journal_code']; @endphp
                                 @endif

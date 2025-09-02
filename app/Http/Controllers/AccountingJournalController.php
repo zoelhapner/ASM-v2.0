@@ -497,10 +497,6 @@ public function ledger(Request $request)
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
-    // 🔹 Base query
-    $query = AccountingJournalDetail::with(['journal', 'account']);
-
-    // 🔹 Filter role user
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
     } else {
@@ -509,63 +505,73 @@ public function ledger(Request $request)
             : $user->employee?->licenses;
 
         abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
-
-        $query->whereHas('journal', function ($q) use ($licenses) {
-            $q->whereIn('license_id', $licenses->pluck('id'));
-        });
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    if ($activeLicenseId) {
-    $query->whereHas('journal', function ($q) use ($activeLicenseId) {
-        $q->where('license_id', $activeLicenseId);
-    });
+    $ledger = $this->getLedgerData($startDate, $endDate, $licenses, $activeLicenseId);
+
+    return view('journals.ledger', compact('ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'));
 }
 
-    // 🔹 Filter periode
-    $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
-        $q->whereBetween('transaction_date', [$startDate, $endDate]);
-    });
+private function getLedgerData($startDate, $endDate, $licenses, $activeLicenseId = null)
+{
+    $query = AccountingJournalDetail::with(['journal', 'account']);
 
-    $details = $query
-        ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
-        ->orderByRaw('CAST(accounting_accounts.account_code AS INTEGER) ASC')
-        ->orderBy(
-            AccountingJournal::select('transaction_date')
-                ->whereColumn('id', 'accounting_journal_details.journal_id')
-        )
-        ->select('accounting_journal_details.*') // supaya tetap dapat detail utuh
-        ->get();
+    if ($licenses) {
+            $query->whereHas('journal', function ($q) use ($licenses) {
+                $q->whereIn('license_id', $licenses->pluck('id'));
+            });
+        }
 
-    // 🔹 Kelompokkan per akun
-    $ledger = [];
-    foreach ($details->groupBy('account_id') as $accountId => $items) {
-        $balance = 0;
-        $rows = [];
+        if ($activeLicenseId) {
+            $query->whereHas('journal', function ($q) use ($activeLicenseId) {
+                $q->where('license_id', $activeLicenseId);
+            });
+        }
 
-        foreach ($items as $detail) {
-            // saldo berjalan = saldo + (debit - kredit)
-            $balance += ($detail->debit - $detail->credit);
+        // 🔹 Filter periode
+        $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
+            $q->whereBetween('transaction_date', [$startDate, $endDate]);
+        });
 
-            $rows[] = [
-                'journal_id'    => $detail->journal_id,
-                'transaction_date'  => $detail->journal->transaction_date,
-                'journal_code' => $detail->journal->journal_code,
-                'description' => $detail->journal->description,
-                'debit'       => $detail->debit,
-                'credit'      => $detail->credit,
-                'balance'     => $balance,
+        $details = $query
+            ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
+            ->orderByRaw('CAST(accounting_accounts.account_code AS INTEGER) ASC')
+            ->orderBy(
+                AccountingJournal::select('transaction_date')
+                    ->whereColumn('id', 'accounting_journal_details.journal_id')
+            )
+            ->select('accounting_journal_details.*')
+            ->get();
+
+        // 🔹 Kelompokkan per akun
+        $ledger = [];
+        foreach ($details->groupBy('account_id') as $accountId => $items) {
+            $balance = 0;
+            $rows = [];
+
+            foreach ($items as $detail) {
+                $balance += ($detail->debit - $detail->credit);
+
+                $rows[] = [
+                    'journal_id'       => $detail->journal_id,
+                    'transaction_date' => $detail->journal->transaction_date,
+                    'journal_code'     => $detail->journal->journal_code,
+                    'description'      => $detail->journal->description,
+                    'debit'            => $detail->debit,
+                    'credit'           => $detail->credit,
+                    'balance'          => $balance,
+                ];
+            }
+
+            $ledger[$accountId] = [
+                'account' => $items->first()->account,
+                'rows'    => $rows,
             ];
         }
 
-        $ledger[$accountId] = [
-            'account' => $items->first()->account,
-            'rows'    => $rows,
-        ];
-    }
-
-    return view('journals.ledger', compact('ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'));
+        return $ledger;
 }
 
 public function exportLedgerPdf(Request $request)
@@ -600,7 +606,7 @@ public function exportLedgerPdf(Request $request)
     }
 
     // 🔹 Ambil data ledger sesuai filter
-    $ledger = $this->ledger($startDate, $endDate, $licenseId);
+    $ledger = $this->getLedgerData($startDate, $endDate, $licenseId);
 
     // 🔹 Load view PDF
     $pdf = Pdf::loadView('journals.ledgerpdf', compact('ledger', 'licenseName', 'startDate', 'endDate'));
