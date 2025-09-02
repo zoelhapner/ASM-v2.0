@@ -5,7 +5,14 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal Umum</h2>
         <button class="btn btn-danger">
-            <i class="bi bi-file-earmark-arrow-down"></i> Export
+            <a href="{{ route('journals.export.pdf', [
+                    'start_date' => request('start_date'),
+                    'end_date' => request('end_date'),
+                    'license_id' => request('license_id')
+                ]) }}" 
+                class="btn btn-danger" target="_blank">
+                    <i class="ti ti-file-earmark-arrow-down"></i> Export PDF
+            </a>
         </button>
     </div>
 

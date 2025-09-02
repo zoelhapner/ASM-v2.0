@@ -488,6 +488,34 @@ public function store(StoreAccountingJournalRequest $request)
     return view('journals.general', compact('journals', 'licenses', 'activeLicenseId', 'startDate', 'endDate', 'totalDebit', 'totalCredit'));
 }
 
+public function exportPDF(Request $request)
+{
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
+    $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
+
+    // Ambil data sesuai filter
+    $journals = Journal::with(['details.account'])
+        ->whereBetween('transaction_date', [$startDate, $endDate])
+        ->where('license_id', $activeLicenseId)
+        ->orderBy('transaction_date', 'asc')
+        ->get();
+
+    $totalDebit = $journals->sum(fn($j) => $j->details->sum('debit'));
+    $totalCredit = $journals->sum(fn($j) => $j->details->sum('credit'));
+
+    // Load view khusus PDF
+    $pdf = Pdf::loadView('journals.export-pdf', compact(
+        'journals',
+        'startDate',
+        'endDate',
+        'totalDebit',
+        'totalCredit'
+    ))->setPaper('a4', 'landscape');
+
+    return $pdf->stream('general.pdf');
+}
+
 
 public function ledger(Request $request)
 {
@@ -520,25 +548,25 @@ private function getLedgerData($startDate, $endDate, $licenses, $activeLicenseId
 
         $licenses = collect($licenses);
         
-        if ($activeLicenseId) {
-            $query->whereHas('journal', function ($q) use ($activeLicenseId) {
-                $q->where('license_id', $activeLicenseId);
-            });
-        } else {
-            // Kalau lebih dari satu license → whereIn
-            if ($licenses->count() > 1) {
-                $licenseIds = $licenses->pluck('id');
-                $query->whereHas('journal', function ($q) use ($licenseIds) {
-                    $q->whereIn('license_id', $licenseIds);
-                });
+          if ($user->hasRole('Super-Admin')) {
+                if ($licenseId) {
+                    $licenses = License::where('id', $licenseId)->get();
+                } else {
+                    $licenses = License::all();
+                }
             } else {
-                // Kalau hanya satu license → where
-                $licenseId = $licenses->first()->id;
-                $query->whereHas('journal', function ($q) use ($licenseId) {
-                    $q->where('license_id', $licenseId);
-                });
+                if ($user->hasRole('Pemilik Lisensi')) {
+                    $licenses = $user->licenses;
+                } elseif ($user->employee) {
+                    $licenses = $user->employee->licenses;
+                } else {
+                    $licenses = collect();
+                }
+
+                if ($licenseId) {
+                    $licenses = $licenses->where('id', $licenseId);
+                }
             }
-        }
 
         // 🔹 Filter periode
         $query->whereHas('journal', function ($q) use ($startDate, $endDate) {

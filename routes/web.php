@@ -142,7 +142,7 @@ Route::get('/journals/report', [AccountingJournalController::class, 'report'])
 Route::get('/journals/general', [AccountingJournalController::class, 'generalJournal'])
     ->name('journals.general')
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
-Route::get('/journals/generalpdf', [AccountingJournalController::class, 'exportLedgerPdf'])->name('generalpdf');
+Route::get('/journals/export/pdf', [AccountingJournalController::class, 'exportPDF'])->name('journals.export.pdf');
 
 Route::get('/journals/ledger', [AccountingJournalController::class, 'ledger'])
     ->name('journals.ledger')
