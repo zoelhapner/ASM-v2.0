@@ -2,10 +2,12 @@
 
 @section('content')
 <div class="container-fluid mt-3">
-    <h3 class="mb-3">Neraca</h3>
-    <button class="btn btn-danger">
-            <i class="bi bi-file-earmark-arrow-down"></i> Export
-    </button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-3">Neraca</h3>
+            <button class="btn btn-danger">
+                    <i class="bi bi-file-earmark-arrow-down"></i> Export
+            </button>
+    </div>
 
     {{-- 🔹 Filter --}}
     <div class="card shadow-sm border-0 mb-3">

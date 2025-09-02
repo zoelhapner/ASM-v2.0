@@ -33,7 +33,7 @@
                         {{ $journal->journal_code }}
                     </a>
                 </td>
-                <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d-m-Y')}}</td>
+                <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y')}}</td>
                 {{-- <td>
                     
                     $journal->details->first()?->description ?? '-'

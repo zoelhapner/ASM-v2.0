@@ -224,7 +224,7 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
-                    'text' => 'Neraca Saldo',
+                    'text' => 'Neraca',
                     'url' => '/journals/trialbalance',
                     'icon' => 'ti ti-report-analytics',
                 ],

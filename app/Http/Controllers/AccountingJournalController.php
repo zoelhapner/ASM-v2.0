@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AccountingJournalController extends Controller
 {
@@ -565,6 +566,22 @@ public function ledger(Request $request)
     }
 
     return view('journals.ledger', compact('ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'));
+}
+
+public function exportLedgerPdf(Request $request)
+{
+    $startDate = $request->get('start_date');
+    $endDate   = $request->get('end_date');
+    $licenseId = $request->get('license_id');
+
+    // 🔹 Ambil data ledger sesuai filter
+    $ledger = $this->getLedgerData($startDate, $endDate, $licenseId);
+
+    // 🔹 Load view PDF
+    $pdf = Pdf::loadView('exports.ledger_pdf', compact('ledger', 'startDate', 'endDate'));
+
+    // 🔹 Tampilkan di browser
+    return $pdf->stream('ledger'.$startDate.'_to_'.$endDate.'.pdf');
 }
 
 public function trialBalance(Request $request)
