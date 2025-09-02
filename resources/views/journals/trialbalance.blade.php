@@ -2,15 +2,25 @@
 
 @section('content')
 <div class="container-fluid mt-3">
-    <h3 class="mb-3">Neraca Saldo</h3>
+    <h3 class="mb-3">Neraca</h3>
 
     {{-- 🔹 Filter --}}
     <div class="card shadow-sm border-0 mb-3">
         <div class="card-body">
             <form method="GET" class="row g-2 align-items-center">
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Dari Tanggal</label>
+                    <input type="date" name="start_date" 
+                        value="{{ $startDate }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">Sampai Tanggal</label>
+                    <input type="date" name="end_date" 
+                        value="{{ $endDate }}">
+                </div>
                 @if(auth()->user()->hasRole('Super-Admin'))
-                    <div class="col-md-4">
-                        <label class="form-label">Lisensi</label>
+                    <div class="col-md-3">
+                        <label for="license_id" class="form-label">Lisensi</label>
                         <select name="license_id" class="form-select select2">
                             <option value="">-- Semua Lisensi --</option>
                             @foreach($licenses as $license)
@@ -21,18 +31,11 @@
                             @endforeach
                         </select>
                     </div>
+                @else
+                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
                 @endif
-                <div class="col-md-3">
-                    <label for="start_date" class="form-label">Periode Awal</label>
-                    <input type="date" name="start_date" 
-                        value="{{ $startDate ? \Carbon\Carbon::parse($startDate)->format('Y-m-d') : '' }}">
-                </div>
-                <div class="col-md-3">
-                    <label for="end_date" class="form-label">Periode Akhir</label>
-                    <input type="date" name="end_date" 
-                        value="{{ $endDate ? \Carbon\Carbon::parse($endDate)->format('Y-m-d') : '' }}">
-                </div>
-                <div class="col-md-3 d-flex align-items-end">
+                
+                <div class="col-md-3 align-self-end">
                     <button type="submit" class="btn btn-primary text-white w-100">
                         <i class="ti ti-funnel"></i> Filter
                     </button>
@@ -72,6 +75,7 @@
                             <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
                             <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
                             <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
+                            <td></td>
                         </tr>
                     @endforeach
                 </tbody>

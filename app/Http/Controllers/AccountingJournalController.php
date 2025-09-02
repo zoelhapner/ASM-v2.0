@@ -548,6 +548,7 @@ public function ledger(Request $request)
             $balance += ($detail->debit - $detail->credit);
 
             $rows[] = [
+                'journal_id'    => $detail->journal_id,
                 'transaction_date'  => $detail->journal->transaction_date,
                 'journal_code' => $detail->journal->journal_code,
                 'description' => $detail->journal->description,

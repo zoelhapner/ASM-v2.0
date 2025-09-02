@@ -46,37 +46,42 @@
 @section('content')
 <div class="container-fluid-mt-3">
     <h4>Buku Besar</h4>
-    <form method="GET" action="{{ route('journals.ledger') }}" class="row g-3 mb-4">
-        <div class="col-md-3">
-            <label for="start_date" class="form-label">Dari Tanggal</label>
-            <input type="date" name="start_date" id="start_date" 
-                class="form-control" value="{{ $startDate }}">
-        </div>
-        <div class="col-md-3">
-            <label for="end_date" class="form-label">Sampai Tanggal</label>
-            <input type="date" name="end_date" id="end_date" 
-                class="form-control" value="{{ $endDate }}">
-        </div>
-        @if(auth()->user()->hasRole('Super-Admin'))
-            <div class="col-md-3">
-                <label for="license_id" class="form-label">Lisensi</label>
-                <select name="license_id" id="license_id" class="form-select select2">
-                    @foreach ($licenses as $license)
-                        <option value="{{ $license->id }}" 
-                            {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
-                            {{ $license->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        @else
-            <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
-        @endif
+    
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+            <form method="GET" action="{{ route('journals.ledger') }}" class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Dari Tanggal</label>
+                    <input type="date" name="start_date" id="start_date" 
+                        class="form-control" value="{{ $startDate }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">Sampai Tanggal</label>
+                    <input type="date" name="end_date" id="end_date" 
+                        class="form-control" value="{{ $endDate }}">
+                </div>
+                @if(auth()->user()->hasRole('Super-Admin'))
+                    <div class="col-md-3">
+                        <label for="license_id" class="form-label">Lisensi</label>
+                        <select name="license_id" id="license_id" class="form-select select2">
+                            @foreach ($licenses as $license)
+                                <option value="{{ $license->id }}" 
+                                    {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                                    {{ $license->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+                @endif
 
-        <div class="col-md-3 align-self-end">
-            <button type="submit" class="btn btn-primary text-white">Filter</button>
+                <div class="col-md-3 align-self-end">
+                    <button type="submit" class="btn btn-primary text-white">Filter</button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 
 
     @foreach($ledger as $accountId => $data)
