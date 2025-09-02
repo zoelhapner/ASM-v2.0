@@ -781,6 +781,7 @@ public function exportTrial(Request $request)
         'activeLicenseId' => $activeLicenseId,
         'totalDebit'      => $totalDebit,
         'totalCredit'     => $totalCredit,
+        'request'         => $request,
     ]);
 
     return $pdf->stream('trial-balance.pdf');

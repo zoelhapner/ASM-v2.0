@@ -160,6 +160,10 @@ Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function 
     Route::resource('journals', AccountingJournalController::class);
 });
 
+Route::get('/reports/income-statement', [AccountingReportController::class, 'incomeStatement'])
+    ->name('reports.income-statement');
+
+
 
 Route::patch('/notifications/{notification}/read', [LicenseNotificationController::class, 'markAsRead'])->name('notifications.read');
 
