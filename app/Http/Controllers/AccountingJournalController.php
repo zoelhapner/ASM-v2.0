@@ -509,7 +509,7 @@ public function ledger(Request $request)
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    $ledger = $this->getLedgerData($startDate, $endDate, $licenses, $activeLicenseId);
+    [$ledger, $licenses] = $this->getLedgerData($startDate, $endDate, $licenses, $activeLicenseId);
 
     return view('journals.ledger', compact('ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'));
 }
@@ -518,16 +518,26 @@ private function getLedgerData($startDate, $endDate, $licenses, $activeLicenseId
 {
     $query = AccountingJournalDetail::with(['journal', 'account']);
 
-    if ($licenses) {
-            $query->whereHas('journal', function ($q) use ($licenses) {
-                $q->whereIn('license_id', $licenses->pluck('id'));
-            });
-        }
-
+        $licenses = collect($licenses);
+        
         if ($activeLicenseId) {
             $query->whereHas('journal', function ($q) use ($activeLicenseId) {
                 $q->where('license_id', $activeLicenseId);
             });
+        } else {
+            // Kalau lebih dari satu license → whereIn
+            if ($licenses->count() > 1) {
+                $licenseIds = $licenses->pluck('id');
+                $query->whereHas('journal', function ($q) use ($licenseIds) {
+                    $q->whereIn('license_id', $licenseIds);
+                });
+            } else {
+                // Kalau hanya satu license → where
+                $licenseId = $licenses->first()->id;
+                $query->whereHas('journal', function ($q) use ($licenseId) {
+                    $q->where('license_id', $licenseId);
+                });
+            }
         }
 
         // 🔹 Filter periode
@@ -571,7 +581,7 @@ private function getLedgerData($startDate, $endDate, $licenses, $activeLicenseId
             ];
         }
 
-        return $ledger;
+        return [$ledger, $licenses];
 }
 
 public function exportLedgerPdf(Request $request)
