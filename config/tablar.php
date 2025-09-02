@@ -228,6 +228,11 @@ return [
                     'url' => '/journals/trialbalance',
                     'icon' => 'ti ti-report-analytics',
                 ],
+                [
+                    'text' => 'Laporan Keuangan',
+                    'url' => '/journals/laporan',
+                    'icon' => 'ti ti-report-analytics',
+                ],
             ],
         ],
 

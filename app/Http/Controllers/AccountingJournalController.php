@@ -604,7 +604,7 @@ private function getLedgerData($startDate, $endDate, $licenses, $licenseId = nul
                 'journal_id'       => $detail->journal_id,
                 'transaction_date' => $detail->journal->transaction_date,
                 'journal_code'     => $detail->journal->journal_code,
-                'description'      => $detail->journal->description,
+                'description'      => $detail->description,
                 'debit'            => $detail->debit,
                 'credit'           => $detail->credit,
                 'balance'          => $balance,
@@ -663,11 +663,11 @@ public function exportLedgerPdf(Request $request)
 }
 
 
-    public function trialBalance(Request $request)
+public function trialBalance(Request $request)
 {
     $user = auth()->user();
 
-    // default periode (bulan berjalan)
+    // Default periode (bulan berjalan)
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
@@ -677,23 +677,46 @@ public function exportLedgerPdf(Request $request)
     } elseif ($user->hasRole('Pemilik Lisensi')) {
         $licenses = $user->licenses;
     } else {
-        $licenses = $user->employee?->licenses;
+        $licenses = $user->employee?->licenses ?? collect();
     }
 
-    // Lisensi aktif
-    $activeLicenseId = $request->license_id ?? $licenses->first()?->id;
+    // 🔹 Lisensi aktif → default ambil yang pertama
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    $accounts = AccountingAccount::where('license_id', $activeLicenseId)
-        ->with(['details' => function ($q) use ($startDate, $endDate, $activeLicenseId) {
-            $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $activeLicenseId) {
+    // 🔹 Ambil akun yang sudah dikelompokkan
+    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+
+    // 🔹 Hitung total debit & kredit
+    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
+    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+
+    return view('journals.trialbalance', compact(
+        'groupedAccounts',
+        'totalDebit',
+        'totalCredit',
+        'startDate',
+        'endDate',
+        'licenses',
+        'activeLicenseId'
+    ));
+}
+
+/**
+ * Ambil akun + group berdasarkan kategori dan sub-kategori
+ */
+private function getGroupedAccounts($startDate, $endDate, $licenseId)
+{
+    $accounts = AccountingAccount::where('license_id', $licenseId)
+        ->with(['details' => function ($q) use ($startDate, $endDate, $licenseId) {
+            $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $licenseId) {
                 $jq->whereBetween('transaction_date', [$startDate, $endDate])
-                    ->where('license_id', $activeLicenseId);
+                   ->where('license_id', $licenseId);
             });
         }])
         ->get()
         ->map(function ($account) {
-            $debit  = $account->details->sum('debit');
-            $credit = $account->details->sum('credit');
+            $debit   = $account->details->sum('debit');
+            $credit  = $account->details->sum('credit');
             $balance = $debit - $credit;
 
             return [
@@ -708,58 +731,61 @@ public function exportLedgerPdf(Request $request)
             ];
         });
 
-        $groupedAccounts = $accounts
-            ->groupBy('category')
-            ->map(function ($catGroup) {
-                return $catGroup->groupBy('sub_category')->map(function ($subGroup) {
-                    return [
-                        'accounts' => $subGroup,
-                        'subtotalDebit' => $subGroup->sum('debit'),
-                        'subtotalCredit' => $subGroup->sum('credit'),
-                    ];
-                });
+    // 🔹 Kelompokkan berdasarkan kategori & sub kategori
+    return $accounts
+        ->groupBy('category')
+        ->map(function ($catGroup) {
+            return $catGroup->groupBy('sub_category')->map(function ($subGroup) {
+                return [
+                    'accounts'       => $subGroup,
+                    'subtotalDebit'  => $subGroup->sum('debit'),
+                    'subtotalCredit' => $subGroup->sum('credit'),
+                ];
             });
-
-
-    $totalDebit  = $accounts->sum('debit');
-    $totalCredit = $accounts->sum('credit');
-
-    return view('journals.trialbalance', compact(
-        'accounts',
-        'groupedAccounts',
-        'totalDebit',
-        'totalCredit',
-        'startDate',
-        'endDate',
-        'licenses',
-        'activeLicenseId'
-    ));
+        });
 }
 
-    public function exportTrial(Request $request)
+/**
+ * Export Trial Balance ke PDF
+ */
+public function exportTrial(Request $request)
 {
-    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
-    $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
-    $licenseId = $request->license_id;
+    $user = auth()->user();
 
-    // Ambil data yang sama seperti di view neraca
-    $licenses = License::all();
-    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $licenseId);
-    $totalDebit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+    // 🔹 Filter lisensi sesuai role → sama seperti trialBalance()
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } elseif ($user->hasRole('Pemilik Lisensi')) {
+        $licenses = $user->licenses;
+    } else {
+        $licenses = $user->employee?->licenses ?? collect();
+    }
+
+   $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+
+    // 🔹 Ambil data yang sama seperti di view trial balance
+    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+
+    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
     $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
 
-    // Generate PDF
+    // 🔹 Generate PDF
     $pdf = Pdf::loadView('journals.trialbalance-pdf', [
         'groupedAccounts' => $groupedAccounts,
-        'startDate' => $startDate,
-        'endDate' => $endDate,
-        'licenses' => $licenses,
-        'totalDebit' => $totalDebit,
-        'totalCredit' => $totalCredit,
-    ])->setPaper('a4', 'landscape');
+        'startDate'       => $startDate,
+        'endDate'         => $endDate,
+        'licenses'        => $licenses,
+        'activeLicenseId' => $activeLicenseId,
+        'totalDebit'      => $totalDebit,
+        'totalCredit'     => $totalCredit,
+    ]);
 
     return $pdf->stream('trial-balance.pdf');
 }
+
 
 }
 

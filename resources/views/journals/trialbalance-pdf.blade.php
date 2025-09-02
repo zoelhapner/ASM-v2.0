@@ -31,8 +31,13 @@
     </style>
 </head>
 <body>
-    <h3>Neraca</h3>
-    <p>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
+    <div class="header">
+        <h2>Trial Balance Report</h2>
+        <h4>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</h4>
+        @if($licenses->where('id', $request->license_id)->first())
+            <h4>License: {{ $licenses->where('id', $request->license_id)->first()->name }}</h4>
+        @endif
+    </div>
 
     <table>
         <thead>
