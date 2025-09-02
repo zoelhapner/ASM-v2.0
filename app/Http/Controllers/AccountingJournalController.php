@@ -574,11 +574,36 @@ public function exportLedgerPdf(Request $request)
     $endDate   = $request->get('end_date');
     $licenseId = $request->get('license_id');
 
+    $user = auth()->user();
+
+    // 🔹 Tentukan nama lisensi
+    if ($user->hasRole('Super-Admin')) {
+        if ($licenseId) {
+            $license = License::find($licenseId);
+            $licenseName = $license?->name ?? '-';
+        } else {
+            $licenseName = 'Semua Lisensi';
+        }
+    } else {
+        // 🔹 kalau Pemilik Lisensi
+        if ($user->hasRole('Pemilik Lisensi')) {
+            $licenseName = $user->licenses->pluck('name')->join(', ');
+        } 
+        // 🔹 kalau Employee
+        elseif ($user->employee) {
+            $licenseName = $user->employee->licenses->pluck('name')->join(', ');
+        } 
+        // fallback kalau nggak ada
+        else {
+            $licenseName = '-';
+        }
+    }
+
     // 🔹 Ambil data ledger sesuai filter
-    $ledger = $this->getLedgerData($startDate, $endDate, $licenseId);
+    $ledger = $this->ledger($startDate, $endDate, $licenseId);
 
     // 🔹 Load view PDF
-    $pdf = Pdf::loadView('exports.ledger_pdf', compact('ledger', 'startDate', 'endDate'));
+    $pdf = Pdf::loadView('journals.ledgerpdf', compact('ledger', 'licenseName', 'startDate', 'endDate'));
 
     // 🔹 Tampilkan di browser
     return $pdf->stream('ledger'.$startDate.'_to_'.$endDate.'.pdf');

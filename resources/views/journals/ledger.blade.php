@@ -48,7 +48,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Buku Besar</h2>
             <button>
-                <a href="{{ route('ledger.export.pdf', request()->query()) }}" 
+                <a href="{{ route('ledgerpdf', request()->query()) }}" 
                     target="_blank" 
                     class="btn btn-danger">
                     <i class="ti ti-file-earmark-arrow-down"></i> Export PDF
