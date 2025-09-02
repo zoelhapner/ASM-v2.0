@@ -63,25 +63,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($groupedAccounts as $sub_category => $data)
+                    @foreach($groupedAccounts as $category => $subs)
                         <tr class="bg-light">
-                            <td colspan="4"><strong>{{ $sub_category }}</strong></td>
+                            <td colspan="4"><strong>{{ $category }}</strong></td>
                         </tr>
-                        @foreach($data['accounts'] as $acc)
-                            <tr>
-                                <td class="text-center">{{ $acc['account_code'] }}</td>
-                                <td>{{ $acc['account_name'] }}</td>
-                                <td class="text-end">{{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                                <td class="text-end">{{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                        @foreach($subs as $subCat => $data)
+                            <tr class="table-secondary">
+                                <td colspan="4">-- {{ $subCat }}</td>
+                            </tr>
+                            
+                            @foreach($data['accounts'] as $acc)
+                                <tr>
+                                    <td class="text-center">{{ $acc['account_code'] }}</td>
+                                    <td>{{ $acc['account_name'] }}</td>
+                                    <td class="text-end">{{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                                    <td class="text-end">{{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+
+                            <tr class="table-secondary fw-bold">
+                                <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
+                                <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
+                                <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
                             </tr>
                         @endforeach
-
-                        <tr class="table-secondary fw-bold">
-                            <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
-                            <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
-                        </tr>
-                        <tr></tr>
                     @endforeach
                 </tbody>
                 <tfoot>

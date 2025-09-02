@@ -11,7 +11,7 @@
                     'license_id' => request('license_id')
                 ]) }}" 
                 class="btn btn-danger" target="_blank">
-                    <i class="ti ti-file-earmark-arrow-down"></i> Export PDF
+                Export PDF
             </a>
         </button>
     </div>
