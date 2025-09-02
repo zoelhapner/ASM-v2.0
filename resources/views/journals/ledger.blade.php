@@ -50,9 +50,8 @@
             <button>
                 <a href="{{ route('ledgerpdf', request()->query()) }}" 
                     target="_blank" 
-                    class="btn btn-danger">
-                    <i class="ti ti-file-earmark-arrow-down"></i> Export PDF
-                    </a>
+                    class="btn btn-danger">Export PDF
+                </a>
             </button>
     </div>
     

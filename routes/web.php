@@ -152,7 +152,7 @@ Route::get('/journals/ledgerpdf', [AccountingJournalController::class, 'exportLe
 Route::get('/journals/trialbalance', [AccountingJournalController::class, 'trialBalance'])
     ->name('journals.trialbalance')
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
-Route::get('/journals/export/pdf', AccountingJournalController::class, 'exportTrial')
+Route::get('/journals/export/trial-pdf', [AccountingJournalController::class, 'exportTrial'])
     ->name('journals.trial.pdf');
 
 
