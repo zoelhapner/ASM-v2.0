@@ -379,7 +379,7 @@ public function store(StoreAccountingJournalRequest $request)
     $endDate = $request->input('end_date');
     $licenseFilterId = $request->input('license_id');
 
-    // Ambil lisensi sesuai role
+    
     $licenses = collect();
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
@@ -511,7 +511,7 @@ public function exportPDF(Request $request)
         'endDate',
         'totalDebit',
         'totalCredit'
-    ))->setPaper('a4', 'landscape');
+    ));
 
     return $pdf->stream('general.pdf');
 }
@@ -663,7 +663,7 @@ public function exportLedgerPdf(Request $request)
 }
 
 
-public function trialBalance(Request $request)
+    public function trialBalance(Request $request)
 {
     $user = auth()->user();
 
@@ -734,6 +734,31 @@ public function trialBalance(Request $request)
         'licenses',
         'activeLicenseId'
     ));
+}
+
+    public function exportTrial(Request $request)
+{
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
+    $licenseId = $request->license_id;
+
+    // Ambil data yang sama seperti di view neraca
+    $licenses = License::all();
+    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $licenseId);
+    $totalDebit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
+    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+
+    // Generate PDF
+    $pdf = Pdf::loadView('journals.trialbalance-pdf', [
+        'groupedAccounts' => $groupedAccounts,
+        'startDate' => $startDate,
+        'endDate' => $endDate,
+        'licenses' => $licenses,
+        'totalDebit' => $totalDebit,
+        'totalCredit' => $totalCredit,
+    ])->setPaper('a4', 'landscape');
+
+    return $pdf->stream('trial-balance.pdf');
 }
 
 }

@@ -4,8 +4,15 @@
 <div class="container-fluid mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-3">Neraca</h3>
-            <button class="btn btn-danger">
-                    <i class="bi bi-file-earmark-arrow-down"></i> Export
+            <button>
+                    <a href="{{ route('journals.trial.pdf', [
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date'),
+                            'license_id' => request('license_id')
+                        ]) }}" 
+                        class="btn btn-danger" target="_blank">
+                        Export PDF
+                    </a>
             </button>
     </div>
 
@@ -69,7 +76,7 @@
                         </tr>
                         @foreach($subs as $subCat => $data)
                             <tr class="table-secondary">
-                                <td colspan="4">-- {{ $subCat }}</td>
+                                <td colspan="4"> {{ $subCat }}</td>
                             </tr>
                             
                             @foreach($data['accounts'] as $acc)

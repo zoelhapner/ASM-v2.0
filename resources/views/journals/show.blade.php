@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Jurnal Umum</h2>
+        <h2>Jurnal</h2>
         <button class="btn btn-danger">
             <i class="bi bi-file-earmark-arrow-down"></i> Export
         </button>
@@ -121,7 +121,7 @@
     </div>
 
     {{-- Footer --}}
-    <div class="text-end text-muted small mt-3">
+    <div class="text-end text-muted small mt-3" >
         Terakhir diubah oleh <strong>{{ $journal->creator->name ?? 'Sistem' }}</strong> 
         pada {{ \Carbon\Carbon::parse($journal->updated_at)->translatedFormat('d F Y H:i') }} GMT+7
     </div>
