@@ -495,7 +495,7 @@ public function exportPDF(Request $request)
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
 
     // Ambil data sesuai filter
-    $journals = Journal::with(['details.account'])
+    $journals = AccountingJournal::with(['details.account'])
         ->whereBetween('transaction_date', [$startDate, $endDate])
         ->where('license_id', $activeLicenseId)
         ->orderBy('transaction_date', 'asc')
@@ -546,7 +546,7 @@ private function getLedgerData($startDate, $endDate, $licenses, $activeLicenseId
 {
     $query = AccountingJournalDetail::with(['journal', 'account']);
 
-        $licenses = collect($licenses);
+        $user = Auth::user();
         
           if ($user->hasRole('Super-Admin')) {
                 if ($licenseId) {

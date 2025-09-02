@@ -15,7 +15,7 @@
             <form method="GET" class="row g-2 align-items-center">
                 <div class="col-md-3">
                     <label for="start_date" class="form-label">Dari Tanggal</label>
-                    <input type="date" name="start_date" id="start_date" class="form-conrol"
+                    <input type="date" name="start_date" id="start_date" class="form-control"
                         value="{{ $startDate }}">
                 </div>
                 <div class="col-md-3">

@@ -129,7 +129,7 @@
                                 @if($lastJournal !== $row['journal_code'])
                                     <a href="{{ route('journals.show', $row['journal_id']) }}" 
                                        class="text-decoration-none fw-bold text-primary" title="{{ $row['journal_code'] }}">
-                                        Jurnal Entry
+                                        Jurnal Umum
                                     </a>
                                     @php $lastJournal = $row['journal_code']; @endphp
                                 @endif

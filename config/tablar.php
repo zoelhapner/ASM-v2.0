@@ -164,11 +164,11 @@ return [
                     'url' => '/license_holders',
                     'icon' => 'ti ti-users',
                 ],
-                [
-                    'text' => 'Lokasi',
-                    'url' => '/office',
-                    'icon' => 'ti ti-building',
-                ],
+                // [
+                //     'text' => 'Lokasi',
+                //     'url' => '/office',
+                //     'icon' => 'ti ti-building',
+                // ],
                 [
                     'text' => 'Starter Pack',
                     'url' => '/starters',

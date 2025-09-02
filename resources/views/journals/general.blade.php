@@ -4,7 +4,7 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal Umum</h2>
-        <button class="btn btn-danger">
+        <button>
             <a href="{{ route('journals.export.pdf', [
                     'start_date' => request('start_date'),
                     'end_date' => request('end_date'),

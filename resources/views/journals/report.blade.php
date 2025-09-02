@@ -135,6 +135,11 @@
 @push('js')
     <script>
         $(document).ready(function () {
+        $('.select2').select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
+        
         const initialLicenseId = $('#license_id').val();
 
         if (initialLicenseId) {
