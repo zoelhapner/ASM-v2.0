@@ -94,8 +94,8 @@
                     <thead>
                         <tr>
                             <th>Tanggal</th>
-                            <th>Deskripsi</th>
                             <th>Transaksi</th>
+                            <th>Deskripsi</th>
                             <th class="text-end">Debit</th>
                             <th class="text-end">Kredit</th>
                             <th class="text-end">Saldo</th>
@@ -105,13 +105,13 @@
                         @foreach($data['rows'] as $row)
                         <tr>
                             <td>{{ $row['transaction_date'] }}</td>
-                            <td>{{ $row['description'] }}</td>
-                            <td>{{ $row['journal_code'] }}
+                            <td>
                                 <a href="{{ route('journals.show', $row['journal_id']) }}" 
                                     class="text-decoration-none fw-bold text-primary">
                                     {{ $row['journal_code'] }}
                                 </a>
                             </td>
+                            <td>{{ $row['description'] }}</td>
                             <td class="text-end">{{ number_format($row['debit'], 2, ',', '.') }}</td>
                             <td class="text-end">{{ number_format($row['credit'], 2, ',', '.') }}</td>
                             <td class="text-end">{{ number_format($row['balance'], 2, ',', '.') }}</td>

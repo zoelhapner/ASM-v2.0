@@ -3,6 +3,9 @@
 @section('content')
 <div class="container-fluid mt-3">
     <h3 class="mb-3">Neraca</h3>
+    <button class="btn btn-danger">
+            <i class="bi bi-file-earmark-arrow-down"></i> Export
+    </button>
 
     {{-- 🔹 Filter --}}
     <div class="card shadow-sm border-0 mb-3">
@@ -10,12 +13,12 @@
             <form method="GET" class="row g-2 align-items-center">
                 <div class="col-md-3">
                     <label for="start_date" class="form-label">Dari Tanggal</label>
-                    <input type="date" name="start_date" 
+                    <input type="date" name="start_date" id="start_date" class="form-conrol"
                         value="{{ $startDate }}">
                 </div>
                 <div class="col-md-3">
                     <label for="end_date" class="form-label">Sampai Tanggal</label>
-                    <input type="date" name="end_date" 
+                    <input type="date" name="end_date" id="end_date" class="form-control"
                         value="{{ $endDate }}">
                 </div>
                 @if(auth()->user()->hasRole('Super-Admin'))
@@ -36,7 +39,7 @@
                 @endif
                 
                 <div class="col-md-3 align-self-end">
-                    <button type="submit" class="btn btn-primary text-white w-100">
+                    <button type="submit" class="btn btn-primary text-white">
                         <i class="ti ti-funnel"></i> Filter
                     </button>
                 </div>
@@ -75,8 +78,8 @@
                             <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
                             <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
                             <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
-                            <td></td>
                         </tr>
+                        <tr></tr>
                     @endforeach
                 </tbody>
                 <tfoot>
@@ -92,12 +95,12 @@
             @if($totalDebit === $totalCredit)
                 <div class="alert alert-success mt-3">
                     ✅ Neraca Saldo seimbang (Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
-                    Kredit: {{ number_format($totalCredit, 0, ',', '.') }})
+                    Kredit: {{ number_format($totalCredit, 2, ',', '.') }})
                 </div>
             @else
                 <div class="alert alert-warning mt-3">
                     ⚠️ Neraca Saldo tidak seimbang! Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
-                    Kredit: {{ number_format($totalCredit, 0, ',', '.') }}
+                    Kredit: {{ number_format($totalCredit, 2, ',', '.') }}
                 </div>
             @endif
         </div>
