@@ -82,7 +82,7 @@
                             @endforeach
 
                             <tr class="table-secondary fw-bold">
-                                <td colspan="2" class="text-end">Subtotal {{ $sub_category }}</td>
+                                <td colspan="2" class="text-end">Subtotal {{ $subCat }}</td>
                                 <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
                                 <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
                             </tr>

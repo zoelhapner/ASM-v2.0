@@ -14,7 +14,7 @@
 </head>
 <body>
     <h3 class="title">Laporan Jurnal Umum</h3>
-    <p><strong>Periode:</strong> {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</p>
+    <p><strong>Periode:</strong> {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
 
     <table>
         <thead>
@@ -43,8 +43,8 @@
                         <td>{{ $detail->description }}</td>
                         <td>{{ $detail->account->account_code }}</td>
                         <td>{{ $detail->account->account_name }}</td>
-                        <td class="text-right">{{ number_format($detail->debit, 0, ',', '.') }}</td>
-                        <td class="text-right">{{ number_format($detail->credit, 0, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($detail->debit, 2, ',', '.') }}</td>
+                        <td class="text-right">{{ number_format($detail->credit, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
             @endforeach

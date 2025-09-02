@@ -516,6 +516,151 @@ public function exportPDF(Request $request)
     return $pdf->stream('general.pdf');
 }
 
+public function ledger(Request $request)
+{
+    $user = Auth::user();
+
+    // 🔹 Default filter tanggal: bulan berjalan
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } else {
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
+
+        abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
+    }
+
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+
+    [$ledger, $licenses] = $this->getLedgerData($startDate, $endDate, $licenses, $activeLicenseId);
+
+    return view('journals.ledger', compact(
+        'ledger', 'licenses', 'activeLicenseId', 'startDate', 'endDate'
+    ));
+}
+
+private function getLedgerData($startDate, $endDate, $licenses, $licenseId = null)
+{
+    $query = AccountingJournalDetail::with(['journal', 'account']);
+    $user = Auth::user();
+
+    // 🔹 Filter lisensi
+    if ($user->hasRole('Super-Admin')) {
+        if ($licenseId) {
+            $licenses = License::where('id', $licenseId)->get();
+        } else {
+            $licenses = License::all();
+        }
+    } else {
+        if ($user->hasRole('Pemilik Lisensi')) {
+            $licenses = $user->licenses;
+        } elseif ($user->employee) {
+            $licenses = $user->employee->licenses;
+        } else {
+            $licenses = collect();
+        }
+
+        if ($licenseId) {
+            $licenses = $licenses->where('id', $licenseId);
+        }
+    }
+
+    // 🔹 Filter periode
+    $query->whereHas('journal', function ($q) use ($startDate, $endDate) {
+        $q->whereBetween('transaction_date', [$startDate, $endDate]);
+    });
+
+    // 🔹 Filter lisensi
+    if ($licenses->isNotEmpty()) {
+        $query->whereHas('journal', function ($q) use ($licenses) {
+            $q->whereIn('license_id', $licenses->pluck('id'));
+        });
+    }
+
+    $details = $query
+        ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
+        ->orderByRaw('CAST(accounting_accounts.account_code AS INTEGER) ASC')
+        ->orderBy(
+            AccountingJournal::select('transaction_date')
+                ->whereColumn('id', 'accounting_journal_details.journal_id')
+        )
+        ->select('accounting_journal_details.*')
+        ->get();
+
+    // 🔹 Kelompokkan per akun
+    $ledger = [];
+    foreach ($details->groupBy('account_id') as $accountId => $items) {
+        $balance = 0;
+        $rows = [];
+
+        foreach ($items as $detail) {
+            $balance += ($detail->debit - $detail->credit);
+
+            $rows[] = [
+                'journal_id'       => $detail->journal_id,
+                'transaction_date' => $detail->journal->transaction_date,
+                'journal_code'     => $detail->journal->journal_code,
+                'description'      => $detail->journal->description,
+                'debit'            => $detail->debit,
+                'credit'           => $detail->credit,
+                'balance'          => $balance,
+            ];
+        }
+
+        $ledger[$accountId] = [
+            'account' => $items->first()->account,
+            'rows'    => $rows,
+        ];
+    }
+
+    return [$ledger, $licenses];
+}
+
+public function exportLedgerPdf(Request $request)
+{
+    $startDate = $request->get('start_date');
+    $endDate   = $request->get('end_date');
+    $licenseId = $request->get('license_id');
+
+    $user = auth()->user();
+
+    // 🔹 Tentukan nama lisensi
+    if ($user->hasRole('Super-Admin')) {
+        if ($licenseId) {
+            $license = License::find($licenseId);
+            $licenseName = $license?->name ?? '-';
+        } else {
+            $licenseName = 'Semua Lisensi';
+        }
+    } else {
+        if ($user->hasRole('Pemilik Lisensi')) {
+            $licenseName = $user->licenses->pluck('name')->join(', ');
+        } elseif ($user->employee) {
+            $licenseName = $user->employee->licenses->pluck('name')->join(', ');
+        } else {
+            $licenseName = '-';
+        }
+    }
+
+    // 🔹 Ambil data ledger sesuai filter
+    [$ledger, $licenses] = $this->getLedgerData(
+        $startDate,
+        $endDate,
+        $user->hasRole('Super-Admin') ? License::all() : ($user->hasRole('Pemilik Lisensi') ? $user->licenses : $user->employee?->licenses),
+        $licenseId
+    );
+
+    // 🔹 Load view PDF
+    $pdf = Pdf::loadView('journals.ledgerpdf', compact(
+        'ledger', 'licenseName', 'startDate', 'endDate'
+    ));
+
+    return $pdf->stream('ledger_'.$startDate.'_to_'.$endDate.'.pdf');
+}
 
 
 public function trialBalance(Request $request)
