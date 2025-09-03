@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Laporan Jurnal Umum</title>
     <style>
-        body { font-family: sans-serif; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #000; padding: 6px; }
-        th { background-color: #f2f2f2; }
+        body { font-family: Poppins, sans-serif; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        table th, table td { border: 1px solid #444; padding: 6px; text-align: right;}
+        table th { background-color: #f5f5f5; }
         .text-right { text-align: right; }
         .title { text-align: center; margin-bottom: 10px; }
     </style>
