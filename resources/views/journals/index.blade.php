@@ -22,10 +22,10 @@
 </div>
 @endsection
 
-@push('scripts')
+@push('js')
 <script>
-$(document).ready(function () {
-    $('#journals-table').DataTable({
+$(function () {
+    const table = $('#journals-table').DataTable({
         processing: true,
         serverSide: true,
         ajax: "{{ route('journals.index') }}",
