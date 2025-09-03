@@ -25,6 +25,7 @@ use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\LicenseNotificationController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\AccountingReportController;
+use App\Http\Controllers\JournalExportController;
 use App\Http\Controllers\Api\AccountingApiController;
 use App\Http\Controllers\Api\JournalApiController;
 use App\Http\Controllers\Api\LicenseSessionController;
@@ -135,6 +136,10 @@ Route::middleware(['auth', 'role:Super-Admin|Akuntan'])
         ->resource('accounting', AccountingAccountController::class)
          ->parameters(['accounting' => 'account']);
 
+Route::get('/journals/{journal}/print', [AccountingJournalController::class, 'print'])
+    ->name('journals.print');
+
+
 Route::get('/journals/report', [AccountingJournalController::class, 'report'])
     ->name('journals.report')
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
@@ -163,7 +168,7 @@ Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function 
 Route::get('/reports/income-statement', [AccountingReportController::class, 'incomeStatement'])
     ->name('reports.income-statement');
 
-Route::get('/journals/{journal}/export', [AccountingJournalController::class, 'export'])
+Route::get('/journals/{journal}/export', [JournalExportController::class, 'export'])
     ->name('journals.export');
 
 

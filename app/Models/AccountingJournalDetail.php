@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 
 class AccountingJournalDetail extends Model
@@ -48,7 +49,9 @@ public function getPersonNameAttribute()
         'student'       => \App\Models\Student::find($this->person)?->fullname ?? '-',
         'employee'      => \App\Models\Employee::find($this->person)?->fullname ?? '-',
         'licenseholder' => \App\Models\LicenseHolder::find($this->person)?->fullname ?? '-',
-        'license'       => \App\Models\License::find($this->person)?->name ?? '-',
+        'license'       => Str::isUuid($this->person)
+                                ? \App\Models\License::find($this->person)?->name
+                                : $this->person,
          default         => $this->person ?? '-', // ⬅️ fallback ke kolom langsung
     };
 }

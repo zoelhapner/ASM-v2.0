@@ -6,7 +6,7 @@
         <h2>Jurnal</h2>
         <button>
             <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-danger">
-                <i class="ti ti-file-earmark-arrow-down"></i> Export
+                <i class="ti ti-file-export"></i> Export
             </a>
         </button>
     </div>
@@ -117,8 +117,10 @@
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
             <i class="ti ti-pencil"></i> Ubah
         </a>
-        <button class="btn btn-danger">
-            <i class="ti ti-printer"></i> Cetak
+        <button>
+            <a href="{{ route('journals.print', $journal->id) }}" target="_blank" class="btn btn-danger">
+                <i class="ti ti-printer"></i> Cetak
+            </a>
         </button>
     </div>
 

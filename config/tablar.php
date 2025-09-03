@@ -229,7 +229,7 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
-                    'text' => 'Laporan Keuangan',
+                    'text' => 'Laba Rugi',
                     'url' => '/reports/income-statement',
                     'icon' => 'ti ti-report-analytics',
                 ],
