@@ -23,8 +23,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AccountingJournalController extends Controller
 {
-
-
     public function index(Request $request)
 {
     $user = Auth::user();

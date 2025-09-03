@@ -53,7 +53,9 @@
         <div class="mt-3">
             <button type="submit" class="btn btn-primary text-white">Filter</button>
             <a href="{{ route('journals.report') }}" class="btn btn-secondary text-white">Reset</a>
-            <a href="{{ route('kas.export.excel', request()->all()) }}" class="btn btn-success text-white">Export Excel</a>
+            <a href="{{ route('kas.export.excel', request()->all()) }}" class="btn btn-success text-white">
+                <i class="ti ti-file-export"></i> Export Excel
+            </a>
         </div>
     </form>
 
@@ -119,7 +121,7 @@
         </tbody>
         <tfoot>
             <tr class="fw-bold">
-                <td colspan="7" class="text-center">TOTAL</td>
+                <td colspan="7" class="text-end">TOTAL</td>
                 <td class="text-end">{{ number_format($totalDebit, 0, ',', '.') }}</td>
                 <td class="text-end">{{ number_format($totalKredit, 0, ',', '.') }}</td>
                 <td class="text-end">{{ number_format($saldo, 0, ',', '.') }}</td>

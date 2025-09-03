@@ -172,7 +172,7 @@ return [
                 [
                     'text' => 'Starter Pack',
                     'url' => '/starters',
-                    'icon' => 'ti ti-users',
+                    'icon' => 'ti ti-list-details',
                 ],
             ],
         ],
@@ -194,7 +194,7 @@ return [
          [
             'text' => 'Akuntasi',
             'url' => '#',
-            'icon' => 'ti ti-user-cog',
+            'icon' => 'ti ti-invoice',
             'role' => ['Super-Admin', 'Pemilik Lisensi', 'Akuntan'],
             'submenu' => [
                 [
@@ -214,7 +214,7 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
-                    'text' => 'Kas',
+                    'text' => 'Transaksi',
                     'url' => '/journals/report',
                     'icon' => 'ti ti-report-analytics',
                 ],

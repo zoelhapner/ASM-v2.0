@@ -5,13 +5,21 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-3">Neraca</h3>
             
+                    <a href="{{ route('journals.trialbalance', [
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date'),
+                            'license_id' => request('license_id')
+                        ]) }}" 
+                        class="btn btn-success" target="_blank">
+                        <i class="ti ti-file-export"></i>Ekspor Excel
+                    </a>
                     <a href="{{ route('journals.trial.pdf', [
                             'start_date' => request('start_date'),
                             'end_date' => request('end_date'),
                             'license_id' => request('license_id')
                         ]) }}" 
                         class="btn btn-danger" target="_blank">
-                        Ekspor PDF
+                        <i class="ti ti-printer"></i>Cetak
                     </a>
             
     </div>

@@ -6,7 +6,7 @@
     <style>
         body { font-family: Poppins, sans-serif; font-size: 12px; }
         h2 { text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table { border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #000; padding: 6px; text-align: left; }
         th { background: #f0f0f0; }
         .text-right { text-align: right; }
@@ -22,7 +22,7 @@
     <table>
         <thead>
             <tr>
-                <th>No. Akun</th>
+                <th style="width:5%">No. Akun</th>
                 <th>Nama Akun</th>
                 <th>Deskripsi</th>
                 <th>User</th>

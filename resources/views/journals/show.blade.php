@@ -5,8 +5,8 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal</h2>
 
-            <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-danger">
-                <i class="ti ti-file-export"></i> Export
+            <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-success">
+                <i class="ti ti-file-export"></i> Ekspor
             </a>
         
     </div>

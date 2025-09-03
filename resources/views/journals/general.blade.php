@@ -5,13 +5,13 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal Umum</h2>
         
-            <a href="{{ route('journals.export.pdf', [
+            <a href="{{ route('general.export', [
                     'start_date' => request('start_date'),
                     'end_date' => request('end_date'),
                     'license_id' => request('license_id')
                 ]) }}" 
                 class="btn btn-danger" target="_blank">
-                Export PDF
+                <i class="ti ti-file-export"></i> Ekspor
             </a>
         
     </div>
@@ -106,7 +106,18 @@
         </table>
     </div>
 
-    
+    <div class="text-end text-muted small mt-3">
+        <a href="{{ route('journals.export.pdf', [
+                    'start_date' => request('start_date'),
+                    'end_date' => request('end_date'),
+                    'license_id' => request('license_id')
+                ]) }}" 
+                class="btn btn-danger" target="_blank">
+                <i class="ti ti-printer"></i> Cetak
+        </a>
+    </div>
+
+
 </div>
 @endsection
 
@@ -120,17 +131,15 @@
 @endpush
 
 {{-- Tombol --}}
-    {{-- <div class="d-flex justify-content-start gap-2 mt-3">
+    {{-- 
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
             <i class="bi bi-pencil"></i> Ubah
         </a>
-        <button class="btn btn-danger">
-            <i class="bi bi-printer"></i> Cetak
-        </button>
+        
     </div> --}}
 
     {{-- Footer --}}
-    {{-- <div class="text-end text-muted small mt-3">
+    {{-- 
         Terakhir diubah oleh <strong>{{ $journal->creator->name ?? 'Sistem' }}</strong> 
         pada {{ \Carbon\Carbon::parse($journal->updated_at)->translatedFormat('d F Y H:i') }} GMT+7
     </div> --}}

@@ -50,7 +50,8 @@
             
                 <a href="{{ route('ledgerpdf', request()->query()) }}" 
                     target="_blank" 
-                    class="btn btn-danger">Ekspor PDF
+                    class="btn btn-danger">
+                    <i class="ti ti-file-export"></i> Ekspor PDF
                 </a>
             
     </div>
@@ -142,6 +143,11 @@
                     </tbody>
                 </table>
             </div>
+            <a href="{{ route('ledgerpdf', request()->query()) }}" 
+                    target="_blank" 
+                    class="btn btn-danger">
+                    <i class="ti ti-printer"></i> Cetak
+            </a>
         </div>
     @endforeach
 </div>

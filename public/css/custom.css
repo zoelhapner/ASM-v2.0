@@ -27,7 +27,7 @@ label.required::after {
 
 .table th.desc-column,
 .table td.desc-column {
-    min-width: 200px;
+    min-width: 100px;
     white-space: nowrap;
 }
 
