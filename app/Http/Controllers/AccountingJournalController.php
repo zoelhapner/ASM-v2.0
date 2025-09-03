@@ -692,7 +692,7 @@ public function exportLedgerPdf(Request $request)
     // 🔹 Load view PDF
     $pdf = Pdf::loadView('journals.ledgerpdf', compact(
         'ledger', 'licenseName', 'startDate', 'endDate'
-    ));
+    ))->setPaper('a4', 'landscape');
 
     return $pdf->stream('ledger_'.$startDate.'_to_'.$endDate.'.pdf');
 }

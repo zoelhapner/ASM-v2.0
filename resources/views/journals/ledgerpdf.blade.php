@@ -22,7 +22,7 @@
                     <td>{{ \Carbon\Carbon::parse($row['transaction_date'])->format('d/m/Y') }}</td>
                     <td>
                         @if($lastJournal !== $row['journal_code'])
-                            Jurnal Entry ({{ $row['journal_code'] }})
+                            ({{ $row['journal_code'] }})
                             @php $lastJournal = $row['journal_code']; @endphp
                         @endif
                     </td>

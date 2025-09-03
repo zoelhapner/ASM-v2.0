@@ -48,10 +48,10 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Buku Besar</h2>
             
-                <a href="{{ route('ledgerpdf', request()->query()) }}" 
+                <a href="{{ route('ledgerexcel', request()->query()) }}" 
                     target="_blank" 
                     class="btn btn-danger">
-                    <i class="ti ti-file-export"></i> Ekspor PDF
+                    <i class="ti ti-file-export"></i> Ekspor Excel
                 </a>
             
     </div>
@@ -95,20 +95,20 @@
 
 
     @foreach($ledger as $accountId => $data)
-        <div class="card mt-4">
-            <div class="card-header">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-light">
                 <strong>{{ $data['account']->account_code }} - {{ $data['account']->account_name }}</strong>
             </div>
             <div class="card-body p-0">
-                <table class="table table-sm mb-0">
-                    <thead>
+                <table class="table table-bordered table-striped mb-0">
+                    <thead class="table-danger">
                         <tr>
-                            <th>Tanggal</th>
-                            <th>Transaksi</th>
+                            <th width="12%">Tanggal</th>
+                            <th width="15%">Transaksi</th>
                             <th>Deskripsi</th>
-                            <th class="text-end">Debit</th>
-                            <th class="text-end">Kredit</th>
-                            <th class="text-end">Saldo</th>
+                            <th class="text-end" width="15%">Debit</th>
+                            <th class="text-end" width="15%">Kredit</th>
+                            <th class="text-end" width="15%">Saldo</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,13 +143,16 @@
                     </tbody>
                 </table>
             </div>
-            <a href="{{ route('ledgerpdf', request()->query()) }}" 
-                    target="_blank" 
-                    class="btn btn-danger">
-                    <i class="ti ti-printer"></i> Cetak
-            </a>
+            
         </div>
     @endforeach
+    <div class="d-flex justify-content-start gap-2 mt-3">
+        <a href="{{ route('ledgerpdf', request()->query()) }}" 
+                        target="_blank" 
+                        class="btn btn-danger">
+                        <i class="ti ti-printer"></i> Cetak
+        </a>
+    </div>
 </div>
 @endsection
 

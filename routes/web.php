@@ -171,7 +171,7 @@ Route::get('/reports/income-statement', [AccountingReportController::class, 'inc
 Route::get('/journals/{journal}/export', [JournalExportController::class, 'export'])
     ->name('journals.export');
 
-Route::get('/journals/{journal}/exportGeneral', [JournalExportController::class, 'exportGeneral'])
+Route::get('/journals/export/general', [JournalExportController::class, 'exportGeneral'])
     ->name('general.export');
 
 
