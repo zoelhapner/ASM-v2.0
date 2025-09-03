@@ -4,11 +4,11 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal</h2>
-        <button>
+
             <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-danger">
                 <i class="ti ti-file-export"></i> Export
             </a>
-        </button>
+        
     </div>
 
     {{-- Filter --}}
@@ -117,11 +117,10 @@
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
             <i class="ti ti-pencil"></i> Ubah
         </a>
-        <button>
-            <a href="{{ route('journals.print', $journal->id) }}" target="_blank" class="btn btn-danger">
-                <i class="ti ti-printer"></i> Cetak
-            </a>
-        </button>
+        
+        <a href="{{ route('journals.print', $journal->id) }}" target="_blank" class="btn btn-danger">
+            <i class="ti ti-printer"></i> Cetak
+        </a>
     </div>
 
     {{-- Footer --}}

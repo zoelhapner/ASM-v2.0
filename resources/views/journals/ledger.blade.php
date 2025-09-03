@@ -47,12 +47,12 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Buku Besar</h2>
-            <button>
+            
                 <a href="{{ route('ledgerpdf', request()->query()) }}" 
                     target="_blank" 
-                    class="btn btn-danger">Export PDF
+                    class="btn btn-danger">Ekspor PDF
                 </a>
-            </button>
+            
     </div>
     
     <div class="card shadow-sm border-0 mb-3">

@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                   
-                        <a href=" {{ route("students.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("students.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         

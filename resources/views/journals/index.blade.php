@@ -10,78 +10,45 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Tipe Lisensi</th>
-                <th>Nama Lisensi</th>
-                <th>No. Transaksi</th>
-                <th>Tanggal Dibuat</th>
-                {{-- <th>Deskripsi</th> --}}
-                <th>PIC</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody>
-    @forelse ($journals as $journal)
-            <tr>
-                <td>{{ $journal->license?->license_type ?? '-' }}</td>
-                <td>{{ $journal->license?->name ?? '-' }}</td>
-                <td>
-                    <a href="{{ route('journals.show', $journal->id) }}" 
-                       class="text-decoration-none fw-bold text-primary">
-                        {{ $journal->journal_code }}
-                    </a>
-                </td>
-                <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y')}}</td>
-                {{-- <td>
-                    
-                    $journal->details->first()?->description ?? '-'
-
-                    
-                    {{-- $journal->details->pluck('description')->implode(', ') 
-                </td> --}}
-                <td>
-                    @if($journal->creator)
-                        {{ $journal->creator->name }}
-                    @else
-                        <small class="fst-italic text-muted">dibuat oleh sistem</small>
-                    @endif
-                </td>
-                <td>
-                    @can('jurnal.lihat')
-                        <a href="{{ route('journals.show', $journal->id) }}" 
-                           class="btn btn-info btn-sm" title="Detail">
-                            <i class="ti ti-eye"></i>
-                        </a>
-                    @endcan
-                    @can('jurnal.ubah')
-                        <a href="{{ route('journals.edit', $journal->id) }}" 
-                           class="btn btn-warning btn-sm" title="Edit">
-                            <i class="ti ti-edit"></i>
-                        </a>
-                    @endcan
-                    @can('jurnal.hapus')
-                        <form action="{{ route('journals.destroy', $journal->id) }}" 
-                              method="POST" style="display:inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button class="btn btn-danger btn-sm" 
-                                    onclick="return confirm('Hapus jurnal ini?')" 
-                                    title="Hapus">
-                                <i class="ti ti-trash"></i>
-                            </button>
-                        </form>
-                    @endcan
-                </td>
-            </tr>
-    @empty
-        <tr>
-            <td colspan="7" class="text-center">Belum ada jurnal.</td>
-        </tr>
-    @endforelse
-</tbody>
-
-    </table>
+    <div class="table-responsive">
+        <table id="journals-table" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Tipe Lisensi</th>
+                    <th>Nama Lisensi</th>
+                    <th>No. Transaksi</th>
+                    <th>Tanggal Dibuat</th>
+                    <th>PIC</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function () {
+    $('#journals-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('journals.index') }}",
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'license_type', name: 'license.license_type' },
+            { data: 'license_name', name: 'license.name' },
+            { data: 'journal_code', name: 'journal_code' },
+            { data: 'transaction_date', name: 'transaction_date' },
+            { data: 'creator', name: 'creator.name', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false },
+        ],
+        order: [[4, 'desc']],
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.11.5/i18n/id.json"
+        }
+    });
+});
+</script>
+@endpush

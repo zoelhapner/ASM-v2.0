@@ -18,33 +18,75 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class AccountingJournalController extends Controller
 {
-    public function index()
+//     public function index()
+// {
+//     $user = Auth::user();
+
+//     $journals = AccountingJournal::with('license')
+//         ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
+//             // Untuk Pemilik Lisensi atau Akuntan
+//             $licenses = $user->hasRole('Pemilik Lisensi')
+//                 ? $user->licenses
+//                 : $user->employee?->licenses;
+
+//             abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
+
+//             $query->whereIn('license_id', $licenses->pluck('id'));
+//         })
+//         ->when(session()->has('active_license_id'), function ($query) {
+//             // Filter berdasarkan lisensi aktif di navbar
+//             $query->where('license_id', session('active_license_id'));
+//         })
+//         ->orderByDesc('transaction_date')
+//         ->get();
+
+//     return view('journals.index', compact('journals'));
+// }
+
+    public function index(Request $request)
 {
     $user = Auth::user();
 
-    $journals = AccountingJournal::with('license')
-        ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
-            // Untuk Pemilik Lisensi atau Akuntan
-            $licenses = $user->hasRole('Pemilik Lisensi')
-                ? $user->licenses
-                : $user->employee?->licenses;
+    if ($request->ajax()) {
+        $journals = AccountingJournal::with(['license', 'creator'])
+            ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
+                // Untuk Pemilik Lisensi atau Akuntan
+                $licenses = $user->hasRole('Pemilik Lisensi')
+                    ? $user->licenses
+                    : $user->employee?->licenses;
 
-            abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
+                abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
 
-            $query->whereIn('license_id', $licenses->pluck('id'));
-        })
-        ->when(session()->has('active_license_id'), function ($query) {
-            // Filter berdasarkan lisensi aktif di navbar
-            $query->where('license_id', session('active_license_id'));
-        })
-        ->orderByDesc('transaction_date')
-        ->get();
+                $query->whereIn('license_id', $licenses->pluck('id'));
+            })
+            ->when(session()->has('active_license_id'), function ($query) {
+                $query->where('license_id', session('active_license_id'));
+            })
+            ->orderByDesc('transaction_date');
 
-    return view('journals.index', compact('journals'));
+        return DataTables::of($journals)
+            ->addIndexColumn()
+            ->addColumn('license_type', fn($row) => $row->license->license_type ?? '-')
+            ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
+            ->addColumn('journal_code', function ($row) {
+                return '<a href="'.route('journals.show', $row->id).'" 
+                    class="fw-bold text-primary">'.$row->journal_code.'</a>';
+            })
+            ->addColumn('transaction_date', fn($row) => \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y'))
+            ->addColumn('creator', fn($row) => $row->creator?->name ?? '<small class="fst-italic text-muted">dibuat oleh sistem</small>')
+            ->addColumn('actions', function ($row) {
+                return view('journals.partials.actions', compact('row'))->render();
+            })
+            ->rawColumns(['journal_code', 'creator', 'actions'])
+            ->make(true);
+    }
+
+    return view('journals.index');
 }
 
     public function create(Request $request)

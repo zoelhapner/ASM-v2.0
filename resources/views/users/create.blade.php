@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form class="font-normal" style="font-weight: 400; font-family: 'Poppins', sans-serif;" action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
+                            <form class="font-normal" action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="row mb-4">
@@ -82,7 +82,7 @@
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary mt-4">Submit</button>
+                                <button type="submit" class="btn btn-primary mt-4 text-white">Submit</button>
                             </form>
 
                         </div>

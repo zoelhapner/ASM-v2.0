@@ -145,7 +145,6 @@ return [
         ['category' => 'BEBAN', 'account_code' => '569', 'account_name' => 'Biaya Cetak Kaos', 'sub_category' => 'Biaya Produksi Merchandise'],
         ['category' => 'BEBAN', 'account_code' => '570', 'account_name' => 'Biaya Cetak Gantungan Kunci', 'sub_category' => 'Biaya Produksi Merchandise'],
 
-        ['category' => 'BEBAN', 'account_code' => '6', 'account_name' => 'BEBAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'BEBAN', 'account_code' => '600', 'account_name' => 'Beban Penjualan & Pemasaran', 'sub_category' => 'Beban Penjualan & Pemasaran', 'is_parent' => true],
         ['category' => 'Beban', 'account_code' => '601', 'account_name' => 'Biaya Transportasi', 'sub_category' => 'Beban Penjualan & Pemasaran'],
         ['category' => 'Beban', 'account_code' => '602', 'account_name' => 'Biaya Digital', 'sub_category' => 'Beban Penjualan & Pemasaran'],
