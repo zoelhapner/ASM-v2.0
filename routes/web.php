@@ -24,7 +24,7 @@ use App\Http\Controllers\LicenseImportController;
 use App\Http\Controllers\UserImportController;
 use App\Http\Controllers\LicenseNotificationController;
 use App\Http\Controllers\KasController;
-use App\Http\Controllers\UserSelect2Controller;
+use App\Http\Controllers\AccountingReportController;
 use App\Http\Controllers\Api\AccountingApiController;
 use App\Http\Controllers\Api\JournalApiController;
 use App\Http\Controllers\Api\LicenseSessionController;

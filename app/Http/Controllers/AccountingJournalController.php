@@ -790,7 +790,7 @@ public function exportTrial(Request $request)
     return $pdf->stream('trial-balance.pdf');
 }
 
-public function export(Journal $journal)
+public function export(AccountingJournal $journal)
 {
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();

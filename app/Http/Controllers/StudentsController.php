@@ -221,7 +221,7 @@ class StudentsController extends Controller
         // Buat akun user
     $user = User::create([
         'name' => $validated['fullname'],
-        'email' => $validated['email'] ?: Str::slug($validated['fullname']).'@example.com',
+        'email' => $validated['email'],
         'password' => Hash::make('password123'), // default password
     ]);
 
