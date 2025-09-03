@@ -23,37 +23,17 @@ use Yajra\DataTables\Facades\DataTables;
 
 class AccountingJournalController extends Controller
 {
-//     public function index()
-// {
-//     $user = Auth::user();
 
-//     $journals = AccountingJournal::with('license')
-//         ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
-//             // Untuk Pemilik Lisensi atau Akuntan
-//             $licenses = $user->hasRole('Pemilik Lisensi')
-//                 ? $user->licenses
-//                 : $user->employee?->licenses;
-
-//             abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
-
-//             $query->whereIn('license_id', $licenses->pluck('id'));
-//         })
-//         ->when(session()->has('active_license_id'), function ($query) {
-//             // Filter berdasarkan lisensi aktif di navbar
-//             $query->where('license_id', session('active_license_id'));
-//         })
-//         ->orderByDesc('transaction_date')
-//         ->get();
-
-//     return view('journals.index', compact('journals'));
-// }
 
     public function index(Request $request)
 {
     $user = Auth::user();
 
+    $journals = AccountingJournal::query()
+        ->with(['license', 'creator']);
+
     if ($request->ajax()) {
-        $journals = AccountingJournal::query()
+        $journals = $journals
             ->select(
                 'accounting_journals.id',
                 'accounting_journals.journal_code',
