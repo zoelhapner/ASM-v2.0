@@ -6,9 +6,9 @@
 
    {{-- Filter --}}
     <form action="{{ route('journals.report') }}" method="GET" class="card p-4 mb-4">
-        <div class="row">
+        <div class="row mb-3">
             @if (auth()->user()->hasRole('Super-Admin') || auth()->user()->hasRole('Pemilik Lisensi') || auth()->user()->hasRole('Akuntan'))
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label for="license_id" class="form-label">Lisensi</label>
                     <select name="license_id" id="license_id" class="form-select select2">
                         <option value="">-- Semua Lisensi --</option>
@@ -20,14 +20,8 @@
                     </select>
                 </div>
             @endif   
-            {{-- <div class="col-md-4">
-                    @include('components.select-license', [
-                        'licenses' => $licenses,
-                        'selectedLicenseId' => old('license_id', $license->license_id ?? null)
-                    ])
-                </div> --}}
 
-           <div class="col-md-4">
+           <div class="col-md-3">
                 <label for="account_id" class="form-label">Akun</label>
                 <select name="account_id" id="account_id" class="form-select select2">
                     <option value="">-- Semua Akun --</option>
@@ -48,6 +42,11 @@
                 <label for="end_date" class="form-label">Sampai Tanggal</label>
                 <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
             </div>
+
+            <div class="col-md-2">
+                <label>Sampai Tanggal</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari data...">
+            </div>
         </div>
 
         <div class="mt-3">
@@ -59,11 +58,8 @@
         </div>
     </form>
 
-    
-
-
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
+        <table id="kasTable" class="table table-bordered table-striped">
         <thead class="text-center">
             <tr>
                 <th>NO</th>
@@ -163,6 +159,24 @@
             } else {
                 $('#account_id').html('<option value="">-- Semua Akun --</option>').prop('disabled', false);
             }
+        });
+
+        let table = $('#kasTable').DataTable({
+            pageLength: 25,
+            ordering: true,
+            language: {
+                search: "Cari:",
+                lengthMenu: "Tampilkan _MENU_ data",
+                zeroRecords: "Tidak ada data ditemukan",
+                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                infoEmpty: "Tidak ada data tersedia",
+                infoFiltered: "(difilter dari total _MAX_ data)",
+            }
+        });
+
+        // Pencarian manual dengan input
+        $('#searchInput').on('keyup', function() {
+            table.search(this.value).draw();
         });
     });
 

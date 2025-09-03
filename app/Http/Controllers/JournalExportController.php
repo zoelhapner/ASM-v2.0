@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use Illuminate\Support\Facades\Response;    
+use Illuminate\Support\Facades\Response; 
+use Illuminate\Http\Request;   
 use App\Models\AccountingJournal;
     
 
