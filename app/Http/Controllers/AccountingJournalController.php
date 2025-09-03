@@ -30,7 +30,7 @@ class AccountingJournalController extends Controller
     $user = Auth::user();
 
     $journals = AccountingJournal::query()
-        ->with(['license', 'creator']);
+        ->with('license');
 
     if ($request->ajax()) {
         $journals = $journals
