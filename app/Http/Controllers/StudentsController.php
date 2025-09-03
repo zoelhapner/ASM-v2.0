@@ -323,10 +323,6 @@ private function generateNis($licenseId)
     ));
 }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Student $student)
     {
         $validated = $request->validate([

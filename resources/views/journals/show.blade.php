@@ -4,8 +4,10 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal</h2>
-        <button class="btn btn-danger">
-            <i class="bi bi-file-earmark-arrow-down"></i> Export
+        <button>
+            <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-danger">
+                <i class="ti ti-file-earmark-arrow-down"></i> Export
+            </a>
         </button>
     </div>
 
@@ -113,10 +115,10 @@
     {{-- Tombol --}}
     <div class="d-flex justify-content-start gap-2 mt-3">
         <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
-            <i class="bi bi-pencil"></i> Ubah
+            <i class="ti ti-pencil"></i> Ubah
         </a>
         <button class="btn btn-danger">
-            <i class="bi bi-printer"></i> Cetak
+            <i class="ti ti-printer"></i> Cetak
         </button>
     </div>
 

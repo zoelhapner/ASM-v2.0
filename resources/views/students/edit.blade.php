@@ -395,13 +395,13 @@
         });
 
         // 🔹 Kalau ada activeLicenseId dari navbar → jalankan otomatis
-        if (activeLicenseId) {
-            // set value select (optional kalau kamu ingin select ikut terisi)
-            $licenseSelect.val(activeLicenseId).trigger('change');
+        // if (activeLicenseId) {
+        //     // set value select (optional kalau kamu ingin select ikut terisi)
+        //     $licenseSelect.val(activeLicenseId).trigger('change');
 
-            // atau langsung generate tanpa ubah dropdown
-            generateNis(activeLicenseId);
-        }
+        //     // atau langsung generate tanpa ubah dropdown
+        //     generateNis(activeLicenseId);
+        // }
 
     });
 </script>
