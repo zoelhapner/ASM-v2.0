@@ -35,16 +35,14 @@ class AccountingJournalController extends Controller
     if ($request->ajax()) {
         $journals = $journals
             ->select(
-                'accounting_journals.id',
-                'accounting_journals.journal_code',
-                'accounting_journals.transaction_date',
-                'licenses.license_type',
+                'accounting_journals.*',
+                'licenses.license_type as license_type',
                 'licenses.name as license_name',
-                'users.name as creator_name'
+                'users.name as creator'
             )
             ->leftJoin('licenses', 'accounting_journals.license_id', '=', 'licenses.id')
             ->leftJoin('users', 'accounting_journals.created_by', '=', 'users.id')
-            ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
+            ->when($user->hasRole('Super-Admin'), function ($query) use ($user) {
                 // Filter lisensi untuk Pemilik Lisensi & Akuntan
                 $licenses = $user->hasRole('Pemilik Lisensi')
                     ? $user->licenses
