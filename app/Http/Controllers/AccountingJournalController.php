@@ -53,34 +53,51 @@ class AccountingJournalController extends Controller
     $user = Auth::user();
 
     if ($request->ajax()) {
-        $journals = AccountingJournal::with(['license', 'creator'])
+        $journals = AccountingJournal::query()
+            ->select(
+                'accounting_journals.id',
+                'accounting_journals.journal_code',
+                'accounting_journals.transaction_date',
+                'licenses.license_type',
+                'licenses.name as license_name',
+                'users.name as creator_name'
+            )
+            ->leftJoin('licenses', 'accounting_journals.license_id', '=', 'licenses.id')
+            ->leftJoin('users', 'accounting_journals.created_by', '=', 'users.id')
             ->when(!$user->hasRole('Super-Admin'), function ($query) use ($user) {
-                // Untuk Pemilik Lisensi atau Akuntan
+                // Filter lisensi untuk Pemilik Lisensi & Akuntan
                 $licenses = $user->hasRole('Pemilik Lisensi')
                     ? $user->licenses
                     : $user->employee?->licenses;
 
-                abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
-
-                $query->whereIn('license_id', $licenses->pluck('id'));
+                if ($licenses && $licenses->isNotEmpty()) {
+                    $query->whereIn('accounting_journals.license_id', $licenses->pluck('id'));
+                } else {
+                    $query->whereNull('accounting_journals.license_id'); // Biar aman
+                }
             })
             ->when(session()->has('active_license_id'), function ($query) {
-                $query->where('license_id', session('active_license_id'));
+                $query->where('accounting_journals.license_id', session('active_license_id'));
             })
-            ->orderByDesc('transaction_date');
+            ->orderByDesc('accounting_journals.transaction_date');
 
         return DataTables::of($journals)
             ->addIndexColumn()
-            ->addColumn('license_type', fn($row) => $row->license->license_type ?? '-')
-            ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
-            ->addColumn('journal_code', function ($row) {
-                return '<a href="'.route('journals.show', $row->id).'" 
-                    class="fw-bold text-primary">'.$row->journal_code.'</a>';
+            ->editColumn('transaction_date', function ($row) {
+                return \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y');
             })
-            ->addColumn('transaction_date', fn($row) => \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y'))
-            ->addColumn('creator', fn($row) => $row->creator?->name ?? '<small class="fst-italic text-muted">dibuat oleh sistem</small>')
+            ->addColumn('journal_code', function ($row) {
+                return '<a href="' . route('journals.show', $row->id) . '" 
+                        class="fw-bold text-primary">'
+                        . $row->journal_code . '</a>';
+            })
+            ->addColumn('creator', function ($row) {
+                return $row->creator_name 
+                    ? e($row->creator_name)
+                    : '<small class="fst-italic text-muted">dibuat oleh sistem</small>';
+            })
             ->addColumn('actions', function ($row) {
-                return view('journals.partials.actions', compact('row'))->render();
+                return view('journals.partials.actions', ['row' => $row])->render();
             })
             ->rawColumns(['journal_code', 'creator', 'actions'])
             ->make(true);
