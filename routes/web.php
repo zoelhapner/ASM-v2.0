@@ -165,8 +165,12 @@ Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function 
     Route::resource('journals', AccountingJournalController::class);
 });
 
+Route::get('/reports/balance_sheet', [AccountingJournalController::class, 'balanceSheet'])
+    ->name('reports.balance_sheet')
+    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+
 Route::get('/reports/income-statement', [AccountingReportController::class, 'incomeStatement'])
-    ->name('reports.income-statement');
+    ->name('reports.income_statement');
 
 Route::get('/journals/{journal}/export', [JournalExportController::class, 'export'])
     ->name('journals.export');
