@@ -115,6 +115,16 @@
                     </tr>
                 </tbody>
             </table>
+            <div class="d-flex justify-content-start gap-2 mt-3">
+                    <a href="{{ route('journals.income.pdf', [
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date'),
+                            'license_id' => request('license_id')
+                        ]) }}" 
+                        class="btn btn-danger" target="_blank">
+                        <i class="ti ti-printer"></i>Cetak
+                    </a>
+            </div>
         </div>
     </div>
 
