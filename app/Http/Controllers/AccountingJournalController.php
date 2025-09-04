@@ -407,11 +407,16 @@ public function store(StoreAccountingJournalRequest $request)
 
 
     public function report(Request $request)
-
 {
-$user = Auth::user();
+    $user = Auth::user();
+    
+    $accountId = $request->input('account_id');
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    $licenseFilterId = $request->input('license_id');
 
-$licenses = collect();
+    
+    $licenses = collect();
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
     } elseif ($user->hasRole('Pemilik Lisensi')) {
@@ -428,40 +433,46 @@ $licenses = collect();
         abort(403, 'Role tidak diizinkan.');
     }
 
-$accounts = AccountingAccount::where('is_parent', false)
-        ->where('is_active', true)
-        ->whereIn('license_id', $licenses->pluck('id'))
-        ->orderBy('account_code')
-        ->get();
+    // Filter akun
+    $accountsQuery = AccountingAccount::where('is_parent', false)->where('is_active', true);
+    if ($licenseFilterId) {
+        $accountsQuery->where('license_id', $licenseFilterId);
+    } else {
+        $accountsQuery->whereIn('license_id', $licenses->pluck('id'));
+    }
+    $accounts = $accountsQuery->orderBy('account_code')->get();
 
-    // Query jurnal
-    $journals = AccountingJournal::with(['creator', 'license'])
-        ->when($request->license_id, fn($q) => $q->where('license_id', $request->license_id))
-        ->when($request->account_id, function ($q) use ($request) {
-            $q->whereHas('details', function ($q2) use ($request) {
-                $q2->where('account_id', $request->account_id);
-            });
-        })
-        ->when($request->from_date, fn($q) => $q->whereDate('transaction_date', '>=', $request->from_date))
-        ->when($request->to_date, fn($q) => $q->whereDate('transaction_date', '<=', $request->to_date));
+    // Filter jurnal
+    $journals = AccountingJournal::with(['details.account', 'creator'])
+        ->when($startDate, fn($q) => $q->whereDate('transaction_date', '>=', $startDate))
+        ->when($endDate, fn($q) => $q->whereDate('transaction_date', '<=', $endDate))
+        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)));
 
-    // Hitung grand total untuk semua data (bukan cuma per page)
-    $totalAll = \DB::table('accounting_journal_details')
-        ->whereIn('journal_id', $journals->pluck('id'))
-        ->sum(\DB::raw('debit - credit'));
-
-
-    if ($request->ajax()) {
-        return DataTables::of($journals)
-            ->addIndexColumn()
-            ->addColumn('transaction_date', fn($row) => \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y'))
-            ->addColumn('creator', fn($row) => $row->creator->name ?? '-')
-            ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
-            ->with('totalAll', $totalAll)
-            ->make(true);
+    if ($licenseFilterId) {
+        if (
+            $user->hasRole('Super-Admin') ||
+            ($user->hasRole('Pemilik Lisensi') && $licenses->pluck('id')->contains($licenseFilterId)) ||
+            ($user->hasRole('Akuntan') && $licenses->pluck('id')->contains($licenseFilterId))
+        ) {
+            $journals->where('license_id', $licenseFilterId);
+        } else {
+            abort(403, 'Lisensi tidak valid.');
+        }
+    } else {
+        $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
-return view('journals.report', compact('licenses', 'accounts'));
+    $journals = $journals->orderBy('transaction_date')->get();
+
+    return view('journals.report', compact(
+        'accounts',
+        'journals',
+        'licenses',
+        'licenseFilterId',
+        'accountId',
+        'startDate',
+        'endDate'
+    ));
 }
 
    public function generalJournal(Request $request)

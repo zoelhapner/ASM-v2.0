@@ -9,6 +9,8 @@ class AccountingReportController extends Controller
 {
     public function incomeStatement(Request $request)
 {
+    $user = Auth::user();
+    
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
     

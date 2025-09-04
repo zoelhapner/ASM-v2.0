@@ -88,8 +88,8 @@
                                 <td>{{ $detail->description }}</td>
                                 <td>{{ $detail->account->account_code }}</td>
                                 <td>{{ $detail->account->account_name }}</td>
-                                <td class="text-end">Rp {{ number_format($detail->debit, 0, ',', '.') }}</td>
-                                <td class="text-end">Rp {{ number_format($detail->credit, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($detail->debit, 0, ',', '.') }}</td>
+                                <td>Rp {{ number_format($detail->credit, 0, ',', '.') }}</td>
                             </tr>
                         @endforeach
                     @endforeach
