@@ -12,6 +12,12 @@ label.required::after {
   color: #db2827;
 }
 
+.table th.code-column,
+.table td.code-column {
+    min-width: 50px;
+    white-space: nowrap;
+}
+
 .table th.account-column,
 .table td.account-column {
     min-width: 200px;

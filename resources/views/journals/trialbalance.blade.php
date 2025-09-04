@@ -107,7 +107,7 @@
             @if($totalDebit === $totalCredit)
                 <div class="alert alert-success mt-3">
                     ✅ Neraca Saldo seimbang (Debit: Rp {{ number_format($totalDebit, 2, ',', '.') }} | 
-                    Kredit: {{ Rp number_format($totalCredit, 2, ',', '.') }})
+                    Kredit: Rp {{ number_format($totalCredit, 2, ',', '.') }})
                 </div>
             @else
                 <div class="alert alert-warning mt-3">

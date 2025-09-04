@@ -1,184 +1,146 @@
-@extends('tablar::page')
+@extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="text-center">TRANSAKSI</h1>
+<div class="container-fluid">
+    <h3 class="mb-4">Laporan Kas</h3>
 
-   {{-- Filter --}}
-    <form action="{{ route('journals.report') }}" method="GET" class="card p-4 mb-4">
-        <div class="row mb-3">
-            @if (auth()->user()->hasRole('Super-Admin') || auth()->user()->hasRole('Pemilik Lisensi') || auth()->user()->hasRole('Akuntan'))
+    <!-- Filter Box -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <!-- Lisensi -->
                 <div class="col-md-3">
                     <label for="license_id" class="form-label">Lisensi</label>
-                    <select name="license_id" id="license_id" class="form-select select2">
-                        <option value="">-- Semua Lisensi --</option>
-                        @foreach ($licenses as $license)
-                            <option value="{{ $license->id }}" {{ request('license_id') == $license->id ? 'selected' : '' }}>
-                                {{ $license->name }}
+                    <select id="license_id" class="form-control">
+                        <option value="">Semua Lisensi</option>
+                        @foreach($licenses as $license)
+                            <option value="{{ $license->id }}">{{ $license->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Akun -->
+                <div class="col-md-3">
+                    <label for="account_id" class="form-label">Akun</label>
+                    <select id="account_id" class="form-control">
+                        <option value="">Semua Akun</option>
+                        @foreach($accounts as $account)
+                            <option value="{{ $account->id }}">
+                                {{ $account->account_code }} - {{ $account->account_name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
-            @endif   
 
-           <div class="col-md-3">
-                <label for="account_id" class="form-label">Akun</label>
-                <select name="account_id" id="account_id" class="form-select select2">
-                    <option value="">-- Semua Akun --</option>
-                    @foreach ($accounts as $account)
-                        <option value="{{ $account->id }}" {{ request('account_id') == $account->id ? 'selected' : '' }}>
-                            [{{ $account->account_code }}] {{ $account->account_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+                <!-- Dari Tanggal -->
+                <div class="col-md-2">
+                    <label for="from_date" class="form-label">Dari</label>
+                    <input type="date" id="from_date" class="form-control">
+                </div>
 
-            <div class="col-md-2">
-                <label for="start_date" class="form-label">Dari Tanggal</label>
-                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
-            </div>
+                <!-- Sampai Tanggal -->
+                <div class="col-md-2">
+                    <label for="to_date" class="form-label">Sampai</label>
+                    <input type="date" id="to_date" class="form-control">
+                </div>
 
-            <div class="col-md-2">
-                <label for="end_date" class="form-label">Sampai Tanggal</label>
-                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
-            </div>
-
-            <div class="col-md-2">
-                <label>Cari Transaksi</label>
-                <input type="text" id="searchInput" class="form-control" placeholder="Cari data...">
+                <!-- Tombol -->
+                <div class="col-md-2 d-flex">
+                    <button id="filter" class="btn btn-primary me-2 w-50">Filter</button>
+                    <button id="reset" class="btn btn-secondary w-50">Reset</button>
+                </div>
             </div>
         </div>
-
-        <div class="mt-3">
-            <button type="submit" class="btn btn-primary text-white">Filter</button>
-            <a href="{{ route('journals.report') }}" class="btn btn-secondary text-white">Reset</a>
-            <a href="{{ route('kas.export.excel', request()->all()) }}" class="btn btn-success text-white">
-                <i class="ti ti-file-export"></i> Export Excel
-            </a>
-        </div>
-    </form>
-
-    <div class="table-responsive">
-        <table id="kasTable" class="table table-bordered table-striped">
-        <thead class="text-center">
-            <tr>
-                <th>NO</th>
-                <th>TANGGAL</th>
-                <th class="desc-column">DESKRIPSI</th>
-                <th>KODE AKUN</th>
-                <th class="account-column">AKUN</th>
-                <th class="user-column">USER</th>
-                <th class="user-column">PIC</th>
-                <th>DEBIT (pemasukan)</th>
-                <th>KREDIT (pengeluaran)</th>
-                <th>SALDO</th>
-                <th>KETERANGAN</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $no = 1;
-                $saldo = 0;
-                $totalDebit = 0;
-                $totalKredit = 0;
-            @endphp
-
-            @foreach ($journals as $journal)
-                @foreach ($journal->details as $detail)
-                    @php
-                        $debit = $detail->debit;
-                        $kredit = $detail->credit;
-                        $saldo += $debit - $kredit;
-                        $totalDebit += $debit;
-                        $totalKredit += $kredit;
-                    @endphp
-                    <tr>
-                        <td class="text-center">{{ $no++ }}</td>
-                        <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</td>
-                        <td class="desc-column">{{ $detail->description }}</td>
-                        <td>{{ $detail->account->account_code }}</td>
-                        <td class="account-column">{{ $detail->account->account_name }}</td>
-                        <td class="user-column">{{ $detail->person_name }}</td>
-                        <td>
-                            @if($journal->creator)
-                                {{ $journal->creator->name }}
-                            @else
-                                <small class="fst-italic text-muted">dibuat oleh sistem</small>
-                            @endif
-                        </td>
-
-                        <td class="text-end">Rp {{ number_format($debit, 2, ',', '.') }}</td>
-                        <td class="text-end">Rp {{ number_format($kredit, 2, ',', '.') }}</td>
-                        <td class="text-end">Rp {{ number_format($saldo, 2, ',', '.') }}</td>
-                        <td>{{ $jouurnal->description ?? '-' }}</td>
-                    </tr>
-                @endforeach
-            @endforeach
-        </tbody>
-        <tfoot>
-            <tr class="fw-bold">
-                <td colspan="7" class="text-end">TOTAL</td>
-                <td class="text-end">Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
-                <td class="text-end">Rp {{ number_format($totalKredit, 2, ',', '.') }}</td>
-                <td class="text-end">Rp {{ number_format($saldo, 2, ',', '.') }}</td>
-                <td></td>
-            </tr>
-        </tfoot>
-    </table>
     </div>
 
+    <!-- Search Box -->
+    <div class="mb-3">
+        <input type="text" id="global_search" class="form-control" placeholder="Cari rincian, akun, atau user...">
+    </div>
+
+    <!-- Table -->
+    <div class="card">
+        <div class="card-body">
+            <table id="kasTable" class="table table-bordered table-striped w-100">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Tanggal</th>
+                        <th>Rincian</th>
+                        <th>Kode Akun</th>
+                        <th>Akun</th>
+                        <th>User</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="6" class="text-end">Grand Total:</th>
+                        <th id="grand_total" class="text-end">Rp 0</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection
 
-@push('js')
-    <script>
-        $(document).ready(function () {
-        $('.select2').select2({
-            placeholder: "-- Pilih --",
-            width: '100%'
-        });
-        
-        const initialLicenseId = $('#license_id').val();
-
-        if (initialLicenseId) {
-            $('#license_id').trigger('change');
-        }
-
-        $('#license_id').on('change', function () {
-            const licenseId = $(this).val();
-            $('#account_id').html('<option value="">Memuat...</option>').prop('disabled', true);
-
-            if (licenseId) {
-                $.get(`/get-accounts-by-license/${licenseId}`, function (data) {
-                    let options = '<option value="">-- Semua Akun --</option>';
-                    data.forEach(function (account) {
-                        options += `<option value="${account.id}">[${account.account_code}] ${account.account_name}</option>`;
-                    });
-                    $('#account_id').html(options).prop('disabled', false);
-                });
+@push('scripts')
+<script>
+$(document).ready(function() {
+    let table = $('#kasTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('kas.index') }}",
+            data: function(d) {
+                d.license_id = $('#license_id').val();
+                d.account_id = $('#account_id').val();
+                d.from_date = $('#from_date').val();
+                d.to_date = $('#to_date').val();
+                d.search = $('#global_search').val();
+            }
+        },
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'transaction_date', name: 'transaction_date' },
+            { data: 'description', name: 'description' },
+            { data: 'account_code', name: 'account_code' },
+            { data: 'account_name', name: 'account_name' },
+            { data: 'creator', name: 'creator' },
+            { data: 'total', name: 'total', render: $.fn.dataTable.render.number(',', '.', 0, 'Rp '), className: "text-end" }
+        ],
+        drawCallback: function(settings) {
+            let json = this.api().ajax.json();
+            if (json && json.totalAll !== undefined) {
+                $('#grand_total').html('Rp ' + parseInt(json.totalAll).toLocaleString('id-ID'));
             } else {
-                $('#account_id').html('<option value="">-- Semua Akun --</option>').prop('disabled', false);
+                $('#grand_total').html('Rp 0');
             }
-        });
-
-        let table = $('#kasTable').DataTable({
-            pageLength: 25,
-            ordering: true,
-            language: {
-                lengthMenu: "Tampilkan _MENU_ data",
-                zeroRecords: "Tidak ada data ditemukan",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                infoEmpty: "Tidak ada data tersedia",
-                infoFiltered: "(difilter dari total _MAX_ data)",
-            }
-        });
-
-        // Pencarian manual dengan input
-        $('#searchInput').on('keyup', function() {
-            table.search(this.value).draw();
-        });
+        }
     });
 
-    </script>
+    // Global search realtime
+    $('#global_search').keyup(function() {
+        table.search($(this).val()).draw();
+    });
+
+    // Trigger filter
+    $('#filter').click(function() {
+        table.ajax.reload();
+    });
+
+    // Reset filter
+    $('#reset').click(function() {
+        $('#license_id').val('');
+        $('#account_id').val('');
+        $('#from_date').val('');
+        $('#to_date').val('');
+        $('#global_search').val('');
+        table.ajax.reload();
+    });
+});
+</script>
 @endpush
+
 
