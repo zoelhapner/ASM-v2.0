@@ -446,7 +446,10 @@ $accounts = AccountingAccount::where('is_parent', false)
         ->when($request->to_date, fn($q) => $q->whereDate('transaction_date', '<=', $request->to_date));
 
     // Hitung grand total untuk semua data (bukan cuma per page)
-    $totalAll = (clone $journals)->sum('total');
+    $totalAll = \DB::table('accounting_journal_details')
+        ->whereIn('journal_id', $journals->pluck('id'))
+        ->sum(\DB::raw('debit - credit'));
+
 
     if ($request->ajax()) {
         return DataTables::of($journals)
@@ -454,7 +457,6 @@ $accounts = AccountingAccount::where('is_parent', false)
             ->addColumn('transaction_date', fn($row) => \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y'))
             ->addColumn('creator', fn($row) => $row->creator->name ?? '-')
             ->addColumn('license_name', fn($row) => $row->license->name ?? '-')
-            ->addColumn('total', fn($row) => $row->total)
             ->with('totalAll', $totalAll)
             ->make(true);
     }

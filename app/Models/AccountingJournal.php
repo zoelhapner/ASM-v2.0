@@ -36,4 +36,10 @@ class AccountingJournal extends Model
     {
         return $this->hasMany(AccountingJournalDetail::class, 'journal_id');
     }
+
+    public function getTotalAttribute()
+{
+    // return $this->details->sum('amount'); // kalau pakai kolom amount
+    return $this->details->sum('debit') - $this->details->sum('credit');
+}
 }
