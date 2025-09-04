@@ -765,8 +765,9 @@ private function getGroupedAccounts($startDate, $endDate, $licenseId)
                 'debit'  => $balance > 0 ? $balance : 0,
                 'credit' => $balance < 0 ? abs($balance) : 0,
             ];
-        });
-        ->filter(function ($acc) {
+        })
+
+        -> filter(function ($acc) {
             return !$acc['is_parent'] && $acc['category'] !== '-';
         });
 
