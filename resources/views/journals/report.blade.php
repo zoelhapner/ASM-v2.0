@@ -92,7 +92,16 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('kas.index') }}",
+            url: 'https://asm.aharightbrain.com/reports',
+            type: 'GET',
+            xhrFields: {
+                withCredentials: true 
+            },
+            error: function (xhr, error, thrown) {
+                console.error("❌ AJAX Error:", error, thrown);
+                console.log("📄 Response Text:", xhr.responseText);
+                alert("Gagal memuat data! Cek console untuk detail error.");
+            } 
             data: function(d) {
                 d.license_id = $('#license_id').val();
                 d.account_id = $('#account_id').val();

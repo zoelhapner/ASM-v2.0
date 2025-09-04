@@ -32,7 +32,8 @@
 </head>
 <body>
     <div class="header">
-        <h2 style="text-align:center;">Trial Balance Report</h2>
+        <h1 style="text-align:center;">Laporan Neraca </h1>
+        <h2 style="text-align:center;">CV AHA Right Brain </h2>
         <h4>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</h4>
         @if($licenses->where('id', $request->license_id)->first())
             <h4>Lisensi: {{ $licenses->where('id', $request->license_id)->first()->name }}</h4>
@@ -61,14 +62,14 @@
                         <tr>
                             <td>{{ $acc['account_code'] }}</td>
                             <td class="text-left">{{ $acc['account_name'] }}</td>
-                            <td>{{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                            <td>{{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                            <td>Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                            <td>Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
                         </tr>
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-right"><strong>Subtotal {{ $subCat }}</strong></td>
-                        <td><strong>{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</strong></td>
-                        <td><strong>{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</strong></td>
+                        <td><strong>Rp {{ number_format($data['subtotalDebit'], 2, ',', '.') }}</strong></td>
+                        <td><strong>Rp {{ number_format($data['subtotalCredit'], 2, ',', '.') }}</strong></td>
                     </tr>
                 @endforeach
             @endforeach
@@ -76,8 +77,8 @@
         <tfoot>
             <tr>
                 <td colspan="2" class="text-right"><strong>Total</strong></td>
-                <td><strong>{{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
-                <td><strong>{{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp {{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>

@@ -177,6 +177,9 @@ Route::get('/journals/export/general', [JournalExportController::class, 'exportG
 Route::get('/ledger/export', [JournalExportController::class, 'exportLedger'])
     ->name('ledger.export');
 
+Route::get('/trial/export', [JournalExportController::class, 'exportTrialBalance'])
+    ->name('trial.export');
+
 
 
 

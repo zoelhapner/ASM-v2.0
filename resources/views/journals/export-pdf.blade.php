@@ -8,8 +8,10 @@
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         table th, table td { border: 1px solid #444; padding: 6px; text-align: right;}
         table th { background-color: #f5f5f5; }
-        .text-right { text-align: right; }
-        .title { text-align: center; margin-bottom: 10px; }
+        h3, p {
+            text-align: center;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -24,8 +26,8 @@
                 <th>Deskripsi</th>
                 <th>No. Akun</th>
                 <th>Nama Akun</th>
-                <th class="text-right">Debit</th>
-                <th class="text-right">Kredit</th>
+                <th>Debit</th>
+                <th>Kredit</th>
             </tr>
         </thead>
         <tbody>
@@ -43,8 +45,8 @@
                         <td>{{ $detail->description }}</td>
                         <td>{{ $detail->account->account_code }}</td>
                         <td>{{ $detail->account->account_name }}</td>
-                        <td class="text-right">{{ number_format($detail->debit, 2, ',', '.') }}</td>
-                        <td class="text-right">{{ number_format($detail->credit, 2, ',', '.') }}</td>
+                        <td>{{ number_format($detail->debit, 2, ',', '.') }}</td>
+                        <td>{{ number_format($detail->credit, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
             @endforeach
@@ -52,8 +54,8 @@
         <tfoot>
             <tr>
                 <td colspan="5"><strong>Total</strong></td>
-                <td class="text-right"><strong>Rp {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
-                <td class="text-right"><strong>Rp {{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp {{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>

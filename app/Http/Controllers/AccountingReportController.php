@@ -8,62 +8,60 @@ use Illuminate\Http\Request;
 class AccountingReportController extends Controller
 {
     public function incomeStatement(Request $request)
-    {
-        $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
-        $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
-        $licenseId = $request->license_id ?? null;
+{
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+    $licenseId = $request->license_id ?? null;
 
-        $accounts = AccountingAccount::with(['details.journal' => function ($q) use ($startDate, $endDate) {
+    $accounts = AccountingAccount::with(['details.journal' => function ($q) use ($startDate, $endDate) {
             $q->whereBetween('transaction_date', [$startDate, $endDate]);
         }])
         ->when($licenseId, fn($q) => $q->where('license_id', $licenseId))
-        ->get();
-
-        $incomeAccounts = [];
-        $expenseAccounts = [];
-        $totalIncome = 0;
-        $totalExpense = 0;
-
-        foreach ($accounts as $account) {
-            $debit = $account->details->sum('debit');
+        ->whereIn('category', ['Pendapatan', 'Beban'])
+        ->get()
+        ->map(function ($account) {
+            $debit  = $account->details->sum('debit');
             $credit = $account->details->sum('credit');
 
-            // hitung saldo (untuk Pendapatan saldo normal di kredit, untuk expense di debit)
             $balance = ($account->category === 'Pendapatan')
                 ? ($credit - $debit)
                 : ($debit - $credit);
 
-            if ($account->category === 'Pendapatan') {
-                $incomeAccounts[] = [
-                    'code' => $account->account_code,
-                    'name' => $account->account_name,
-                    'balance' => $balance,
-                ];
-                $totalIncome += $balance;
-            }
+            return [
+                'code'        => $account->account_code,
+                'name'        => $account->account_name,
+                'category'    => $account->category,
+                'sub_category'=> $account->sub_category,
+                'is_parent'   => $account->is_parent,
+                'balance'     => $balance,
+            ];
+        })
+        ->reject(fn($acc) => $acc['is_parent']); // skip akun induk
 
-            if ($account->category === 'Beban') {
-                $expenseAccounts[] = [
-                    'code' => $account->account_code,
-                    'name' => $account->account_name,
-                    'balance' => $balance,
-                ];
-                $totalExpense += $balance;
-            }
-        }
+    // 🔹 Grouping by category & sub_category
+    $grouped = $accounts->groupBy('category')->map(function ($catGroup) {
+        return $catGroup->groupBy('sub_category')->map(function ($subGroup) {
+            return [
+                'accounts' => $subGroup->sortBy('code')->values(),
+                'subtotal' => $subGroup->sum('balance'),
+            ];
+        });
+    });
 
-        $netIncome = $totalIncome - $totalExpense;
+    $totalIncome  = $grouped['Pendapatan']?->sum('subtotal') ?? 0;
+    $totalExpense = $grouped['Beban']?->sum('subtotal') ?? 0;
+    $netIncome    = $totalIncome - $totalExpense;
 
-        return view('reports.income_statement', compact(
-            'startDate',
-            'endDate',
-            'incomeAccounts',
-            'expenseAccounts',
-            'totalIncome',
-            'totalExpense',
-            'netIncome'
-        ));
-    }
+    return view('reports.income_statement', compact(
+        'startDate',
+        'endDate',
+        'grouped',
+        'totalIncome',
+        'totalExpense',
+        'netIncome'
+    ));
+}
+
 
 }
 

@@ -4,8 +4,8 @@
 
 @foreach($ledger as $accountId => $data)
     <h4>{{ $data['account']->account_code }} - {{ $data['account']->account_name }}</h4>
-    <table class="table table-bordered table-striped mb-0">
-        <thead class="table-danger">
+    <table>
+        <thead>
             <tr>
                 <th width="12%">Tanggal</th>
                 <th width="15%">Transaksi</th>

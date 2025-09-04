@@ -4,13 +4,13 @@
 <div class="container-fluid mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-3">Neraca</h3>
-            <a href="{{ route('journals.trialbalance', [
+            <a href="{{ route('trial.export', [
                     'start_date' => request('start_date'),
                     'end_date' => request('end_date'),
                     'license_id' => request('license_id')
                 ]) }}" 
                 class="btn btn-success" target="_blank">
-                <i class="ti ti-file-export"></i>Ekspor Excel
+                <i class="ti ti-file-export text-white"></i>Ekspor Excel
             </a> 
     </div>
 
