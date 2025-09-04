@@ -253,7 +253,7 @@ public function exportTrialBalance(Request $request)
         $licenseId = $request->license_id;
 
         // Query jurnal
-        $journals = AccountingJournal::with('account')
+        $journals = AccountingJournal::with('details.account')
             ->when($licenseId, function ($q) use ($licenseId) {
                 $q->where('license_id', $licenseId);
             })

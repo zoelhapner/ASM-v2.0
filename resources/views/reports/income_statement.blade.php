@@ -104,8 +104,14 @@
 
                     {{-- Laba Bersih --}}
                     <tr class="table-dark fw-bold">
-                        <td colspan="2" class="text-end">Laba Bersih</td>
+                        <td colspan="2" class="text-end">Laba/Rugi</td>
                         <td class="text-end">{{ number_format($netIncome, 2, ',', '.') }}</td>
+                        <td class="text-end">
+                            {{ $acc['balance'] < 0 
+                                ? '(' . number_format(abs($acc['balance']), 2, ',', '.') . ')' 
+                                : number_format($acc['balance'], 2, ',', '.') }}
+                        </td>
+
                     </tr>
                 </tbody>
             </table>
@@ -113,7 +119,7 @@
     </div>
 
     <h4 class="text-end mt-4">
-        Laba Bersih: {{ number_format($netIncome, 0, ',', '.') }}
+        Laba/Rugi: {{ number_format($netIncome, 2, ',', '.') }}
     </h4>
 </div>
 @endsection
