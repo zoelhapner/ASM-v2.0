@@ -4,24 +4,14 @@
 <div class="container-fluid mt-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-3">Neraca</h3>
-            
-                    <a href="{{ route('journals.trialbalance', [
-                            'start_date' => request('start_date'),
-                            'end_date' => request('end_date'),
-                            'license_id' => request('license_id')
-                        ]) }}" 
-                        class="btn btn-success" target="_blank">
-                        <i class="ti ti-file-export"></i>Ekspor Excel
-                    </a>
-                    <a href="{{ route('journals.trial.pdf', [
-                            'start_date' => request('start_date'),
-                            'end_date' => request('end_date'),
-                            'license_id' => request('license_id')
-                        ]) }}" 
-                        class="btn btn-danger" target="_blank">
-                        <i class="ti ti-printer"></i>Cetak
-                    </a>
-            
+            <a href="{{ route('journals.trialbalance', [
+                    'start_date' => request('start_date'),
+                    'end_date' => request('end_date'),
+                    'license_id' => request('license_id')
+                ]) }}" 
+                class="btn btn-success" target="_blank">
+                <i class="ti ti-file-export"></i>Ekspor Excel
+            </a> 
     </div>
 
     {{-- 🔹 Filter --}}
@@ -80,26 +70,26 @@
                 <tbody>
                     @foreach($groupedAccounts as $category => $subs)
                         <tr class="bg-light">
-                            <td colspan="4"><strong>{{ $category }}</strong></td>
+                            <td colspan="4" class="text-center fw-bold">{{ strtoupper($category) }}</td>
                         </tr>
                         @foreach($subs as $subCat => $data)
                             <tr class="table-secondary">
-                                <td colspan="4"> {{ $subCat }}</td>
+                                <td colspan="4" class="fw-semibold fst-italic"> {{ $subCat }}</td>
                             </tr>
                             
                             @foreach($data['accounts'] as $acc)
                                 <tr>
                                     <td class="text-center">{{ $acc['account_code'] }}</td>
                                     <td>{{ $acc['account_name'] }}</td>
-                                    <td class="text-end">{{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                                    <td class="text-end">{{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                                    <td class="text-end">Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                                    <td class="text-end">Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
                                 </tr>
                             @endforeach
 
                             <tr class="table-secondary fw-bold">
                                 <td colspan="2" class="text-end">Subtotal {{ $subCat }}</td>
-                                <td class="text-end">{{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
-                                <td class="text-end">{{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
+                                <td class="text-end">Rp {{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
+                                <td class="text-end">Rp {{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
                             </tr>
                         @endforeach
                     @endforeach
@@ -107,8 +97,8 @@
                 <tfoot>
                     <tr class="fw-bold">
                         <td colspan="2" class="text-end">Total</td>
-                        <td class="text-end">{{ number_format($totalDebit, 2, ',', '.') }}</td>
-                        <td class="text-end">{{ number_format($totalCredit, 2, ',', '.') }}</td>
+                        <td class="text-end">Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
+                        <td class="text-end">Rp {{ number_format($totalCredit, 2, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -116,15 +106,26 @@
             {{-- 🔹 Status keseimbangan --}}
             @if($totalDebit === $totalCredit)
                 <div class="alert alert-success mt-3">
-                    ✅ Neraca Saldo seimbang (Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
-                    Kredit: {{ number_format($totalCredit, 2, ',', '.') }})
+                    ✅ Neraca Saldo seimbang (Debit: Rp {{ number_format($totalDebit, 2, ',', '.') }} | 
+                    Kredit: {{ Rp number_format($totalCredit, 2, ',', '.') }})
                 </div>
             @else
                 <div class="alert alert-warning mt-3">
-                    ⚠️ Neraca Saldo tidak seimbang! Debit: {{ number_format($totalDebit, 2, ',', '.') }} | 
-                    Kredit: {{ number_format($totalCredit, 2, ',', '.') }}
+                    ⚠️ Neraca Saldo tidak seimbang! Debit: Rp {{ number_format($totalDebit, 2, ',', '.') }} | 
+                    Kredit: Rp {{ number_format($totalCredit, 2, ',', '.') }}
                 </div>
             @endif
+
+                <div class="d-flex justify-content-start gap-2 mt-3">
+                    <a href="{{ route('journals.trial.pdf', [
+                            'start_date' => request('start_date'),
+                            'end_date' => request('end_date'),
+                            'license_id' => request('license_id')
+                        ]) }}" 
+                        class="btn btn-danger" target="_blank">
+                        <i class="ti ti-printer"></i>Cetak
+                    </a>
+                </div>
         </div>
     </div>
 </div>

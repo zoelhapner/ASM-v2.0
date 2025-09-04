@@ -54,6 +54,7 @@
                             <table id="tableLicenses" class="table nowrap w-100" >
                                 <thead>
                                     <tr>
+                                        <th class="fixed-column">No</th>
                                         <th class="fixed-column">Id Lisensi</th>
                                         <th class="fixed-column">Tipe Lisensi</th>
                                         <th class="fixed-column">Nama</th>
@@ -105,7 +106,7 @@
                 scrollX: true,
                 scrollCollapse: true,
                 fixedColumns: {
-                    leftColumns: 3
+                    leftColumns: 4
                 },
                 processing: true,
                 serverSide: true, 
@@ -122,6 +123,7 @@
                     }
                 },
                 columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                     { data: 'license_id', name: 'license_id' },
                     { data: 'license_type', name: 'license_type' },
                     { data: 'name', name: 'name' },

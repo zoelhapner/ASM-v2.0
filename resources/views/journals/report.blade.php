@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <h1 class="text-center">KAS</h1>
+    <h1 class="text-center">TRANSAKSI</h1>
 
    {{-- Filter --}}
     <form action="{{ route('journals.report') }}" method="GET" class="card p-4 mb-4">
@@ -44,7 +44,7 @@
             </div>
 
             <div class="col-md-2">
-                <label>Sampai Tanggal</label>
+                <label>Cari Transaksi</label>
                 <input type="text" id="searchInput" class="form-control" placeholder="Cari data...">
             </div>
         </div>
@@ -64,11 +64,11 @@
             <tr>
                 <th>NO</th>
                 <th>TANGGAL</th>
-                <th class="desc-column">RINCIAN</th>
+                <th class="desc-column">DESKRIPSI</th>
                 <th>KODE AKUN</th>
                 <th class="account-column">AKUN</th>
                 <th class="user-column">USER</th>
-                <th>PIC</th>
+                <th class="user-column">PIC</th>
                 <th>DEBIT (pemasukan)</th>
                 <th>KREDIT (pengeluaran)</th>
                 <th>SALDO</th>
@@ -107,9 +107,9 @@
                             @endif
                         </td>
 
-                        <td class="text-end">{{ number_format($debit, 0, ',', '.') }}</td>
-                        <td class="text-end">{{ number_format($kredit, 0, ',', '.') }}</td>
-                        <td class="text-end">{{ number_format($saldo, 0, ',', '.') }}</td>
+                        <td class="text-end">Rp {{ number_format($debit, 2, ',', '.') }}</td>
+                        <td class="text-end">Rp {{ number_format($kredit, 2, ',', '.') }}</td>
+                        <td class="text-end">Rp {{ number_format($saldo, 2, ',', '.') }}</td>
                         <td>{{ $jouurnal->description ?? '-' }}</td>
                     </tr>
                 @endforeach
@@ -118,9 +118,9 @@
         <tfoot>
             <tr class="fw-bold">
                 <td colspan="7" class="text-end">TOTAL</td>
-                <td class="text-end">{{ number_format($totalDebit, 0, ',', '.') }}</td>
-                <td class="text-end">{{ number_format($totalKredit, 0, ',', '.') }}</td>
-                <td class="text-end">{{ number_format($saldo, 0, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($totalKredit, 2, ',', '.') }}</td>
+                <td class="text-end">Rp {{ number_format($saldo, 2, ',', '.') }}</td>
                 <td></td>
             </tr>
         </tfoot>
@@ -165,7 +165,6 @@
             pageLength: 25,
             ordering: true,
             language: {
-                search: "Cari:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 zeroRecords: "Tidak ada data ditemukan",
                 info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",

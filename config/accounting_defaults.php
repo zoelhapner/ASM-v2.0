@@ -3,7 +3,7 @@
 return [
     'accounts' => [
         // I - Aset
-        ['category' => 'AKTIVA', 'account_code' => '1', 'account_name' => 'AKTIVA', 'sub_category' => '-', 'is_parent' => true],
+        ['category' => '-', 'account_code' => '1', 'account_name' => 'AKTIVA', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'AKTIVA', 'account_code' => '100', 'account_name' => 'Kas & Bank', 'sub_category' => 'Aset Lancar - Kas & Bank', 'is_parent' => true],
         ['category' => 'AKTIVA', 'account_code' => '101', 'account_name' => 'Kas Utama', 'sub_category' => 'Aset Lancar - Kas & Bank'],
         ['category' => 'AKTIVA', 'account_code' => '102', 'account_name' => 'Petty Cash', 'sub_category' => 'Aset Lancar - Kas & Bank'],
@@ -42,7 +42,7 @@ return [
         ['category' => 'AKTIVA', 'account_code' => '163', 'account_name' => 'Penyusutan Perlengkapan Kantor', 'sub_category' => 'Penyusutan'],
 
         // II - KEWAJIBAN
-        ['category' => 'KEWAJIBAN', 'account_code' => '2', 'account_name' => 'KEWAJIBAN', 'sub_category' => '-', 'is_parent' => true],
+        ['category' => '-', 'account_code' => '2', 'account_name' => 'KEWAJIBAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'KEWAJIBAN', 'account_code' => '200', 'account_name' => 'Hutang', 'sub_category' => 'Hutang', 'is_parent' => true],
         ['category' => 'KEWAJIBAN', 'account_code' => '201', 'account_name' => 'Hutang Usaha', 'sub_category' => 'Hutang'],
         ['category' => 'KEWAJIBAN', 'account_code' => '202', 'account_name' => 'Hutang Gaji', 'sub_category' => 'Hutang'],
@@ -60,7 +60,7 @@ return [
         ['category' => 'KEWAJIBAN', 'account_code' => '223', 'account_name' => 'Hutang Pajak PPh 25', 'sub_category' => 'Pajak'],
         ['category' => 'KEWAJIBAN', 'account_code' => '224', 'account_name' => 'Hutang Pajak Lainnya', 'sub_category' => 'Pajak'],
 
-        ['category' => 'EKUITAS', 'account_code' => '3', 'account_name' => 'EKUITAS', 'sub_category' => '-', 'is_parent' => true],
+        ['category' => '-', 'account_code' => '3', 'account_name' => 'EKUITAS', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'Ekuitas', 'account_code' => '300', 'account_name' => 'Modal', 'sub_category' => 'Ekuitas', 'is_parent' => true],
         ['category' => 'Ekuitas', 'account_code' => '301', 'account_name' => 'Modal Saham', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
         ['category' => 'Ekuitas', 'account_code' => '302', 'account_name' => 'Tambahan Modal Disetor', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
@@ -68,7 +68,7 @@ return [
         ['category' => 'Ekuitas', 'account_code' => '304', 'account_name' => 'Deviden', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
         ['category' => 'Ekuitas', 'account_code' => '305', 'account_name' => 'Prive', 'sub_category' => 'Ekuitas', 'person_type' => 'licenseholder', 'employee'],
 
-        ['category' => 'PENDAPATAN', 'account_code' => '4', 'account_name' => 'PENDAPATAN', 'sub_category' => '-', 'is_parent' => true],
+        ['category' => '-', 'account_code' => '4', 'account_name' => 'PENDAPATAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'Pendapatan', 'account_code' => '400', 'account_name' => 'Pendapatan Lisensi', 'sub_category' => 'Pendapatan Lisensi', 'is_parent' => true],
         ['category' => 'Pendapatan', 'account_code' => '401', 'account_name' => 'Pembukaan Lisensi LC', 'sub_category' => 'Pendapatan Lisensi', 'person_type' => 'license'],
         ['category' => 'Pendapatan', 'account_code' => '402', 'account_name' => 'Pembukaan Lisensi LO', 'sub_category' => 'Pendapatan Lisensi', 'person_type' => 'license'],
@@ -103,7 +103,7 @@ return [
         ['category' => 'Pendapatan', 'account_code' => '453', 'account_name' => 'Diskon Penjualan', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
         ['category' => 'Pendapatan', 'account_code' => '454', 'account_name' => 'Retur Penjualan', 'sub_category' => 'Pendapatan Lainnya', 'person_type' => 'license'],
 
-        ['category' => 'BEBAN', 'account_code' => '5', 'account_name' => 'BEBAN', 'sub_category' => '-', 'is_parent' => true],
+        ['category' => '-', 'account_code' => '5', 'account_name' => 'BEBAN', 'sub_category' => '-', 'is_parent' => true],
         ['category' => 'BEBAN', 'account_code' => '500', 'account_name' => 'Biya Lisensi', 'sub_category' => 'Biaya Lisensi', 'is_parent' => true],
         ['category' => 'BEBAN', 'account_code' => '501', 'account_name' => 'Biaya Pembukaan Lisensi LC', 'sub_category' => 'Biaya Lisensi', 'person_type' => 'license'],
         ['category' => 'BEBAN', 'account_code' => '502', 'account_name' => 'Biaya Pembukaan Lisensi LO', 'sub_category' => 'Biaya Lisensi', 'person_type' => 'license'],
@@ -146,12 +146,12 @@ return [
         ['category' => 'BEBAN', 'account_code' => '570', 'account_name' => 'Biaya Cetak Gantungan Kunci', 'sub_category' => 'Biaya Produksi Merchandise'],
 
         ['category' => 'BEBAN', 'account_code' => '600', 'account_name' => 'Beban Penjualan & Pemasaran', 'sub_category' => 'Beban Penjualan & Pemasaran', 'is_parent' => true],
-        ['category' => 'Beban', 'account_code' => '601', 'account_name' => 'Biaya Transportasi', 'sub_category' => 'Beban Penjualan & Pemasaran'],
-        ['category' => 'Beban', 'account_code' => '602', 'account_name' => 'Biaya Digital', 'sub_category' => 'Beban Penjualan & Pemasaran'],
-        ['category' => 'Beban', 'account_code' => '603', 'account_name' => 'Biaya Packing', 'sub_category' => 'Beban Penjualan & Pemasaran'],
-        ['category' => 'Beban', 'account_code' => '604', 'account_name' => 'Biaya Kirim Paket', 'sub_category' => 'Beban Penjualan & Pemasaran'],
-        ['category' => 'Beban', 'account_code' => '605', 'account_name' => 'Biaya Marketing', 'sub_category' => 'Beban Penjualan & Pemasaran'],
-        ['category' => 'Beban', 'account_code' => '606', 'account_name' => 'Biaya Event', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '601', 'account_name' => 'Biaya Transportasi', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '602', 'account_name' => 'Biaya Digital', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '603', 'account_name' => 'Biaya Packing', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '604', 'account_name' => 'Biaya Kirim Paket', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '605', 'account_name' => 'Biaya Marketing', 'sub_category' => 'Beban Penjualan & Pemasaran'],
+        ['category' => 'BEBAN', 'account_code' => '606', 'account_name' => 'Biaya Event', 'sub_category' => 'Beban Penjualan & Pemasaran'],
 
 
         ['category' => 'Beban', 'account_code' => '610', 'account_name' => 'Beban Administrasi & Umum', 'sub_category' => 'Beban Administrasi & Umum', 'is_parent' => true],

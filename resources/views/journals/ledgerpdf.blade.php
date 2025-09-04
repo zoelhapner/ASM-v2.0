@@ -4,15 +4,15 @@
 
 @foreach($ledger as $accountId => $data)
     <h4>{{ $data['account']->account_code }} - {{ $data['account']->account_name }}</h4>
-    <table width="100%" border="1" cellspacing="0" cellpadding="4">
-        <thead>
+    <table class="table table-bordered table-striped mb-0">
+        <thead class="table-danger">
             <tr>
-                <th>Tanggal</th>
-                <th>Transaksi</th>
+                <th width="12%">Tanggal</th>
+                <th width="15%">Transaksi</th>
                 <th>Deskripsi</th>
-                <th>Debit</th>
-                <th>Kredit</th>
-                <th>Saldo</th>
+                <th class="text-end" width="15%">Debit</th>
+                <th class="text-end" width="15%">Kredit</th>
+                <th class="text-end" width="15%">Saldo</th>
             </tr>
         </thead>
         <tbody>
@@ -27,9 +27,9 @@
                         @endif
                     </td>
                     <td>{{ $row['description'] }}</td>
-                    <td align="right">{{ number_format($row['debit'], 2, ',', '.') }}</td>
-                    <td align="right">{{ number_format($row['credit'], 2, ',', '.') }}</td>
-                    <td align="right">{{ number_format($row['balance'], 2, ',', '.') }}</td>
+                    <td align="right">Rp {{ number_format($row['debit'], 2, ',', '.') }}</td>
+                    <td align="right">Rp {{ number_format($row['credit'], 2, ',', '.') }}</td>
+                    <td align="right">Rp {{ number_format($row['balance'], 2, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -245,5 +245,145 @@ public function exportLedger(Request $request)
     return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
 }
 
+public function exportTrialBalance(Request $request)
+    {
+        // Ambil parameter filter
+        $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+        $licenseId = $request->license_id;
+
+        // Query jurnal
+        $journals = AccountingJournal::with('account')
+            ->when($licenseId, function ($q) use ($licenseId) {
+                $q->where('license_id', $licenseId);
+            })
+            ->whereBetween('transaction_date', [$startDate, $endDate])
+            ->get();
+
+        // Ambil semua akun
+        $accounts = AccountingAccount::orderBy('account_code')->get();
+
+        // Hitung grouped accounts
+        $groupedAccounts = [];
+        $totalDebit = 0;
+        $totalCredit = 0;
+
+        foreach ($accounts as $account) {
+            $debit = $journals->where('account_id', $account->id)->sum('debit');
+            $credit = $journals->where('account_id', $account->id)->sum('credit');
+
+            // Tentukan kategori dan sub kategori
+            $category = $account->category ?? 'Lainnya';
+            $subCategory = $account->sub_category ?? 'Tanpa Sub Kategori';
+
+            if (!isset($groupedAccounts[$category][$subCategory])) {
+                $groupedAccounts[$category][$subCategory] = [
+                    'accounts' => [],
+                    'subtotalDebit' => 0,
+                    'subtotalCredit' => 0
+                ];
+            }
+
+            $groupedAccounts[$category][$subCategory]['accounts'][] = [
+                'account_code' => $account->account_code,
+                'account_name' => $account->account_name,
+                'debit' => $debit,
+                'credit' => $credit,
+            ];
+
+            // Subtotal per sub kategori
+            $groupedAccounts[$category][$subCategory]['subtotalDebit'] += $debit;
+            $groupedAccounts[$category][$subCategory]['subtotalCredit'] += $credit;
+
+            // Total keseluruhan
+            $totalDebit += $debit;
+            $totalCredit += $credit;
+        }
+
+        // Buat spreadsheet baru
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Judul
+        $sheet->setCellValue('A1', 'Neraca Saldo');
+        $sheet->mergeCells('A1:D1');
+        $sheet->getStyle('A1')->getFont()->setSize(14)->setBold(true);
+        $sheet->getStyle('A1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
+        // Header table
+        $sheet->setCellValue('A3', 'Kode Akun');
+        $sheet->setCellValue('B3', 'Nama Akun');
+        $sheet->setCellValue('C3', 'Debit');
+        $sheet->setCellValue('D3', 'Kredit');
+
+        // Styling header
+        $sheet->getStyle('A3:D3')->getFont()->setBold(true);
+        $sheet->getStyle('A3:D3')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('A3:D3')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('E2E3E5');
+        $sheet->getStyle('A3:D3')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+
+        // Isi data
+        $row = 4;
+        foreach ($groupedAccounts as $category => $subs) {
+            // Kategori
+            $sheet->setCellValue("A{$row}", strtoupper($category));
+            $sheet->mergeCells("A{$row}:D{$row}");
+            $sheet->getStyle("A{$row}:D{$row}")->getFont()->setBold(true);
+            $sheet->getStyle("A{$row}:D{$row}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('F3F4F6');
+            $row++;
+
+            foreach ($subs as $subCat => $data) {
+                // Sub kategori
+                $sheet->setCellValue("A{$row}", $subCat);
+                $sheet->mergeCells("A{$row}:D{$row}");
+                $sheet->getStyle("A{$row}:D{$row}")->getFont()->setItalic(true);
+                $sheet->getStyle("A{$row}:D{$row}")->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('F8F9FA');
+                $row++;
+
+                foreach ($data['accounts'] as $acc) {
+                    $sheet->setCellValue("A{$row}", $acc['account_code']);
+                    $sheet->setCellValue("B{$row}", $acc['account_name']);
+                    $sheet->setCellValue("C{$row}", $acc['debit']);
+                    $sheet->setCellValue("D{$row}", $acc['credit']);
+                    $row++;
+                }
+
+                // Subtotal per kategori
+                $sheet->setCellValue("A{$row}", "Subtotal {$subCat}");
+                $sheet->mergeCells("A{$row}:B{$row}");
+                $sheet->setCellValue("C{$row}", $data['subtotalDebit']);
+                $sheet->setCellValue("D{$row}", $data['subtotalCredit']);
+                $sheet->getStyle("A{$row}:D{$row}")->getFont()->setBold(true);
+                $row++;
+            }
+        }
+
+        // Total akhir
+        $sheet->setCellValue("A{$row}", 'Total');
+        $sheet->mergeCells("A{$row}:B{$row}");
+        $sheet->setCellValue("C{$row}", $totalDebit);
+        $sheet->setCellValue("D{$row}", $totalCredit);
+        $sheet->getStyle("A{$row}:D{$row}")->getFont()->setBold(true);
+
+        // Set format angka
+        $sheet->getStyle("C4:D{$row}")->getNumberFormat()->setFormatCode('#,##0.00');
+
+        // Auto width kolom
+        foreach (range('A', 'D') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Output file Excel
+        $fileName = 'trial_balance_' . now()->format('Ymd_His') . '.xlsx';
+        $writer = new Xlsx($spreadsheet);
+
+        return new StreamedResponse(function () use ($writer) {
+            $writer->save('php://output');
+        }, 200, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+        ]);
+    }
+
 
 }

@@ -29,6 +29,7 @@ class LicenseHoldersController extends Controller
             $license_holders = $this->getJoinedLicenseHolders();
 
             return DataTables::of($license_holders)
+                ->addIndexColumn()
                 ->addColumn('birth_date', fn($row) => $row->birth_date ? \Carbon\Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
                 ->addColumn('marital_status', fn($row) => $this->readableMaritalStatus($row->marital_status))
                 ->addColumn('gender', fn($row) => $this->readableGender($row->gender))

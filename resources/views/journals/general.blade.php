@@ -88,8 +88,8 @@
                                 <td>{{ $detail->description }}</td>
                                 <td>{{ $detail->account->account_code }}</td>
                                 <td>{{ $detail->account->account_name }}</td>
-                                <td class="text-end">{{ number_format($detail->debit, 0, ',', '.') }}</td>
-                                <td class="text-end">{{ number_format($detail->credit, 0, ',', '.') }}</td>
+                                <td class="text-end">Rp {{ number_format($detail->debit, 0, ',', '.') }}</td>
+                                <td class="text-end">Rp {{ number_format($detail->credit, 0, ',', '.') }}</td>
                             </tr>
                         @endforeach
                     @endforeach
@@ -99,8 +99,8 @@
             <tfoot class="fw-bold">
                 <tr>
                     <td colspan="5">Total</td>
-                    <td class="text-end">Rp. {{ number_format($totalDebit, 2, ',', '.') }}</td>
-                    <td class="text-end">Rp. {{ number_format($totalCredit, 2, ',', '.') }}</td>
+                    <td class="text-end">Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
+                    <td class="text-end">Rp {{ number_format($totalCredit, 2, ',', '.') }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -129,17 +129,3 @@
         });
 </script>
 @endpush
-
-{{-- Tombol --}}
-    {{-- 
-        <a href="{{ route('journals.edit', $journal->id) }}" class="btn btn-danger">
-            <i class="bi bi-pencil"></i> Ubah
-        </a>
-        
-    </div> --}}
-
-    {{-- Footer --}}
-    {{-- 
-        Terakhir diubah oleh <strong>{{ $journal->creator->name ?? 'Sistem' }}</strong> 
-        pada {{ \Carbon\Carbon::parse($journal->updated_at)->translatedFormat('d F Y H:i') }} GMT+7
-    </div> --}}

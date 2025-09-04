@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Buku Besar</h2>
+        <h2 style="text-align:center;">Buku Besar</h2>
             
                 <a href="{{ route('ledger.export', request()->query()) }}" 
                     class="btn btn-success">
@@ -91,9 +91,9 @@
                                 @endif
                             </td>
                             <td>{{ $row['description'] }}</td>
-                            <td class="text-end">{{ number_format($row['debit'], 2, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($row['credit'], 2, ',', '.') }}</td>
-                            <td class="text-end">{{ number_format($row['balance'], 2, ',', '.') }}</td>
+                            <td class="text-end">Rp {{ number_format($row['debit'], 2, ',', '.') }}</td>
+                            <td class="text-end">Rp {{ number_format($row['credit'], 2, ',', '.') }}</td>
+                            <td class="text-end">Rp {{ number_format($row['balance'], 2, ',', '.') }}</td>
                         </tr>
                         @endforeach
                     </tbody>

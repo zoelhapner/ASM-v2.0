@@ -54,6 +54,7 @@
                             <table id="tableLicenseHolders" class="table card-table table-vcenter text-nowrap">
                                 <thead>
                                     <tr>
+                                        <th>No.</th>
                                         <th>ID Lisensi</th>
                                         <th>Tipe Lisensi</th>
                                         <th>Nama Lisensi</th>
@@ -118,6 +119,7 @@
                     }
                 },
                 columns: [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'license_id', name: 'licenses.license_id' },
                 { data: 'license_type', name: 'licenses.license_type' },
                 { data: 'license_name', name: 'licenses.name' },

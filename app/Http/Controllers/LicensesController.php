@@ -36,6 +36,7 @@ class LicensesController extends Controller
             $buildinghasAC = [true => 'Punya', false => 'Tidak Punya'];
 
             return DataTables::of($licenses)
+                ->addIndexColumn()
                 ->addColumn('province_name', fn($row) => $row->province->name ?? '-')
                 ->addColumn('city_name', fn($row) => $row->city->name ?? '-')
                 ->addColumn('district_name', fn($row) => $row->district->name ?? '-')

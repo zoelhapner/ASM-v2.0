@@ -198,7 +198,7 @@ return [
             'role' => ['Super-Admin', 'Pemilik Lisensi', 'Akuntan'],
             'submenu' => [
                 [
-                    'text' => 'Akun',
+                    'text' => 'Detail Akun',
                     'url' => '/accounting',
                     'icon' => 'ti ti-currency-dollar',
                     'can' => 'akun-akuntansi.lihat',
