@@ -11,7 +11,18 @@ class AccountingReportController extends Controller
 {
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
-    $licenseId = $request->license_id ?? null;
+    
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } else {     
+        $licenses = $user->hasRole('Pemilik Lisensi')
+            ? $user->licenses
+            : $user->employee?->licenses;
+
+        abort_if(!$licenses || $licenses->isEmpty(), 403, 'Lisensi tidak ditemukan.');
+    }
+
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
     $accounts = AccountingAccount::with(['details.journal' => function ($q) use ($startDate, $endDate) {
             $q->whereBetween('transaction_date', [$startDate, $endDate]);
@@ -55,6 +66,8 @@ class AccountingReportController extends Controller
     return view('reports.income_statement', compact(
         'startDate',
         'endDate',
+        'activeLicenseId',
+        'licenses',
         'grouped',
         'totalIncome',
         'totalExpense',

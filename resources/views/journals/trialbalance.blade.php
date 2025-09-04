@@ -78,12 +78,14 @@
                             </tr>
                             
                             @foreach($data['accounts'] as $acc)
-                                <tr>
-                                    <td class="text-center">{{ $acc['account_code'] }}</td>
-                                    <td>{{ $acc['account_name'] }}</td>
-                                    <td class="text-end">Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                                    <td class="text-end">Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
-                                </tr>
+                                @if(!$acc['is_parent'])
+                                    <tr>
+                                        <td class="text-center">{{ $acc['account_code'] }}</td>
+                                        <td>{{ $acc['account_name'] }}</td>
+                                        <td class="text-end">Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                                    </tr>
+                                @endif
                             @endforeach
 
                             <tr class="table-secondary fw-bold">

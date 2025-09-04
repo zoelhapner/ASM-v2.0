@@ -5,6 +5,38 @@
     <h4 class="mb-4">Laporan Laba Rugi</h4>
     <p>Periode: {{ $startDate }} s/d {{ $endDate }}</p>
 
+    <form method="GET" action="{{ route('reports.income_statement') }}" class="row g-2 mb-3">
+        <div class="col-auto">
+            <label for="start_date" class="col-form-label">Periode</label>
+        </div>
+        <div class="col-auto">
+            <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">
+        </div>
+        <div class="col-auto">
+            <input type="date" name="end_date" value="{{ $endDate }}" class="form-control">
+        </div>
+
+        @role('Super-Admin')
+        <div class="col-auto">
+            <select name="license_id" class="form-select">
+                <option value="">-- Pilih Lisensi --</option>
+                @foreach($licenses as $license)
+                    <option value="{{ $license->id }}" {{ $license->id == $licenseId ? 'selected' : '' }}>
+                        {{ $license->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        @endrole
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">
+                <i class="ti ti-filter"></i> Tampilkan
+            </button>
+        </div>
+    </form>
+
+
     <div class="row">
         <div class="col-mb-3">
             <table class="table table-bordered">
@@ -79,33 +111,6 @@
             </table>
         </div>
     </div>
-
-        {{-- <div class="col-md-6">
-            <h5>Beban</h5>
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Kode</th>
-                        <th>Akun</th>
-                        <th class="text-end">Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($expenseAccounts as $acc)
-                        <tr>
-                            <td>{{ $acc['code'] }}</td>
-                            <td>{{ $acc['name'] }}</td>
-                            <td class="text-end">{{ number_format($acc['balance'], 0, ',', '.') }}</td>
-                        </tr>
-                    @endforeach
-                    <tr class="fw-bold">
-                        <td colspan="2">Total Beban</td>
-                        <td class="text-end">{{ number_format($totalExpense, 0, ',', '.') }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div> --}}
-    
 
     <h4 class="text-end mt-4">
         Laba Bersih: {{ number_format($netIncome, 0, ',', '.') }}
