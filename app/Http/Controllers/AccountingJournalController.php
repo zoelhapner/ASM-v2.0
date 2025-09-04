@@ -835,8 +835,35 @@ public function print(AccountingJournal $journal)
     return $pdf->stream('journal-'.$journal->journal_code.'.pdf');
 }
 
+public function balanceSheet(Request $request)
+{
+    $user = auth()->user();
 
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
+    if ($user->hasRole('Super-Admin')) {
+        $licenses = License::all();
+    } elseif ($user->hasRole('Pemilik Lisensi')) {
+        $licenses = $user->licenses;
+    } else {
+        $licenses = $user->employee?->licenses ?? collect();
+    }
+
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+    $viewType = $request->get('view', 'default'); // 🔹 default | skontro
+
+    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+
+    return view('reports.balance_sheet', compact(
+        'startDate',
+        'endDate',
+        'licenses',
+        'activeLicenseId',
+        'groupedAccounts',
+        'viewType'
+    ));
+}
 
 }
 

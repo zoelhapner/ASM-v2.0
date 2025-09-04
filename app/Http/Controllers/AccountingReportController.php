@@ -31,7 +31,7 @@ class AccountingReportController extends Controller
     $accounts = AccountingAccount::with(['details.journal' => function ($q) use ($startDate, $endDate) {
             $q->whereBetween('transaction_date', [$startDate, $endDate]);
         }])
-        ->when($licenseId, fn($q) => $q->where('license_id', $licenseId))
+        ->when($activeLicenseId, fn($q) => $q->where('license_id', $activeLicenseId))
         ->whereIn('category', ['Pendapatan', 'Beban'])
         ->get()
         ->map(function ($account) {

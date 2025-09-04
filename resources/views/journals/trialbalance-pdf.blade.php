@@ -27,7 +27,7 @@
         h3, h4, p {
             text-align: center;
             margin-bottom: 10px;
-            font-size: 12px;
+            font-size: 15px;
         }
     </style>
 </head>
