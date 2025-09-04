@@ -16,7 +16,7 @@
         table th, table td {
             border: 1px solid #444;
             padding: 6px;
-            text-align: right;
+            text-align: left;
         }
         table th {
             background-color: #f5f5f5;
@@ -24,9 +24,10 @@
         table td.text-left {
             text-align: left;
         }
-        h3, p {
+        h3, h4, p {
             text-align: center;
             margin-bottom: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
@@ -34,7 +35,7 @@
     <div class="header">
         <h1 style="text-align:center;">Laporan Neraca </h1>
         <h2 style="text-align:center;">CV AHA Right Brain </h2>
-        <h4>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }}</h4>
+        <h3>Periode: {{ \Carbon\Carbon::parse($startDate)->format('d/M/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/M/Y') }}</h3>
         @if($licenses->where('id', $request->license_id)->first())
             <h4>Lisensi: {{ $licenses->where('id', $request->license_id)->first()->name }}</h4>
         @endif
@@ -44,27 +45,29 @@
         <thead>
             <tr>
                 <th>Kode Akun</th>
-                <th class="text-left">Nama Akun</th>
+                <th>Nama Akun</th>
                 <th>Debit</th>
                 <th>Kredit</th>
             </tr>
         </thead>
         <tbody>
             @foreach($groupedAccounts as $category => $subs)
-                <tr>
-                    <td colspan="4" class="text-left"><strong>{{ $category }}</strong></td>
+                <tr class="bg-light">
+                    <td colspan="4" class="text-center fw-bold"><strong>{{ $category }}</strong></td>
                 </tr>
                 @foreach($subs as $subCat => $data)
-                    <tr>
-                        <td colspan="4" class="text-left"><em>{{ $subCat }}</em></td>
+                    <tr class="table-secondary">
+                        <td colspan="4" class="fw-semibold fst-italic"><em>{{ $subCat }}</em></td>
                     </tr>
                     @foreach($data['accounts'] as $acc)
-                        <tr>
-                            <td>{{ $acc['account_code'] }}</td>
-                            <td class="text-left">{{ $acc['account_name'] }}</td>
-                            <td>Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                            <td>Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
-                        </tr>
+                        @if(!$acc['is_parent'])
+                            <tr>
+                                <td>{{ $acc['account_code'] }}</td>
+                                <td class="text-left">{{ $acc['account_name'] }}</td>
+                                <td>Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
+                                <td>Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
+                            </tr>
+                        @endif
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-right"><strong>Subtotal {{ $subCat }}</strong></td>

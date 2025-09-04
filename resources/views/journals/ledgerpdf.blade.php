@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Neraca</title>
+    <title>Buku Besar</title>
     <style>
         body {
             font-family: Poppins, sans-serif;
@@ -16,7 +16,7 @@
         table th, table td {
             border: 1px solid #444;
             padding: 6px;
-            text-align: right;
+            text-align: left,
         }
         table th {
             background-color: #f5f5f5;

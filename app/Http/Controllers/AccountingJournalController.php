@@ -766,6 +766,9 @@ private function getGroupedAccounts($startDate, $endDate, $licenseId)
                 'credit' => $balance < 0 ? abs($balance) : 0,
             ];
         });
+        ->filter(function ($acc) {
+            return !$acc['is_parent'] && $acc['category'] !== '-';
+        });
 
     // 🔹 Kelompokkan berdasarkan kategori & sub kategori
     return $accounts

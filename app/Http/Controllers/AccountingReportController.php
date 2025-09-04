@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccountingAccount;
+use App\Models\License;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AccountingReportController extends Controller
 {

@@ -6,16 +6,17 @@
     <style>
         body { font-family: Poppins, sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        table th, table td { border: 1px solid #444; padding: 6px;}
+        table th, table td { border: 1px solid #444; padding: 6px; text-align: left; }
         table th { background-color: #f5f5f5; }
         h3, p {
             text-align: center;
             margin-bottom: 10px;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <h3 class="title">Laporan Jurnal Umum</h3>
+    <h3>Laporan Jurnal Umum</h3>
     <p><strong>Periode:</strong> {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
 
     <table>
