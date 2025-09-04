@@ -154,9 +154,10 @@ Route::get('/journals/ledger', [AccountingJournalController::class, 'ledger'])
     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
 Route::get('/journals/ledgerpdf', [AccountingJournalController::class, 'exportLedgerPdf'])->name('ledgerpdf');
 
-Route::get('/journals/trialbalance', [AccountingJournalController::class, 'trialBalance'])
-    ->name('journals.trialbalance')
-    ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+// Route::get('/journals/trialbalance', [AccountingJournalController::class, 'trialBalance'])
+//     ->name('journals.trialbalance')
+//     ->middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi']);
+
 Route::get('/journals/export/trial-pdf', [AccountingJournalController::class, 'exportTrial'])
     ->name('journals.trial.pdf');
 

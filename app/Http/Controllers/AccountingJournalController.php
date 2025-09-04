@@ -855,13 +855,29 @@ public function balanceSheet(Request $request)
 
     $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
 
+    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
+    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+
+    $totalAktiva = collect($groupedAccounts['AKTIVA'] ?? [])
+        ->sum(fn($sub) => $sub['subtotalDebit']);
+
+    $totalPassiva = collect($groupedAccounts['KEWAJIBAN'] ?? [])
+        ->sum(fn($sub) => $sub['subtotalCredit'])
+       + collect($groupedAccounts['EKUITAS'] ?? [])
+        ->sum(fn($sub) => $sub['subtotalCredit']);
+
+
     return view('reports.balance_sheet', compact(
         'startDate',
         'endDate',
         'licenses',
         'activeLicenseId',
         'groupedAccounts',
-        'viewType'
+        'viewType',
+        'totalDebit',      // <— tambah ini
+        'totalCredit',     // <— tambah ini
+        'totalAktiva',     // <— dan ini buat skontro
+        'totalPassiva'
     ));
 }
 

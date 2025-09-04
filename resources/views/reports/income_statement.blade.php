@@ -21,7 +21,7 @@
             <select name="license_id" class="form-select">
                 <option value="">-- Pilih Lisensi --</option>
                 @foreach($licenses as $license)
-                    <option value="{{ $license->id }}" {{ $license->id == $licenseId ? 'selected' : '' }}>
+                    <option value="{{ $license->id }}" {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
                         {{ $license->name }}
                     </option>
                 @endforeach

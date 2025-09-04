@@ -97,7 +97,7 @@
                             <td>
                                 {{ $aktivaRows[$i]['account_name'] ?? '' }}
                                 @if(isset($aktivaRows[$i]))
-                                    <span class="float-end">{{ number_format($aktivaRows[$i]['debit'] - $aktivaRows[$i]['credit'], 0, ',', '.') }}</span>
+                                    <span class="float-end">{{ number_format($aktivaRows[$i]['debit'] - $aktivaRows[$i]['credit'], 2, ',', '.') }}</span>
                                 @endif
                             </td>
 
@@ -105,7 +105,7 @@
                             <td>
                                 {{ $passivaRows[$i]['account_name'] ?? '' }}
                                 @if(isset($passivaRows[$i]))
-                                    <span class="float-end">{{ number_format($passivaRows[$i]['credit'] - $passivaRows[$i]['debit'], 0, ',', '.') }}</span>
+                                    <span class="float-end">{{ number_format($passivaRows[$i]['credit'] - $passivaRows[$i]['debit'], 2, ',', '.') }}</span>
                                 @endif
                             </td>
                         </tr>
@@ -113,8 +113,8 @@
                 </tbody>
                 <tfoot class="table-dark fw-bold">
                     <tr>
-                        <td colspan="2" class="text-end">TOTAL AKTIVA: {{ number_format($totalAktiva, 0, ',', '.') }}</td>
-                        <td colspan="2" class="text-end">TOTAL PASSIVA: {{ number_format($totalPassiva, 0, ',', '.') }}</td>
+                        <td colspan="2" class="text-end">TOTAL AKTIVA: {{ number_format($totalAktiva, 2, ',', '.') }}</td>
+                        <td colspan="2" class="text-end">TOTAL PASSIVA: {{ number_format($totalPassiva, 2, ',', '.') }}</td>
                     </tr>
                 </tfoot>
             </table>
