@@ -16,7 +16,7 @@ class ReportService
         }
         return 0;
     }
-    
+
     public static function calculateBalanceSheet(Collection|array $groupedAccounts): array
     {
          if ($groupedAccounts instanceof Collection) {
@@ -24,29 +24,35 @@ class ReportService
         }
         // 🔹 AKTIVA
         $asetLancar = collect($groupedAccounts['AKTIVA']['Aset Lancar - Kas & Bank']['Aset Lancar - Persediaan Barang']['Aset Lancar - Piutang']['Aset Lancar - Dana Belum Disetor']['Aset Lancar - Pajak Bayar Dimuka'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalDebit']);
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
 
         $asetTetap = collect($groupedAccounts['AKTIVA']['Aset Tetap'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalDebit']);
+    
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
 
         $penyusutan = collect($groupedAccounts['AKTIVA']['Penyusutan'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalCredit']); // biasanya kredit
+            
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalCredit'));
 
         $beban = collect($groupedAccounts['BEBAN'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalDebit']);
+            
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
 
         $totalAktiva = $asetLancar + ($asetTetap - $penyusutan) + $beban;
 
 
         // 🔹 PASSIVA
         $kewajiban = collect($groupedAccounts['KEWAJIBAN'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalCredit']);
+            
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalCredit'));
 
         $ekuitas = collect($groupedAccounts['EKUITAS'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalDebit']['subtotalCredit']);
+        
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit', 'subtotalCredit'));
 
         $pendapatan = collect($groupedAccounts['PENDAPATAN'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalCredit']);
+            
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalCredit'));
 
         $totalPassiva = $kewajiban + $ekuitas + $pendapatan;
 

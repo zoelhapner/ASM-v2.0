@@ -71,8 +71,7 @@
                             value="{{ old("details.$i.description", $detail->description) }}">
                     </td>
 
-                    {{-- Pilih User --}}
-                    <td>
+                    {{-- <td>
                         <select name="details[{{ $i }}][person]" 
                                 class="form-control select2 user-select" 
                                 data-row="{{ $i }}" 
@@ -97,13 +96,24 @@
                             @endforeach
                         </select>
 
-                        {{-- Hidden input --}}
                         @if($detail->person)
                             <input type="hidden" name="details[{{ $i }}][person]" value="{{ $detail->person }}">
                         @endif
-                    </td>
+                    </td> --}}
 
-                    {{-- Debit --}}
+                    <td>
+                            <select name="details[{{ $i }}][person]" 
+                                    class="form-select user-select" 
+                                    data-row="{{ $i }}" 
+                                    data-selected="{{ $detail->person_id }}">
+                                @if($detail->person)
+                                    <option value="{{ $detail->person_id }}" selected>
+                                        {{ $detail->person->name }}
+                                    </option>
+                                @endif
+                            </select>
+                    </td>
+                    
                     <td>
                         <input type="number" step="0.01" 
                             name="details[{{ $i }}][debit]" 
@@ -116,7 +126,7 @@
                         @endif
                     </td>
 
-                    {{-- Kredit --}}
+                    
                     <td>
                         <input type="number" step="0.01" 
                             name="details[{{ $i }}][credit]" 
