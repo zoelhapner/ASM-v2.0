@@ -44,6 +44,14 @@
                 @else
                     <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
                 @endif
+
+                <div class="col-md-2">
+                    <label for="view" class="form-label">Tampilan</label>
+                    <select name="view" id="view" class="form-select">
+                        <option value="default" {{ $viewType == 'default' ? 'selected' : '' }}>Default</option>
+                        <option value="skontro" {{ $viewType == 'skontro' ? 'selected' : '' }}>Skontro</option>
+                    </select>
+                </div>
                 
                 <div class="col-md-3 align-self-end">
                     <button type="submit" class="btn btn-primary text-white">

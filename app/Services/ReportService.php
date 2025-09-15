@@ -8,6 +8,9 @@ class ReportService
 {
     private static function getVal($sub, string $key): float
     {
+        if ($sub instanceof Collection) {
+            return $sub->sum(fn($item) => self::getVal($item, $key));
+        }
         if (is_array($sub)) {
             return $sub[$key] ?? 0;
         }
@@ -19,7 +22,7 @@ class ReportService
 
     public static function calculateBalanceSheet(Collection|array $groupedAccounts): array
     {
-         if ($groupedAccounts instanceof Collection) {
+        if ($groupedAccounts instanceof Collection) {
             $groupedAccounts = $groupedAccounts->toArray();
         }
         // 🔹 AKTIVA

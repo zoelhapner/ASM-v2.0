@@ -69,7 +69,7 @@ $(function () {
                 if (result.isConfirmed) {
                     $.ajax({
 
-                        url: `/journals/${journalId}`,
+                        url: `https://asm.aharightbrain.com/journals/${journalId}`,
                         method: 'DELETE',
                         data: {
                             _token: '{{ csrf_token() }}',
@@ -103,6 +103,7 @@ $(function () {
             });
 });
 </script>
+
 @if (session('success'))
     <script>
         Swal.fire({
