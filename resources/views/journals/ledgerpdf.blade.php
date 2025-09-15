@@ -9,6 +9,7 @@
             font-size: 11px;
         }
         table {
+            width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
         }
@@ -42,12 +43,12 @@
         <table>
             <thead>
                 <tr>
-                    <th width="15%">Tanggal</th>
-                    <th width="15%">Transaksi</th>
-                    <th width="20%">Deskripsi</th>
-                    <th class="text-end" width="10%">Debit</th>
-                    <th class="text-end" width="10%">Kredit</th>
-                    <th class="text-end" width="10%">Saldo</th>
+                    <th>Tanggal</th>
+                    <th>Transaksi</th>
+                    <th>Deskripsi</th>
+                    <th class="text-end">Debit</th>
+                    <th class="text-end">Kredit</th>
+                    <th class="text-end">Saldo</th>
                 </tr>
             </thead>
             <tbody>

@@ -872,6 +872,9 @@ public function balanceSheet(Request $request)
 
     $totals = ReportService::calculateBalanceSheet($groupedAccounts);
 
+    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
+    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+
     return view('reports.balance_sheet', array_merge([
         'startDate'       => $startDate,
         'endDate'         => $endDate,
@@ -879,6 +882,8 @@ public function balanceSheet(Request $request)
         'activeLicenseId' => $activeLicenseId,
         'groupedAccounts' => $groupedAccounts,
         'viewType'        => $viewType,
+        'totalDebit'      => $totalDebit,
+        'totalCredit'     => $totalCredit,
     ], $totals));
 }
 

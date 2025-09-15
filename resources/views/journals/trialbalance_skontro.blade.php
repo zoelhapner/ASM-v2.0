@@ -176,7 +176,7 @@
                                         <td class="text-end">Rp {{ number_format($kewajiban, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Ekuitas Awal</td>
+                                        <td>Ekuitas</td>
                                         <td class="text-end">Rp {{ number_format($ekuitas, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
