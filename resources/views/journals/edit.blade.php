@@ -246,7 +246,7 @@ $(document).ready(function () {
         let urlMap = {
             student: '/get-students',
             employee: '/get-employees',
-            licenseholder: '/get-licenseholders'
+            licenseholder: '/get-licenseholders',
             license: '/get-licenses'
         };
 
@@ -261,15 +261,6 @@ $(document).ready(function () {
                 );
             });
         });
-
-        $('.user-select').each(function () {
-            let $select = $(this);
-            let personType = $select.closest('tr').find('.person-type').val();
-            let selected = $select.data('selected'); // 🔹 ambil id user lama dari blade
-
-            renderUserOptions($select, personType, selected);
-        });
-
     }
 
     /** 🔹 Change event: pilih akun → render user sesuai person_type */
@@ -300,15 +291,21 @@ $(document).ready(function () {
             $userSelect.after(
                 `<input type="hidden" name="${$userSelect.attr('name')}" value="${selectedUser}">`
             );
+
+            // 🔹 render user lama biar tetap tampil di dropdown
+            let personType = $(this).find(':selected').data('person-type');
+            renderUserOptions($userSelect, personType, selectedUser);
         }
     });
 
+    /** 🔹 Ganti lisensi → load akun baru */
     $('#license_id').on('change', function () {
         const licenseId = $(this).val();
         $('#activeLicenseId').val(licenseId);
         loadAccountsByLicense(licenseId);
     });
 
+    // Jalankan load pertama kali
     const selectedLicense = $('#license_id').length
         ? $('#license_id').val()
         : $('#activeLicenseId').val();
@@ -400,6 +397,7 @@ $(document).ready(function () {
     });
 });
 </script>
+
 @endsection
 
 

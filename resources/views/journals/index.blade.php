@@ -50,6 +50,68 @@ $(function () {
             { data: 'actions', name: 'actions', orderable: false, searchable: false },
         ]
     });
+
+    $('table').on('click', '.delete-journal', function () {
+            const journalId = $(this).data('id');
+
+            Swal.fire({
+            title: 'Yakin ingin menghapus?',
+            text: "Data akan hilang secara permanen.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+
+            }).then((result) => {
+
+                if (result.isConfirmed) {
+                    $.ajax({
+
+                        url: `/journals/${journalId}`,
+                        method: 'DELETE',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                        },
+
+                        success: function (response) {
+                            if (response.status === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Berhasil!',
+                                    text: 'Pemilik telah dihapus.',
+                                    timer: 2000,
+                                    showConfirmButton: false
+                            });
+
+                        table.ajax.reload(null, false); // refresh datatable
+                        } else {
+
+                            Swal.fire('Gagal', response.message || 'Tidak bisa menghapus data.', 'error');
+                        }
+                        },
+
+                    error: function () {
+
+                    Swal.fire('Error', 'Terjadi kesalahan saat menghapus.', 'error');
+                    }
+
+                    });
+                }
+            });
+            });
 });
 </script>
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Sukses!',
+            text: '{{ session('success') }}',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    @endif
 @endpush

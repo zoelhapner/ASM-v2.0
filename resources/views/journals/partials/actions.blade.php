@@ -22,5 +22,8 @@
                 title="Hapus">
             <i class="ti ti-trash"></i>
         </button>
+        <button data-id="' . $license_holder->license_holder_id . '" class="btn btn-icon btn-sm btn-danger delete-license_holder" title="Hapus">
+                                        <i class="ti ti-trash"></i>
+        </button>';
     </form>
 @endcan
