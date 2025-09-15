@@ -58,7 +58,7 @@
     {{-- 🔹 Table --}}
     <div class="card shadow-sm border-0">
         <div class="card-body table-responsive">
-            <table class="table table-bordered">
+            {{-- <table class="table table-bordered">
                 <thead class="table-light">
                     <tr>
                         <th colspan="2" class="text-center">AKTIVA</th>
@@ -117,7 +117,84 @@
                         <td colspan="2" class="text-end">TOTAL PASSIVA: {{ number_format($totalPassiva, 2, ',', '.') }}</td>
                     </tr>
                 </tfoot>
-            </table>
+            </table> --}}
+
+            <div class="row">
+                
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-primary text-white">
+                            <strong>AKTIVA</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Aset Lancar</td>
+                                        <td class="text-end">{{ number_format($asetLancar, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aset Tetap</td>
+                                        <td class="text-end">{{ number_format($asetTetap, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Akumulasi Penyusutan</td>
+                                        <td class="text-end text-danger">({{ number_format($penyusutan, 0, ',', '.') }})</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Beban Dibayar Dimuka</td>
+                                        <td class="text-end">{{ number_format($bebanDibayarDimuka, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr class="fw-bold table-secondary">
+                                        <td>Total Aktiva</td>
+                                        <td class="text-end">{{ number_format($totalAktiva, 0, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-success text-white">
+                            <strong>PASSIVA</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Kewajiban</td>
+                                        <td class="text-end">{{ number_format($kewajiban, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ekuitas Awal</td>
+                                        <td class="text-end">{{ number_format($ekuitasAwal, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pendapatan</td>
+                                        <td class="text-end">{{ number_format($pendapatan, 0, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Beban</td>
+                                        <td class="text-end text-danger">({{ number_format($beban, 0, ',', '.') }})</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Laba/Rugi Berjalan</td>
+                                        <td class="text-end fw-bold">
+                                            {{ number_format($labaRugiBerjalan, 0, ',', '.') }}
+                                        </td>
+                                    </tr>
+                                    <tr class="fw-bold table-secondary">
+                                        <td>Total Passiva</td>
+                                        <td class="text-end">{{ number_format($totalPassiva, 0, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
                 <div class="d-flex justify-content-start gap-2 mt-3">
                     <a href="{{ route('journals.trial.pdf', [
@@ -143,48 +220,3 @@
         });
 </script>
 @endpush
-
-{{-- <table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th class="text-center">Kode Akun</th>
-            <th class="text-center">Nama Akun</th>
-            <th class="text-center">Debit</th>
-            <th class="text-center">Kredit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($groupedAccounts as $category => $subs)
-            <tr class="bg-light">
-                <td colspan="4" class="text-center fw-bold">{{ strtoupper($category) }}</td>
-            </tr>
-            @foreach($subs as $subCat => $data)
-                <tr class="table-secondary">
-                    <td colspan="4" class="fw-semibold fst-italic"> {{ $subCat }}</td>
-                </tr>
-                
-                @foreach($data['accounts'] as $acc)
-                        <tr>
-                            <td class="text-center">{{ $acc['account_code'] }}</td>
-                            <td>{{ $acc['account_name'] }}</td>
-                            <td class="text-end">Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
-                            <td class="text-end">Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
-                        </tr>
-                @endforeach
-
-                <tr class="table-secondary fw-bold">
-                    <td colspan="2" class="text-end">Subtotal {{ $subCat }}</td>
-                    <td class="text-end">Rp {{ number_format($data['subtotalDebit'], 2, ',', '.') }}</td>
-                    <td class="text-end">Rp {{ number_format($data['subtotalCredit'], 2, ',', '.') }}</td>
-                </tr>
-            @endforeach
-        @endforeach
-    </tbody>
-    <tfoot>
-        <tr class="fw-bold">
-            <td colspan="2" class="text-end">Total</td>
-            <td class="text-end">Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
-            <td class="text-end">Rp {{ number_format($totalCredit, 2, ',', '.') }}</td>
-        </tr>
-    </tfoot>
-</table> --}}

@@ -141,6 +141,10 @@
                             <input type="hidden" name="details[{{ $i }}][credit]" value="{{ $detail->credit }}">
                         @endif
                     </td>
+                    <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                                <i class="ti ti-trash"></i>
+                        </button>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -242,7 +246,7 @@ $(document).ready(function () {
         let urlMap = {
             student: '/get-students',
             employee: '/get-employees',
-            licenseholder: 'get-licenseholders'
+            licenseholder: '/get-licenseholders'
             license: '/get-licenses'
         };
 
@@ -299,9 +303,16 @@ $(document).ready(function () {
         }
     });
 
-    /** 🔹 Inisialisasi awal */
-    let licenseId = $('#license_id').val();
-    loadAccountsByLicense(licenseId);
+    $('#license_id').on('change', function () {
+        const licenseId = $(this).val();
+        $('#activeLicenseId').val(licenseId);
+        loadAccountsByLicense(licenseId);
+    });
+
+    const selectedLicense = $('#license_id').length
+        ? $('#license_id').val()
+        : $('#activeLicenseId').val();
+    loadAccountsByLicense(selectedLicense);
 
     /** 🔹 Tambah baris baru */
     $('#add-row').click(function () {
@@ -340,13 +351,6 @@ $(document).ready(function () {
         $(this).closest('tr').remove();
         calculateSubtotals();
     });
-
-    // /** 🔹 Saat ganti akun, render user otomatis */
-    // $(document).on('change', '.account-select', function () {
-    //     const personType = $(this).find(':selected').data('person-type');
-    //     const $row = $(this).closest('tr').find('.user-select');
-    //     renderUserOptions($row, personType);
-    // });
 
     /** 🔹 Hitung subtotal otomatis */
     function calculateSubtotals() {

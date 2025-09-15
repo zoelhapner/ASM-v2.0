@@ -852,12 +852,11 @@ public function balanceSheet(Request $request)
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
-    $viewType = $request->get('view', 'default'); // 🔹 default | skontro
+    $viewType = $request->get('view', 'skontro'); // 🔹 default | skontro
 
     $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
 
     $totals = ReportService::calculateBalanceSheet($groupedAccounts);
-
 
     return view('reports.balance_sheet', array_merge([
         'startDate'       => $startDate,
