@@ -147,6 +147,9 @@
 
         <tfoot>
             <tr>
+                <td colspan="6"><button type="button" id="add-row" class="btn btn-sm btn-primary text-white">Tambah Baris</button></td>
+            </tr>
+            <tr>
                 <th colspan="3">Subtotal</th>
                 <th id="subtotal-debit">{{ $journal->details->sum('debit') }}</th>
                 <th id="subtotal-credit">{{ $journal->details->sum('credit') }}</th>
@@ -301,42 +304,42 @@ $(document).ready(function () {
     loadAccountsByLicense(licenseId);
 
     /** 🔹 Tambah baris baru */
-    // $('#add-row').click(function () {
-    //     const rowCount = $('#detail-rows tr').length;
-    //     const newRow = `
-    //         <tr>
-    //             <td>
-    //                 <select name="details[${rowCount}][account_id]" 
-    //                         class="form-select account-select" 
-    //                         data-row="${rowCount}" required></select>
-    //             </td>
-    //             <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
-    //             <td>
-    //                 <select name="details[${rowCount}][person]" 
-    //                         class="form-select user-select" 
-    //                         data-row="${rowCount}"></select>
-    //             </td>
-    //             <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
-    //             <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
-    //             <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
-    //                     <i class="ti ti-trash"></i>
-    //                 </button>
-    //             </td>
-    //         </tr>
-    //     `;
+    $('#add-row').click(function () {
+        const rowCount = $('#detail-rows tr').length;
+        const newRow = `
+            <tr>
+                <td>
+                    <select name="details[${rowCount}][account_id]" 
+                            class="form-select account-select" 
+                            data-row="${rowCount}" required></select>
+                </td>
+                <td><input type="text" name="details[${rowCount}][description]" class="form-control"></td>
+                <td>
+                    <select name="details[${rowCount}][person]" 
+                            class="form-select user-select" 
+                            data-row="${rowCount}"></select>
+                </td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][debit]" class="form-control debit-input"></td>
+                <td><input type="number" step="0.01" name="details[${rowCount}][credit]" class="form-control credit-input"></td>
+                <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                        <i class="ti ti-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
 
-    //     $('#detail-rows').append(newRow);
+        $('#detail-rows').append(newRow);
 
-    //     // Isi opsi akun
-    //     const $newAccountSelect = $('#detail-rows tr:last .account-select');
-    //     renderAccountOptions($newAccountSelect);
-    // });
+        // Isi opsi akun
+        const $newAccountSelect = $('#detail-rows tr:last .account-select');
+        renderAccountOptions($newAccountSelect);
+    });
 
-    // /** 🔹 Hapus baris */
-    // $(document).on('click', '.remove-row', function () {
-    //     $(this).closest('tr').remove();
-    //     calculateSubtotals();
-    // });
+    /** 🔹 Hapus baris */
+    $(document).on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+        calculateSubtotals();
+    });
 
     // /** 🔹 Saat ganti akun, render user otomatis */
     // $(document).on('change', '.account-select', function () {
