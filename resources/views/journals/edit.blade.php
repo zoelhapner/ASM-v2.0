@@ -42,11 +42,12 @@
         <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Akun</th>
-                <th>Deskripsi</th>
-                <th>User</th>
-                <th>Debit</th>
-                <th>Kredit</th>
+                <th style="width:20%">Akun</th>
+                <th style="width:20%">Deskripsi</th>
+                <th style="width:20%">User</th>
+                <th style="width:10%">Debit</th>
+                <th style="width:10%">Kredit</th>
+                <th style="width:5%">Aksi</th>
             </tr>
         </thead>
         <tbody id="detail-rows">
@@ -74,12 +75,11 @@
                                 value="{{ old("details.$i.description", $detail->description) }}">
                         </td>
 
-                        {{-- <td>
+                        <td>
                             <select name="details[{{ $i }}][person]" 
                                     class="form-control select2 user-select" 
                                     data-row="{{ $i }}" 
-                                    data-selected="{{ $detail->person ?? '' }}"
-                                    {{ $detail->person ? 'disabled' : '' }}>
+                                    data-selected="{{ $detail->person ?? '' }}">
                                 <option value="">-- Pilih User --</option>
                                 @php
                                     if ($detail->person_type === 'student') {
@@ -102,9 +102,9 @@
                             @if($detail->person)
                                 <input type="hidden" name="details[{{ $i }}][person]" value="{{ $detail->person }}">
                             @endif
-                        </td> --}}
+                        </td>
 
-                        <td>
+                        {{-- <td>
                                 <select name="details[{{ $i }}][person]" 
                                         class="form-select user-select" 
                                         data-row="{{ $i }}" 
@@ -115,7 +115,7 @@
                                         </option>
                                     @endif
                                 </select>
-                        </td>
+                        </td> --}}
                         
                         <td>
                             <input type="number" step="0.01" 
