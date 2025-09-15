@@ -210,7 +210,7 @@ class LicenseHoldersController extends Controller
             'postal_code_id' => 'required|exists:postal_codes,id',
             'phone' => 'required',
             'hobby' => 'required',
-            'marital_status' => 'required|in:1,2,3',
+            'marital_status' => 'required|in:1,2,3,4',
             'married_date' => ['nullable', 'date_format:Y-m-d'],
             'indonesian_literacy' => 'nullable|in:1,2',
             'indonesian_proficiency' => 'nullable|in:1,2',

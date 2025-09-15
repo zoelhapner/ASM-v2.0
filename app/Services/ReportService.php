@@ -6,8 +6,11 @@ use Illuminate\Support\Collection;
 
 class ReportService
 {
-    public static function calculateBalanceSheet(array $groupedAccounts): array
+    public static function calculateBalanceSheet(Collection|array $groupedAccounts): array
     {
+         if ($groupedAccounts instanceof Collection) {
+            $groupedAccounts = $groupedAccounts->toArray();
+        }
         // 🔹 AKTIVA
         $asetLancar = collect($groupedAccounts['AKTIVA']['Aset Lancar - Kas & Bank']['Aset Lancar - Persediaan Barang']['Aset Lancar - Piutang']['Aset Lancar - Dana Belum Disetor']['Aset Lancar - Pajak Bayar Dimuka'] ?? [])
             ->sum(fn($sub) => $sub['subtotalDebit']);
@@ -29,10 +32,10 @@ class ReportService
             ->sum(fn($sub) => $sub['subtotalCredit']);
 
         $ekuitas = collect($groupedAccounts['EKUITAS'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalCredit']);
+            ->sum(fn($sub) => $sub['subtotalDebit']['subtotalCredit']);
 
         $pendapatan = collect($groupedAccounts['PENDAPATAN'] ?? [])
-            ->sum(fn($sub) => $sub['subtotalDebit']['subtotalCredit']);
+            ->sum(fn($sub) => $sub['subtotalCredit']);
 
         $totalPassiva = $kewajiban + $ekuitas + $pendapatan;
 

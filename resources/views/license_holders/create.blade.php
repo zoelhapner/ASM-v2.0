@@ -18,7 +18,7 @@
                 <div class="col-12 col-md-auto ms-auto d-print-none">
                     <div class="btn-list">
                  
-                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary d-none d-sm-inline-block" >
+                        <a href=" {{ route("license_holders.index") }} " class="btn btn-primary text-white d-none d-sm-inline-block" >
                             Kembali
                         </a>
                         
@@ -92,7 +92,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="required" for="religion_id">Agama</label>
-                                            <select name="religion_id" class="form-control" required>
+                                            <select name="religion_id" class="form-select" required>
                                                 <option value="">-- Pilih Agama --</option>
                                                 @foreach($religions as $religion)
                                                     <option value="{{ $religion->id }}" {{ old('religion_id') == $religion->id ? 'selected' : '' }}>
@@ -104,7 +104,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Nomor KTP</label>
-                                            <input type="number" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number" name="identity_number" maxlength="16" value="{{ old('identity_number') }}" required>
+                                            <input type="text" class="form-control @error('identity_number') is-invalid @enderror" id="identity_number" name="identity_number" maxlength="16" value="{{ old('identity_number') }}" required>
                                             @error('identity_number')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
@@ -180,9 +180,6 @@
                                             </select>
                                         </div>
 
-                                        
-                                       
-
                                         <div class="col-md-6 mb-3">
                                             <label class="required">Telepon</label>
                                             <input type="number" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" required>
@@ -244,7 +241,7 @@
                                     <div class="row mb-4">
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Indonesia (Baca/Tulis) </label>
-                                            <select name="indonesian_literacy" class="form-control">
+                                            <select name="indonesian_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -253,7 +250,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Indonesia (Bicara) </label>
-                                            <select name="indonesian_proficiency" class="form-control">
+                                            <select name="indonesian_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -262,7 +259,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Arab (Baca/Tulis)</label>
-                                            <select name="arabic_literacy" class="form-control">
+                                            <select name="arabic_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -271,7 +268,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Arab (Bicara)</label>
-                                            <select name="arabic_proficiency" class="form-control">
+                                            <select name="arabic_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -280,7 +277,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Inggris (Baca/Tulis)</label>
-                                            <select name="english_literacy" class="form-control">
+                                            <select name="english_literacy" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -289,7 +286,7 @@
 
                                         <div class="col-md-6 mb-3">
                                             <label>Bahasa Ingris (Bicara)</label>
-                                            <select name="english_proficiency" class="form-control">
+                                            <select name="english_proficiency" class="form-select">
                                                 <option value="">-- Pilih Tipe --</option>
                                                 <option value="1">Lancar</option>
                                                 <option value="2">Tidak Lancar</option>
@@ -300,7 +297,7 @@
 
                                     {{-- Submit Button --}}
                                         <div class="text-end">
-                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                        <button type="submit" class="btn btn-primary text-white">Simpan</button>
                                         </div>
                                 </form>
                             </div>
