@@ -267,14 +267,14 @@ $(document).ready(function () {
         let selectedUser = $userSelect.data('selected');
 
         if (selectedVal) {
-            $(this).prop('disabled', true);
+            $(this).prop('disabled', false);
             $(this).after(
                 `<input type="hidden" name="${$(this).attr('name')}" value="${selectedVal}">`
             );
         }
 
         if (selectedUser) {
-            $userSelect.prop('disabled', true);
+            $userSelect.prop('disabled', false);
             $userSelect.after(
                 `<input type="hidden" name="${$userSelect.attr('name')}" value="${selectedUser}">`
             );

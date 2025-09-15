@@ -47,7 +47,7 @@ $(function () {
             { data: 'journal_code', name: 'accounting_journals.journal_code' },
             { data: 'transaction_date', name: 'accounting_journals.transaction_date' },
             { data: 'creator', name: 'users.name' },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            { data: 'action', name: 'action', orderable: false, searchable: false },
         ]
     });
 

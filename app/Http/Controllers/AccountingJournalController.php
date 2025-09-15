@@ -803,9 +803,6 @@ private function getGroupedAccounts($startDate, $endDate, $licenseId)
         });
 }
 
-/**
- * Export Trial Balance ke PDF
- */
 public function exportTrial(Request $request)
 {
     $user = auth()->user();
