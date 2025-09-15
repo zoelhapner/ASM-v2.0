@@ -50,100 +50,104 @@
             </tr>
         </thead>
         <tbody id="detail-rows">
-            @foreach ($journal->details as $i => $detail)
-                <tr>
-                    {{-- Pilih Akun --}}
-                    <td>
-                                <select name="details[{{ $i }}][account_id]" 
-                                        class="form-select account-select" 
-                                        data-row="{{ $i }}" required>
-                                    <option value="{{ $detail->account_id }}" selected>
-                                        {{ $detail->account->account_code }} - {{ $detail->account->account_name }}
-                                    </option>
-                                </select>
-                    </td>
-
-                    {{-- Deskripsi --}}
-                    <td>
-                        <input type="text" 
-                            name="details[{{ $i }}][description]" 
-                            class="form-control"
-                            value="{{ old("details.$i.description", $detail->description) }}">
-                    </td>
-
-                    {{-- <td>
-                        <select name="details[{{ $i }}][person]" 
-                                class="form-control select2 user-select" 
-                                data-row="{{ $i }}" 
-                                data-selected="{{ $detail->person ?? '' }}"
-                                {{ $detail->person ? 'disabled' : '' }}>
-                            <option value="">-- Pilih User --</option>
-                            @php
-                                if ($detail->person_type === 'student') {
-                                    $users = $students;
-                                } elseif ($detail->person_type === 'employee') {
-                                    $users = $employees;
-                                } elseif ($detail->person_type === 'license') {
-                                    $users = $licenseList;
-                                } else {
-                                    $users = collect();
-                                }
-                            @endphp
-                            @foreach ($users as $u)
-                                <option value="{{ $u->id }}" {{ $u->id == $detail->person ? 'selected' : '' }}>
-                                    {{ $u->name }}
+            @if(isset($journal) && $journal->details)
+                @foreach ($journal->details as $i => $detail)
+                    <tr>
+                        {{-- Pilih Akun --}}
+                        <td>
+                            <select name="details[{{ $i }}][account_id]" 
+                                    class="form-select account-select" 
+                                    data-row="{{ $i }}" required>
+                                <option value="{{ $detail->account_id }}" 
+                                        data-person-type="{{ $detail->account->person_type }}" 
+                                        selected>
+                                    {{ $detail->account->account_code }} - {{ $detail->account->account_name }}
                                 </option>
-                            @endforeach
-                        </select>
-
-                        @if($detail->person)
-                            <input type="hidden" name="details[{{ $i }}][person]" value="{{ $detail->person }}">
-                        @endif
-                    </td> --}}
-
-                    <td>
-                            <select name="details[{{ $i }}][person]" 
-                                    class="form-select user-select" 
-                                    data-row="{{ $i }}" 
-                                    data-selected="{{ $detail->person }}">
-                                @if($detail->person)
-                                    <option value="{{ $detail->person }}" selected>
-                                        {{ $detail->person }}
-                                    </option>
-                                @endif
                             </select>
-                    </td>
+                        </td>
 
-                    <td>
-                        <input type="number" step="0.01" 
-                            name="details[{{ $i }}][debit]" 
-                            class="form-control debit-input" 
-                            value="{{ old("details.$i.debit", $detail->debit) }}"
-                            {{ $detail->credit ? 'disabled' : '' }}>
+                        {{-- Deskripsi --}}
+                        <td>
+                            <input type="text" 
+                                name="details[{{ $i }}][description]" 
+                                class="form-control"
+                                value="{{ old("details.$i.description", $detail->description) }}">
+                        </td>
 
-                        @if($detail->credit)
-                            <input type="hidden" name="details[{{ $i }}][debit]" value="{{ $detail->debit }}">
-                        @endif
-                    </td>
+                        {{-- <td>
+                            <select name="details[{{ $i }}][person]" 
+                                    class="form-control select2 user-select" 
+                                    data-row="{{ $i }}" 
+                                    data-selected="{{ $detail->person ?? '' }}"
+                                    {{ $detail->person ? 'disabled' : '' }}>
+                                <option value="">-- Pilih User --</option>
+                                @php
+                                    if ($detail->person_type === 'student') {
+                                        $users = $students;
+                                    } elseif ($detail->person_type === 'employee') {
+                                        $users = $employees;
+                                    } elseif ($detail->person_type === 'license') {
+                                        $users = $licenseList;
+                                    } else {
+                                        $users = collect();
+                                    }
+                                @endphp
+                                @foreach ($users as $u)
+                                    <option value="{{ $u->id }}" {{ $u->id == $detail->person ? 'selected' : '' }}>
+                                        {{ $u->name }}
+                                    </option>
+                                @endforeach
+                            </select>
 
-                    
-                    <td>
-                        <input type="number" step="0.01" 
-                            name="details[{{ $i }}][credit]" 
-                            class="form-control credit-input" 
-                            value="{{ old("details.$i.credit", $detail->credit) }}"
-                            {{ $detail->debit ? 'disabled' : '' }}>
+                            @if($detail->person)
+                                <input type="hidden" name="details[{{ $i }}][person]" value="{{ $detail->person }}">
+                            @endif
+                        </td> --}}
 
-                        @if($detail->debit)
-                            <input type="hidden" name="details[{{ $i }}][credit]" value="{{ $detail->credit }}">
-                        @endif
-                    </td>
-                    <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
-                                <i class="ti ti-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            @endforeach
+                        <td>
+                                <select name="details[{{ $i }}][person]" 
+                                        class="form-select user-select" 
+                                        data-row="{{ $i }}" 
+                                        data-selected="{{ $detail->person_id }}">
+                                    @if($detail->person)
+                                        <option value="{{ $detail->person_id }}" selected>
+                                            {{ $detail->person->name }}
+                                        </option>
+                                    @endif
+                                </select>
+                        </td>
+                        
+                        <td>
+                            <input type="number" step="0.01" 
+                                name="details[{{ $i }}][debit]" 
+                                class="form-control debit-input" 
+                                value="{{ old("details.$i.debit", $detail->debit) }}"
+                                {{ $detail->credit ? 'disabled' : '' }}>
+
+                            @if($detail->credit)
+                                <input type="hidden" name="details[{{ $i }}][debit]" value="{{ $detail->debit }}">
+                            @endif
+                        </td>
+
+                        
+                        <td>
+                            <input type="number" step="0.01" 
+                                name="details[{{ $i }}][credit]" 
+                                class="form-control credit-input" 
+                                value="{{ old("details.$i.credit", $detail->credit) }}"
+                                {{ $detail->debit ? 'disabled' : '' }}>
+
+                            @if($detail->debit)
+                                <input type="hidden" name="details[{{ $i }}][credit]" value="{{ $detail->credit }}">
+                            @endif
+                        </td>
+                        <td><button type="button" class="btn btn-sm btn-danger remove-row" title="Hapus">
+                                    <i class="ti ti-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
 
         <tfoot>
