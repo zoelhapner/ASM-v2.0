@@ -76,17 +76,17 @@ class AccountingJournalController extends Controller
             ->addColumn('action', function ($journal) {
                     $buttons = '';
                     if (auth()->user()->can('jurnal.ubah')) {
-                        $buttons .= '<a href="' . route('journals.edit', $journal->journal_id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
+                        $buttons .= '<a href="' . route('journals.edit', $journal->id) . '" class="btn btn-icon btn-sm btn-warning me-1" title="Ubah">
                                         <i class="ti ti-edit"></i>
                                     </a>';
                     }
                     if (auth()->user()->can('jurnal.lihat')) {
-                        $buttons .= '<a href="' . route('journals.show', $journal->journal_id) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
+                        $buttons .= '<a href="' . route('journals.show', $journal->id) . '" class="btn btn-icon btn-sm btn-info me-1" title="Lihat">
                                         <i class="ti ti-eye"></i>
                                     </a>';
                     }
                     if (auth()->user()->can('jurnal.hapus')) {
-                        $buttons .= '<button data-id="' . $journal->journal_id . '" class="btn btn-icon btn-sm btn-danger delete-journal" title="Hapus">
+                        $buttons .= '<button data-id="' . $journal->id . '" class="btn btn-icon btn-sm btn-danger delete-journal" title="Hapus">
                                         <i class="ti ti-trash"></i>
                                     </button>';
                     }

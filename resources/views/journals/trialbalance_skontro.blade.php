@@ -131,23 +131,23 @@
                                 <tbody>
                                     <tr>
                                         <td>Aset Lancar</td>
-                                        <td class="text-end">{{ number_format($asetLancar, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($asetLancar, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Aset Tetap</td>
-                                        <td class="text-end">{{ number_format($asetTetap, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($asetTetap, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Akumulasi Penyusutan</td>
-                                        <td class="text-end text-danger">({{ number_format($penyusutan, 0, ',', '.') }})</td>
+                                        <td class="text-end text-danger">Rp ({{ number_format($penyusutan, 2, ',', '.') }})</td>
                                     </tr>
                                     <tr>
-                                        <td>Beban Dibayar Dimuka</td>
-                                        <td class="text-end">{{ number_format($bebanDibayarDimuka, 0, ',', '.') }}</td>
+                                        <td>Beban</td>
+                                        <td class="text-end">Rp {{ number_format($beban, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr class="fw-bold table-secondary">
                                         <td>Total Aktiva</td>
-                                        <td class="text-end">{{ number_format($totalAktiva, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($totalAktiva, 2, ',', '.') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -165,17 +165,17 @@
                                 <tbody>
                                     <tr>
                                         <td>Kewajiban</td>
-                                        <td class="text-end">{{ number_format($kewajiban, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($kewajiban, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Ekuitas Awal</td>
-                                        <td class="text-end">{{ number_format($ekuitasAwal, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($ekuitas, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Pendapatan</td>
-                                        <td class="text-end">{{ number_format($pendapatan, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($pendapatan, 2, ',', '.') }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>Beban</td>
                                         <td class="text-end text-danger">({{ number_format($beban, 0, ',', '.') }})</td>
                                     </tr>
@@ -184,10 +184,10 @@
                                         <td class="text-end fw-bold">
                                             {{ number_format($labaRugiBerjalan, 0, ',', '.') }}
                                         </td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr class="fw-bold table-secondary">
                                         <td>Total Passiva</td>
-                                        <td class="text-end">{{ number_format($totalPassiva, 0, ',', '.') }}</td>
+                                        <td class="text-end">Rp {{ number_format($totalPassiva, 0, ',', '.') }}</td>
                                     </tr>
                                 </tbody>
                             </table>
