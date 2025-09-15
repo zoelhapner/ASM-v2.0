@@ -92,7 +92,7 @@ class AccountingJournalController extends Controller
                     }
                     return $buttons;
             })
-            ->rawColumns(['journal_code', 'creator', 'actions'])
+            ->rawColumns(['journal_code', 'creator', 'action'])
             ->make(true);
     }
 

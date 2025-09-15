@@ -6,6 +6,17 @@ use Illuminate\Support\Collection;
 
 class ReportService
 {
+    private static function getVal($sub, string $key): float
+    {
+        if (is_array($sub)) {
+            return $sub[$key] ?? 0;
+        }
+        if (is_object($sub)) {
+            return $sub->$key ?? 0;
+        }
+        return 0;
+    }
+    
     public static function calculateBalanceSheet(Collection|array $groupedAccounts): array
     {
          if ($groupedAccounts instanceof Collection) {

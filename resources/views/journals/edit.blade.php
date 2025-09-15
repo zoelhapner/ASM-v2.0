@@ -54,26 +54,13 @@
                 <tr>
                     {{-- Pilih Akun --}}
                     <td>
-                        <select name="details[{{ $i }}][account_id]" 
-                                class="form-select account-select" 
-                                data-row="{{ $i }}" required
-                                {{ $detail->account_id ? 'disabled' : '' }}>
-                            <option value="">-- Pilih Akun --</option>
-                            @foreach ($accounts as $account)
-                                <option value="{{ $account->id }}"
-                                    data-code="{{ $account->account_code }}"
-                                    data-name="{{ $account->account_name }}"
-                                    data-person-type="{{ $account->person_type }}"
-                                    {{ $account->id == $detail->account_id ? 'selected' : '' }}>
-                                    {{ $account->account_code }} - {{ $account->account_name }}
-                                </option>
-                            @endforeach
-                        </select>
-
-                        {{-- Hidden input supaya tetap terkirim --}}
-                        @if($detail->account_id)
-                            <input type="hidden" name="details[{{ $i }}][account_id]" value="{{ $detail->account_id }}">
-                        @endif
+                                <select name="details[{{ $i }}][account_id]" 
+                                        class="form-select account-select" 
+                                        data-row="{{ $i }}" required>
+                                    <option value="{{ $detail->account_id }}" selected>
+                                        {{ $detail->account->account_code }} - {{ $detail->account->account_name }}
+                                    </option>
+                                </select>
                     </td>
 
                     {{-- Deskripsi --}}
