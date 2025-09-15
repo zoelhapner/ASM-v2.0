@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-header">
                             <p class="text-center mb-4">
-                                Edit Data Penddikan
+                                Tambah Data Penddikan
                             </p>
                         </div>
 
@@ -53,7 +53,7 @@
                                     </div>
 
                                 <div class="mb-3">
-                                        <label for="education_level" class="form-label">Jenjang Pendidikan <code>*</code></label>
+                                        <label for="education_level" class="form-label">Jenjang Pendidikan </label>
                                         <select name="education_level" class="form-select" required>
                                             <option value="">-- Pilih Jenjang --</option>
                                             <option value="SD">SD</option>

@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Services\ReportService;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
@@ -855,30 +856,17 @@ public function balanceSheet(Request $request)
 
     $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
 
-    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
-    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
-
-    $totalAktiva = collect($groupedAccounts['AKTIVA'] ?? [])
-        ->sum(fn($sub) => $sub['subtotalDebit']);
-
-    $totalPassiva = collect($groupedAccounts['KEWAJIBAN'] ?? [])
-        ->sum(fn($sub) => $sub['subtotalCredit'])
-       + collect($groupedAccounts['EKUITAS'] ?? [])
-        ->sum(fn($sub) => $sub['subtotalCredit']);
+    $totals = ReportService::calculateBalanceSheet($groupedAccounts);
 
 
-    return view('reports.balance_sheet', compact(
-        'startDate',
-        'endDate',
-        'licenses',
-        'activeLicenseId',
-        'groupedAccounts',
-        'viewType',
-        'totalDebit',      // <— tambah ini
-        'totalCredit',     // <— tambah ini
-        'totalAktiva',     // <— dan ini buat skontro
-        'totalPassiva'
-    ));
+    return view('reports.balance_sheet', array_merge([
+        'startDate'       => $startDate,
+        'endDate'         => $endDate,
+        'licenses'        => $licenses,
+        'activeLicenseId' => $activeLicenseId,
+        'groupedAccounts' => $groupedAccounts,
+        'viewType'        => $viewType,
+    ], $totals));
 }
 
 }

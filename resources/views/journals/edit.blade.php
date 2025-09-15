@@ -155,7 +155,7 @@
         </tfoot>
     </table>
 
-    <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Balance</div>
+    <div id="balance-status" class="mt-2 fw-bold text-danger">❌ Tidak Seimbang</div>
 
     <div class="col-md-6 mb-3">
             <label for="description">Keterangan</label>
@@ -360,9 +360,9 @@ $(document).ready(function () {
         $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
 
         if (totalDebit === totalCredit && totalDebit > 0) {
-            $('#balance-status').text('✅ Balance').css('color', 'green');
+            $('#balance-status').text('✅ Seimbang').css('color', 'green');
         } else {
-            $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
+            $('#balance-status').text('❌ Tidak Seimbang').css('color', 'red');
         }
     }
 

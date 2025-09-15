@@ -37,7 +37,7 @@
                     <div class="card">
                         <div class="card-header">
                             <p class="text-center mb-4">
-                                Edit Data Keluarga
+                                Tambah Data Keluarga
                             </p>
                         </div>
 

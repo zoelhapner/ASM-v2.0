@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Illuminate\Support\Facades\Response; 
 use Illuminate\Http\Request;
+use App\Models\License;
 use App\Models\AccountingAccount;   
 use App\Models\AccountingJournal;
     

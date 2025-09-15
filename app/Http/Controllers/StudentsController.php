@@ -116,7 +116,7 @@ class StudentsController extends Controller
             ->addColumn('birth_date', fn($row) => $row->birth_date ? Carbon::parse($row->birth_date)->format('d/m/Y') : '-')
             ->addColumn('registered_date', fn($row) => $row->registered_date ? Carbon::parse($row->registered_date)->format('d/m/Y') : '-')
             ->editColumn('fullname', function ($row) {
-                    $url = route('students.show', $row->id); // Ganti dengan route detailmu
+                    $url = route('students.show', $row->id); 
                     return '<a href="'.$url.'">'.e($row->fullname).'</a>';
                 })
             ->addColumn('action', function ($s) {

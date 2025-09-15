@@ -161,6 +161,9 @@ Route::get('/journals/ledgerpdf', [AccountingJournalController::class, 'exportLe
 Route::get('/journals/export/trial-pdf', [AccountingJournalController::class, 'exportTrial'])
     ->name('journals.trial.pdf');
 
+Route::get('/journals/income/pdf', [AccountingJournalController::class, 'exportIncome'])
+    ->name('journals.income.pdf');
+
 
 Route::middleware(['role:Super-Admin|Akuntan|Pemilik Lisensi'])->group(function () {
     Route::resource('journals', AccountingJournalController::class);
