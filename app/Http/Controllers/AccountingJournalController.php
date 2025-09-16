@@ -470,7 +470,8 @@ public function store(StoreAccountingJournalRequest $request)
         ->when($startDate, fn($q) => $q->whereDate('transaction_date', '>=', $startDate))
         ->when($endDate, fn($q) => $q->whereDate('transaction_date', '<=', $endDate))
         ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)))
-        ->when($licenseFilterId, fn($q) => $q->where('license_id', $licenseFilterId),
+        ->when($licenseFilterId, 
+            fn($q) => $q->where('license_id', $licenseFilterId),
             fn($q) => $q->whereIn('license_id', $licenses->pluck('id')))
         ->orderBy('transaction_date')
         ->get();
@@ -490,7 +491,9 @@ public function store(StoreAccountingJournalRequest $request)
         $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
-    $journals = $journals->orderBy('transaction_date')->get();
+    $journals = $journals
+        ->orderBy('transaction_date')
+        ->get();
 
     return view('journals.report', compact(
         'accounts',
@@ -788,8 +791,8 @@ public function trialBalance(Request $request)
                 'sub_category' => $account->sub_category,
                 'parent_id'    => $account->parent_id,
                 'is_parent'    => $account->is_parent,
-                'debit'  => $balance > 0 ? $balance : 0,
-                'credit' => $balance < 0 ? abs($balance) : 0,
+                'debit'        => $balance > 0 ? $balance : 0,
+                'credit'       => $balance < 0 ? abs($balance) : 0,
             ];
         })
 
