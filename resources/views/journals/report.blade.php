@@ -96,7 +96,7 @@
                         <td class="text-center">{{ $no++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($journal->transaction_date)->format('d/m/Y') }}</td>
                         <td class="desc-column">{{ $detail->description }}</td>
-                        <td>{{ $detail->account->account_code }}</td>
+                        <td class="text-center">{{ $detail->account->account_code }}</td>
                         <td class="account-column">{{ $detail->account->account_name }}</td>
                         <td class="user-column">{{ $detail->person_name }}</td>
                         <td>

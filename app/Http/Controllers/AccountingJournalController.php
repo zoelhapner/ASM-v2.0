@@ -461,10 +461,20 @@ public function store(StoreAccountingJournalRequest $request)
     $accounts = $accountsQuery->orderBy('account_code')->get();
 
     // Filter jurnal
-    $journals = AccountingJournal::with(['details.account', 'creator'])
+    $journals = AccountingJournal::with([
+            'creator',
+            'details' => fn($q) => $accountId 
+                ? $q->where('account_id', $accountId)->with('account')
+                : $q->with('account')
+        ])
         ->when($startDate, fn($q) => $q->whereDate('transaction_date', '>=', $startDate))
         ->when($endDate, fn($q) => $q->whereDate('transaction_date', '<=', $endDate))
-        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)));
+        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)))
+        ->when($licenseFilterId, fn($q) => $q->where('license_id', $licenseFilterId),
+            fn($q) => $q->whereIn('license_id', $licenses->pluck('id')))
+        ->orderBy('transaction_date')
+        ->get();
+
 
     if ($licenseFilterId) {
         if (
@@ -758,14 +768,12 @@ public function trialBalance(Request $request)
 /**
  * Ambil akun + group berdasarkan kategori dan sub-kategori
  */
-private function getGroupedAccounts($startDate, $endDate, $licenseId)
+    private function getGroupedAccounts($startDate, $endDate, $licenseId)
 {
     $accounts = AccountingAccount::where('license_id', $licenseId)
-        ->with(['details' => function ($q) use ($startDate, $endDate, $licenseId) {
-            $q->whereHas('journal', function ($jq) use ($startDate, $endDate, $licenseId) {
-                $jq->whereBetween('transaction_date', [$startDate, $endDate])
+        ->with(['details.journal' => function ($q) use ($startDate, $endDate, $licenseId) {
+                $q->whereBetween('transaction_date', [$startDate, $endDate])
                    ->where('license_id', $licenseId);
-            });
         }])
         ->get()
         ->map(function ($account) {
@@ -785,7 +793,7 @@ private function getGroupedAccounts($startDate, $endDate, $licenseId)
             ];
         })
 
-        -> filter(function ($acc) {
+        ->filter(function ($acc) {
             return !$acc['is_parent'] && $acc['category'] !== '-';
         });
 
@@ -866,7 +874,7 @@ public function balanceSheet(Request $request)
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
-    
+
     $viewType = $request->get('view', 'default'); // 🔹 default | skontro
 
     $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
