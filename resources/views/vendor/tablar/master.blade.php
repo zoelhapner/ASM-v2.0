@@ -40,6 +40,8 @@
 </head>
 
 <body class="@yield('classes_body')">
+    @yield('body')
+
     @yield('layout')
 
     @include('tablar::extra.modal')
