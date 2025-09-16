@@ -39,13 +39,16 @@
 
 </head>
 
-@yield('body')
-@include('tablar::extra.modal')
+<body class="@yield('classes_body')">
+    @yield('layout')
 
-{{-- Livewire Script --}}
-@if(config('tablar.livewire'))
-    @livewireScripts
-@endif
+    @include('tablar::extra.modal')
 
-@yield('tablar_js')
+    {{-- Livewire Script --}}
+    @if(config('tablar.livewire'))
+        @livewireScripts
+    @endif
+
+    @yield('tablar_js')
+</body>
 </html>

@@ -59,15 +59,15 @@ public function getNameAttribute()
 public function getPhotoUrlAttribute()
 {
     if ($this->employee && $this->employee->photo) {
-        return asset('storage/photos/' . $this->employee->photo);
+        return asset('storage/' . $this->employee->photo);
     }
 
     if ($this->licenseholder && $this->licenseholder->photo) {
-        return asset('storage/photos/' . $this->licenseholder->photo);
+        return asset('storage/' . $this->licenseholder->photo);
     }
 
     // fallback default
-    return asset('tablar-logo.png');
+    return asset('avatars/003m.jpg');
 }
 
     protected $fillable = [

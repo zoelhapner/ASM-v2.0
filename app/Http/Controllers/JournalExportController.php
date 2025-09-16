@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use Illuminate\Support\Facades\Response; 
 use Illuminate\Http\Request;
 use App\Models\License;

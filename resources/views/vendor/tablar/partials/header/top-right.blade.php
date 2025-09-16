@@ -3,7 +3,7 @@
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
             <span class="avatar">
-                    <img src="{{ asset('storage/photos/' . auth()->user()->photo_url) }}" 
+                    <img src="{{ auth()->user()->photo_url) }}" 
                         alt="Foto Profil" 
                         style="width: 100%; height: 100%; object-fit: cover;">
             </span>
