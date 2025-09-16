@@ -23,8 +23,6 @@
     @endif
     <!-- SweetAlert2 CDN -->
     
-
-
     {{-- Livewire Styles --}}
     @if(config('tablar.livewire'))
         @livewireStyles

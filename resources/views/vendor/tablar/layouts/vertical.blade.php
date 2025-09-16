@@ -1,6 +1,7 @@
 @php
     $layoutData['cssClasses'] =  'navbar navbar-vertical navbar-expand-lg';
 @endphp
+
 @section('body')
     <body>
         <div class="page">

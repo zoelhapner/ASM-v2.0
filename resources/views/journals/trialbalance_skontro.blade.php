@@ -55,7 +55,7 @@
                 
                 <div class="col-md-3 align-self-end">
                     <button type="submit" class="btn btn-primary text-white">
-                        <i class="ti ti-funnel"></i> Filter
+                        <i class="ti ti-filter"></i> Filter
                     </button>
                 </div>
 
@@ -66,66 +66,6 @@
     {{-- 🔹 Table --}}
     <div class="card shadow-sm border-0">
         <div class="card-body table-responsive">
-            {{-- <table class="table table-bordered">
-                <thead class="table-light">
-                    <tr>
-                        <th colspan="2" class="text-center">AKTIVA</th>
-                        <th colspan="2" class="text-center">PASSIVA (Kewajiban + Ekuitas)</th>
-                    </tr>
-                    <tr>
-                        <th>Kode</th>
-                        <th>Nama Akun</th>
-                        <th>Kode</th>
-                        <th>Nama Akun</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
-                        $aktivaRows = isset($groupedAccounts['AKTIVA'])
-                            ? $groupedAccounts['AKTIVA']->flatMap(fn($s) => $s['accounts'])->values()
-                            : collect();
-
-                        $passivaRows = collect();
-                        if(isset($groupedAccounts['KEWAJIBAN'])) {
-                            $passivaRows = $passivaRows->merge($groupedAccounts['KEWAJIBAN']->flatMap(fn($s) => $s['accounts']));
-                        }
-                        if(isset($groupedAccounts['EKUITAS'])) {
-                            $passivaRows = $passivaRows->merge($groupedAccounts['EKUITAS']->flatMap(fn($s) => $s['accounts']));
-                        }
-
-                        $maxRows = max($aktivaRows->count(), $passivaRows->count());
-
-                        $totalAktiva = $aktivaRows->sum(fn($a) => $a['debit'] - $a['credit']);
-                        $totalPassiva = $passivaRows->sum(fn($a) => $a['credit'] - $a['debit']);
-                    @endphp
-
-                    @for ($i = 0; $i < $maxRows; $i++)
-                        <tr>
-                            <td>{{ $aktivaRows[$i]['account_code'] ?? '' }}</td>
-                            <td>
-                                {{ $aktivaRows[$i]['account_name'] ?? '' }}
-                                @if(isset($aktivaRows[$i]))
-                                    <span class="float-end">{{ number_format($aktivaRows[$i]['debit'] - $aktivaRows[$i]['credit'], 2, ',', '.') }}</span>
-                                @endif
-                            </td>
-
-                            <td>{{ $passivaRows[$i]['account_code'] ?? '' }}</td>
-                            <td>
-                                {{ $passivaRows[$i]['account_name'] ?? '' }}
-                                @if(isset($passivaRows[$i]))
-                                    <span class="float-end">{{ number_format($passivaRows[$i]['credit'] - $passivaRows[$i]['debit'], 2, ',', '.') }}</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endfor
-                </tbody>
-                <tfoot class="table-dark fw-bold">
-                    <tr>
-                        <td colspan="2" class="text-end">TOTAL AKTIVA: {{ number_format($totalAktiva, 2, ',', '.') }}</td>
-                        <td colspan="2" class="text-end">TOTAL PASSIVA: {{ number_format($totalPassiva, 2, ',', '.') }}</td>
-                    </tr>
-                </tfoot>
-            </table> --}}
 
             <div class="row">
                 
@@ -140,6 +80,22 @@
                                     <tr>
                                         <td>Aset Lancar</td>
                                         <td class="text-end">Rp {{ number_format($asetLancar, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Persediaan Barang</td>
+                                        <td class="text-end">Rp {{ number_format($persediaan, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Piutang</td>
+                                        <td class="text-end">Rp {{ number_format($piutang, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dana Belum Disetor</td>
+                                        <td class="text-end">Rp {{ number_format($dana, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pajak Bayar Dimuka</td>
+                                        <td class="text-end">Rp {{ number_format($pajak, 2, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                         <td>Aset Tetap</td>
@@ -183,16 +139,7 @@
                                         <td>Pendapatan</td>
                                         <td class="text-end">Rp {{ number_format($pendapatan, 2, ',', '.') }}</td>
                                     </tr>
-                                    {{-- <tr>
-                                        <td>Beban</td>
-                                        <td class="text-end text-danger">({{ number_format($beban, 0, ',', '.') }})</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Laba/Rugi Berjalan</td>
-                                        <td class="text-end fw-bold">
-                                            {{ number_format($labaRugiBerjalan, 0, ',', '.') }}
-                                        </td>
-                                    </tr> --}}
+                                    
                                     <tr class="fw-bold table-secondary">
                                         <td>Total Passiva</td>
                                         <td class="text-end">Rp {{ number_format($totalPassiva, 0, ',', '.') }}</td>

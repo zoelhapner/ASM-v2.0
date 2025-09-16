@@ -57,7 +57,9 @@ class ReportService
             
             ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
 
-        $totalAktiva = $asetLancar + ($asetTetap - $penyusutan) + $beban;
+        $totalAktiva = ($asetLancar + $persediaan + $piutang + $dana + $pajak) 
+                     + ($asetTetap - $penyusutan) 
+                     + $beban;
 
 
         // 🔹 PASSIVA
@@ -67,7 +69,7 @@ class ReportService
 
         $ekuitas = collect($groupedAccounts['EKUITAS'] ?? [])
         
-            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit') - self::getVal($sub, 'subtotalCredit'));
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalCredit') - self::getVal($sub, 'subtotalDebit'));
 
         $pendapatan = collect($groupedAccounts['PENDAPATAN'] ?? [])
             

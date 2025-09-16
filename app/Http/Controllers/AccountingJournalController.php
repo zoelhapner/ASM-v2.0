@@ -866,6 +866,7 @@ public function balanceSheet(Request $request)
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+    
     $viewType = $request->get('view', 'default'); // 🔹 default | skontro
 
     $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
