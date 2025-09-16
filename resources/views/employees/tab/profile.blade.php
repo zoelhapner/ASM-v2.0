@@ -21,8 +21,7 @@
                         @endphp
 
                         {{-- tampilkan username & posisi --}}
-                        <div>{{ auth()->user()->name }}</div>
-                        <div>{{ $positionText }}</div>
+                        {{ $positionText }}
                     </div>
                 </div>
             </div>

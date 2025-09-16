@@ -56,6 +56,20 @@ public function getNameAttribute()
     return $this->attributes['name'] ?? 'User';
 }
 
+public function getPhotoUrlAttribute()
+{
+    if ($this->employee && $this->employee->photo) {
+        return asset('storage/' . $this->employee->photo);
+    }
+
+    if ($this->licenseholder && $this->licenseholder->photo) {
+        return asset('storage/' . $this->licenseholder->photo);
+    }
+
+    // fallback default
+    return asset('images/default-avatar.png');
+}
+
     protected $fillable = [
         'name',
         'email',

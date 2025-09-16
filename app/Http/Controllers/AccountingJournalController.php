@@ -482,12 +482,12 @@ public function store(StoreAccountingJournalRequest $request)
             ($user->hasRole('Pemilik Lisensi') && $licenses->pluck('id')->contains($licenseFilterId)) ||
             ($user->hasRole('Akuntan') && $licenses->pluck('id')->contains($licenseFilterId))
         ) {
-            $journals->where('license_id', $licenseFilterId);
+            $journalsQuery->where('license_id', $licenseFilterId);
         } else {
             abort(403, 'Lisensi tidak valid.');
         }
     } else {
-        $journals->whereIn('license_id', $licenses->pluck('id'));
+        $journalsQuery->whereIn('license_id', $licenses->pluck('id'));
     }
 
     $journals = $journalQuery

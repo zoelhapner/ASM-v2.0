@@ -3,12 +3,11 @@
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
             <span class="avatar">
-                @if(auth()->user()->photo)
-                    <img src="{{ asset('storage/' . auth()->user()->photo) }}" 
+                    <img src="{{ asset('storage/' . auth()->user()->photo_url) }}" 
                         alt="Foto Profil" 
                         style="width: 100%; height: 100%; object-fit: cover;">
-                @endif
             </span>
+            
             <div class="d-none d-xl-block ps-2">
                 @php
                     $positions = optional(auth()->user()->employee)->position;
@@ -35,7 +34,9 @@
                 @php( $setting_url = $setting_url ? url($setting_url) : '' )
             @endif
 
-            <a href="{{ route('profile.edit') }}" class="dropdown-item">Edit Profil</a>
+            <a href="{{ route('profile.edit') }}" class="dropdown-item">
+                <i class="ti ti-users"></i> Edit Profil
+            </a>
             <a class="dropdown-item"
                href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="ti ti-logout"></i>
