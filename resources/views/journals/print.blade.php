@@ -4,12 +4,29 @@
     <meta charset="utf-8">
     <title>Jurnal - {{ $journal->journal_code }}</title>
     <style>
-        body { font-family: Poppins, sans-serif; font-size: 12px; }
+        body { font-family: Poppins, sans-serif; font-size: 11px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
+        table th, table td { border: 1px solid #444; padding: 6px; word-wrap: break-word; font-size: 10px; }
+        table th { background-color: #f5f5f5; }
         h2 { text-align: center; }
-        table { border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: left; }
-        th { background: #f0f0f0; }
-        .text-right { text-align: right; }
+        
+        table th:nth-child(1),
+        table td:nth-child(1) { width: 70px; } 
+
+        table th:nth-child(2),
+        table td:nth-child(2) { width: 150px; }
+
+        table th:nth-child(3),
+        table td:nth-child(3) { width: 35%; }  
+
+        table th:nth-child(4),
+        table td:nth-child(4) { width: 150px; }
+
+        table th:nth-child(5),
+        table td:nth-child(5) { width: 90px; text-align: right; } /* Debit */
+
+        table th:nth-child(6),
+        table td:nth-child(6) { width: 90px; text-align: right; } /* Kredit */
     </style>
 </head>
 <body>
@@ -22,7 +39,7 @@
     <table>
         <thead>
             <tr>
-                <th style="width:5%">No. Akun</th>
+                <th>No. Akun</th>
                 <th>Nama Akun</th>
                 <th>Deskripsi</th>
                 <th>User</th>
@@ -45,16 +62,16 @@
                     <td>{{ $detail->account->account_name ?? '-' }}</td>
                     <td>{{ $detail->description ?? '-' }}</td>
                     <td>{{ $detail->person_name ?? '-' }}</td>
-                    <td class="text-right">Rp. {{ number_format($detail->debit, 2, ',', '.') }}</td>
-                    <td class="text-right">Rp. {{ number_format($detail->credit, 2, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($detail->debit, 2, ',', '.') }}</td>
+                    <td>Rp. {{ number_format($detail->credit, 2, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="4"><strong>Total</strong></td>
-                <td class="text-right"><strong>Rp. {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
-                <td class="text-right"><strong>Rp. {{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp. {{ number_format($totalDebit, 2, ',', '.') }}</strong></td>
+                <td><strong>Rp. {{ number_format($totalCredit, 2, ',', '.') }}</strong></td>
             </tr>
         </tfoot>
     </table>
