@@ -12,22 +12,38 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            table-layout: fixed;
         }
         table th, table td {
             border: 1px solid #444;
             padding: 6px;
-            text-align: left,
+            word-wrap: break-word;
         }
         table th {
             background-color: #f5f5f5;
-        }
-        table td.text-left {
-            text-align: left;
         }
         h3, p {
             text-align: center;
             margin-bottom: 10px;
         }
+
+        table th:nth-child(1),
+        table td:nth-child(1) { width: 80px; }   /* Tanggal */
+
+        table th:nth-child(2),
+        table td:nth-child(2) { width: 100px; }  /* Transaksi */
+
+        table th:nth-child(3),
+        table td:nth-child(3) { width: 40%; }    /* Deskripsi (fleksibel) */
+
+        table th:nth-child(4),
+        table td:nth-child(4) { width: 100px; text-align: right; } /* Debit */
+
+        table th:nth-child(5),
+        table td:nth-child(5) { width: 100px; text-align: right; } /* Kredit */
+
+        table th:nth-child(6),
+        table td:nth-child(6) { width: 120px; text-align: right; }
     </style>
 </head>
 
