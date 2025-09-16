@@ -460,21 +460,20 @@ public function store(StoreAccountingJournalRequest $request)
     }
     $accounts = $accountsQuery->orderBy('account_code')->get();
 
-    // Filter jurnal
-    $journals = AccountingJournal::with([
-            'creator',
-            'details' => fn($q) => $accountId 
-                ? $q->where('account_id', $accountId)->with('account')
-                : $q->with('account')
-        ])
+    $journalsQuery = AccountingJournal::query()
+        ->with('creator')
+        ->with(['details' => function ($q) use ($accountId) {
+            // jika ada filter akun, eager-load hanya details untuk account tersebut
+            if ($accountId) {
+                $q->where('account_id', $accountId)->with('account');
+            } else {
+                $q->with('account');
+            }
+        }])
         ->when($startDate, fn($q) => $q->whereDate('transaction_date', '>=', $startDate))
         ->when($endDate, fn($q) => $q->whereDate('transaction_date', '<=', $endDate))
-        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)))
-        ->when($licenseFilterId, 
-            fn($q) => $q->where('license_id', $licenseFilterId),
-            fn($q) => $q->whereIn('license_id', $licenses->pluck('id')))
-        ->orderBy('transaction_date')
-        ->get();
+        // pastikan jurnal memiliki detail yang sesuai (biar jurnal tanpa akun itu tidak muncul)
+        ->when($accountId, fn($q) => $q->whereHas('details', fn($q2) => $q2->where('account_id', $accountId)));
 
 
     if ($licenseFilterId) {
@@ -491,7 +490,7 @@ public function store(StoreAccountingJournalRequest $request)
         $journals->whereIn('license_id', $licenses->pluck('id'));
     }
 
-    $journals = $journals
+    $journals = $journalQuery
         ->orderBy('transaction_date')
         ->get();
 

@@ -4,15 +4,29 @@
             {{-- Foto & Nama --}}
             <div class="d-flex align-items-center mb-4">
                 @if ($employee->photo)
-                    <span class="avatar avatar-xl me-3 rounded" style="background-image: url('{{ asset('storage/' . $employee->photo) }}')"></span>
+                    <span class="avatar avatar-xl me-3 rounded" 
+                        style="background-image: url('{{ asset('storage/' . $employee->photo) }}')"></span>
                 @else
                     <span class="avatar avatar-xl me-3 avatar-rounded bg-secondary-lt">?</span>
                 @endif
+
                 <div>
                     <h3 class="card-title mb-1">{{ $employee->fullname }}</h3>
-                    <div class="text-muted">{{ $employee->job ?? 'No Job Title' }}</div>
+                    <div class="text-muted">
+                        @php
+                            $positions = optional($employee)->position;
+                            $positionText = is_array($positions) 
+                                ? implode(', ', $positions) 
+                                : ($positions ?? auth()->user()->getRoleNames()->first());
+                        @endphp
+
+                        {{-- tampilkan username & posisi --}}
+                        <div>{{ auth()->user()->name }}</div>
+                        <div>{{ $positionText }}</div>
+                    </div>
                 </div>
             </div>
+
 
            {{-- Informasi Pribadi --}}
             <h4 class="subheader">🧾 Informasi Pribadi</h4>
