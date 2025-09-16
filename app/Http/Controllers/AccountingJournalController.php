@@ -490,9 +490,7 @@ public function store(StoreAccountingJournalRequest $request)
         $journalsQuery->whereIn('license_id', $licenses->pluck('id'));
     }
 
-    $journals = $journalQuery
-        ->orderBy('transaction_date')
-        ->get();
+    $journals = $journalsQuery->orderBy('transaction_date')->get();
 
     return view('journals.report', compact(
         'accounts',

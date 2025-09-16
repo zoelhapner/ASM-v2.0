@@ -31,7 +31,7 @@
     </div>
 
     {{-- 🔹 Dropdown untuk pilih tampilan --}}
-    <div class="col-md-2">
+    <div class="col-md-3">
         <label for="view" class="form-label">Tampilan</label>
         <select name="view" id="view" class="form-select">
             <option value="default" {{ $viewType == 'default' ? 'selected' : '' }}>Default</option>
@@ -39,8 +39,8 @@
         </select>
     </div>
 
-    <div class="col-md-1">
-        <button type="submit" class="btn btn-primary w-100">Filter</button>
+    <div class="col-md-3">
+        <button type="submit" class="btn btn-primary text-white">Filter</button>
     </div>
 </form>
 

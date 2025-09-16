@@ -55,7 +55,7 @@
                 
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary text-white">
-                        <i class="ti ti-funnel"></i> Filter
+                        <i class="ti ti-filter"></i> Filter
                     </button>
                 </div>
 
