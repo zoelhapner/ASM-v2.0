@@ -32,31 +32,6 @@
 
     {{-- Custom Stylesheets (post Tablar) --}}
     @yield('tablar_css')
-
-    <style>
-        /* Pastikan header dan tombol profil di atas semua elemen */
-        .navbar,
-        .header,
-        .header-right,
-        .nav-item.dropdown,
-        .dropdown-menu {
-            position: relative;
-            z-index: 1050 !important;
-        }
-
-        /* Pastikan kontainer utama di bawah header */
-        .container-fluid,
-        .page-wrapper,
-        .content,
-        .card,
-        .card-body,
-        .card-header {
-            position: relative;
-            z-index: 1 !important;
-        }
-    </style>
-
-
     
     <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.3.2/fc-5.0.4/fh-4.0.3/datatables.min.css"/>
     <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.css') }}">

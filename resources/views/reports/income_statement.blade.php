@@ -111,7 +111,6 @@
                                 ? '(' . number_format(abs($acc['balance']), 2, ',', '.') . ')' 
                                 : number_format($acc['balance'], 2, ',', '.') }}
                         </td>
-
                     </tr>
                 </tbody>
             </table>

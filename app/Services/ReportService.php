@@ -26,7 +26,23 @@ class ReportService
             $groupedAccounts = $groupedAccounts->toArray();
         }
         // 🔹 AKTIVA
-        $asetLancar = collect($groupedAccounts['AKTIVA']['Aset Lancar - Kas & Bank']['Aset Lancar - Persediaan Barang']['Aset Lancar - Piutang']['Aset Lancar - Dana Belum Disetor']['Aset Lancar - Pajak Bayar Dimuka'] ?? [])
+        $asetLancar = collect($groupedAccounts['AKTIVA']['Aset Lancar - Kas & Bank'] ?? [])
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
+
+        $persediaan = collect($groupedAccounts['AKTIVA']['Aset Lancar - Persediaan Barang'] ?? [])
+    
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
+
+        $piutang = collect($groupedAccounts['AKTIVA']['Aset Lancar - Piutang'] ?? [])
+    
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
+
+        $dana = collect($groupedAccounts['AKTIVA']['Aset Lancar - Dana Belum Disetor'] ?? [])
+    
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
+
+        $pajak = collect($groupedAccounts['AKTIVA']['Aset Lancar - Pajak Bayar Dimuka'] ?? [])
+    
             ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit'));
 
         $asetTetap = collect($groupedAccounts['AKTIVA']['Aset Tetap'] ?? [])
@@ -51,7 +67,7 @@ class ReportService
 
         $ekuitas = collect($groupedAccounts['EKUITAS'] ?? [])
         
-            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit', 'subtotalCredit'));
+            ->sum(fn($sub) => self::getVal($sub, 'subtotalDebit') - self::getVal($sub, 'subtotalCredit'));
 
         $pendapatan = collect($groupedAccounts['PENDAPATAN'] ?? [])
             
@@ -62,6 +78,10 @@ class ReportService
 
         return [
             'asetLancar'         => $asetLancar,
+            'persediaan'         => $persediaan,
+            'piutang'            => $piutang,
+            'dana'               => $dana,
+            'pajak'              => $pajak,
             'asetTetap'          => $asetTetap,
             'penyusutan'         => $penyusutan,
             'beban'              => $beban,

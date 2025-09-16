@@ -199,7 +199,7 @@
 @endsection
 
 
-@section('js')
+@push('js')
 
 <script>
 $(document).ready(function () {
@@ -312,6 +312,18 @@ $(document).ready(function () {
         : $('#activeLicenseId').val();
     loadAccountsByLicense(selectedLicense);
 
+    /** 🔹 Init user lama di edit form */
+    $('.user-select').each(function () {
+        let $select = $(this);
+        let row = $select.data('row');
+        let selectedUser = $select.data('selected');
+        let personType = $(`.account-select[data-row="${row}"] option:selected`).data('person-type');
+
+        // Render ulang user sesuai personType
+        renderUserOptions($select, personType, selectedUser);
+    });
+
+
     /** 🔹 Tambah baris baru */
     $('#add-row').click(function () {
         const rowCount = $('#detail-rows tr').length;
@@ -399,134 +411,6 @@ $(document).ready(function () {
 });
 </script>
 
-@endsection
+@endpush
 
 
-{{-- <script>
-        const studentOptions = @json($students);
-        const employeeOptions = @json($employees);
-        const licenseHolderOptions = @json($licenseHolders);
-        const licenseOptions = @json($licenseList);
-
-        function renderUserOptions(row, source) {
-            const $userSelect = $(`select.user-select[data-row="${row}"]`);
-            $userSelect.empty().append(`<option value="">-- Pilih User --</option>`);
-            $userSelect.prop('disabled', true).hide();
-            $userSelect.show().prop('disabled', true);
-
-            let data = [];
-            if (source === 'student') data = studentOptions;
-            if (source === 'employee') data = employeeOptions;
-            if (source === 'Pemilik Lisensi') data = licenseHolderOptions;
-            if (source === 'license') data = licenseOptions;
-
-            if (data.length) {
-                $userSelect.append(`<option value="">-- Pilih User --</option>`);
-                data.forEach(item => {
-                    $userSelect.append(`<option value="${item.id}">${item.name}</option>`);
-                });
-                $userSelect.show();
-            } else {
-                $userSelect.hide();
-            }
-        }
-
-        function toggleDebitCreditInputs(row, code) {
-            const debitInput = $(`input[name="details[${row}][debit]"]`);
-            const creditInput = $(`input[name="details[${row}][credit]"]`);
-
-            if (code.startsWith('D')) {
-                debitInput.prop('disabled', false);
-                creditInput.prop('disabled', true).val('');
-            } else if (code.startsWith('K')) {
-                creditInput.prop('disabled', false);
-                debitInput.prop('disabled', true).val('');
-            } else {
-                debitInput.prop('disabled', false).val('');
-                creditInput.prop('disabled', false).val('');
-            }
-        }
-
-        const akunOtomatisPusat = ['K 0026', 'K 0027', 'K 0031', 'K 0032'];
-        const pusatUserId = @json($pusatUserId ?? '');
-        const pusatUserName = @json($pusatUserName ?? '');
-
-         $(document).ready(function () {
-        // Inisialisasi select2 untuk semua select user yang ada saat edit
-        $('.user-select').select2({
-            placeholder: "-- Pilih User --",
-            width: '100%'
-        });
-    // Loop setiap baris detail saat edit
-    $('#detail-rows tr').each(function () {
-        const row = $(this).find('.account-select').data('row');
-        const selectedAccount = $(this).find('.account-select option:selected');
-        const code = selectedAccount.data('code') || '';
-        const personType = selectedAccount.data('person-type') || null;
-        const $userSelect = $(`select.user-select[data-row="${row}"]`);
-
-        // Render opsi user kalau personType cocok
-        if (['student', 'employee', 'Pemilik Lisensi', 'license'].includes(personType)) {
-            renderUserOptions(row, personType);
-
-            // Set selected user jika ada value
-            const currentValue = $userSelect.attr('data-selected');
-            if (currentValue) {
-                $userSelect.val(currentValue).trigger('change');
-            }
-        }
-
-        // Aktifkan debit/kredit sesuai kode akun
-        toggleDebitCreditInputs(row, code);
-    });
-
-    function calculateSubtotals() {
-            let totalDebit = 0;
-            let totalCredit = 0;
-
-            $('.debit-input').each(function() {
-                let value = parseFloat($(this).val()) || 0;
-                totalDebit += value;
-            });
-
-            $('.credit-input').each(function() {
-                let value = parseFloat($(this).val()) || 0;
-                totalCredit += value;
-            });
-
-            $('#subtotal-debit').text(totalDebit.toLocaleString('id-ID'));
-            $('#subtotal-credit').text(totalCredit.toLocaleString('id-ID'));
-
-            if (totalDebit === totalCredit && totalDebit > 0) {
-                $('#balance-status').text('✅ Balance').css('color', 'green');
-            } else {
-                $('#balance-status').text('❌ Tidak Balance').css('color', 'red');
-            }
-        }
-
-        // Aktifkan saat halaman load & saat ada perubahan
-        $(document).ready(function() {
-            $(document).on('input', '.debit-input, .credit-input', function() {
-                const val = parseFloat($(this).val());
-                if (val < 0) $(this).val('');
-                calculateSubtotals();
-            });
-
-    // Hitung subtotal awal
-    calculateSubtotals();
-});
-    $('form').on('submit', function (e) {
-        let totalDebit = 0, totalCredit = 0;
-        $('#detail-rows tr').each(function() {
-            totalDebit  += parseFloat($(this).find('.debit-input').val())  || 0;
-            totalCredit += parseFloat($(this).find('.credit-input').val()) || 0;
-        });
-
-        if (totalDebit !== totalCredit) {
-            e.preventDefault();
-            alert('Transaksi tidak balance! Jumlah Debit dan Kredit harus sama.');
-        }
-    });
-
-         });
-</script> --}}

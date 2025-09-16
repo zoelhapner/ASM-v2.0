@@ -1,6 +1,5 @@
 @extends('tablar::page')
 
-@section('title', 'Informasi Profil')
 @section('content')
 <div class="container-fluid mt-3">
     <div class="row">
@@ -152,47 +151,6 @@
                             @enderror
                         </div>
 
-
-                        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-                        <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            // Inisialisasi tooltip Bootstrap
-                            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                                return new bootstrap.Tooltip(tooltipTriggerEl);
-                            });
-
-                            // Toggle show/hide password untuk semua tombol
-                            document.querySelectorAll(".toggle-password").forEach(function(toggle) {
-                                toggle.addEventListener("click", function(e) {
-                                    e.preventDefault();
-
-                                    const targetId = this.getAttribute("data-target");
-                                    const input = document.getElementById(targetId);
-                                    const eyeIcon = this.querySelector(".eyeIcon");
-                                    const eyeOffIcon = this.querySelector(".eyeOffIcon");
-
-                                    const isPassword = input.type === "password";
-                                    input.type = isPassword ? "text" : "password";
-
-                                    eyeIcon.style.display = isPassword ? "none" : "inline";
-                                    eyeOffIcon.style.display = isPassword ? "inline" : "none";
-
-                                    const title = isPassword ? "Hide password" : "Show password";
-                                    this.setAttribute("aria-label", title);
-                                    this.setAttribute("title", title);
-
-                                    // Update tooltip secara dinamis
-                                    const tooltip = bootstrap.Tooltip.getInstance(this);
-                                    if (tooltip) {
-                                        tooltip.setContent({ '.tooltip-inner': title });
-                                    }
-                                });
-                            });
-                        });
-                        </script>
-
-
                         <!-- Tombol Simpan -->
                         <button type="submit" class="btn btn-primary text-white">Simpan</button>
 
@@ -209,3 +167,44 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Inisialisasi tooltip Bootstrap
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Toggle show/hide password untuk semua tombol
+        document.querySelectorAll(".toggle-password").forEach(function(toggle) {
+            toggle.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute("data-target");
+                const input = document.getElementById(targetId);
+                const eyeIcon = this.querySelector(".eyeIcon");
+                const eyeOffIcon = this.querySelector(".eyeOffIcon");
+
+                const isPassword = input.type === "password";
+                input.type = isPassword ? "text" : "password";
+
+                eyeIcon.style.display = isPassword ? "none" : "inline";
+                eyeOffIcon.style.display = isPassword ? "inline" : "none";
+
+                const title = isPassword ? "Hide password" : "Show password";
+                this.setAttribute("aria-label", title);
+                this.setAttribute("title", title);
+
+                // Update tooltip secara dinamis
+                const tooltip = bootstrap.Tooltip.getInstance(this);
+                if (tooltip) {
+                    tooltip.setContent({ '.tooltip-inner': title });
+                }
+            });
+        });
+    });
+    </script>
+@endpush
