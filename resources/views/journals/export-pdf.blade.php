@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <title>Laporan Jurnal Umum</title>
     <style>
-        body { font-family: Poppins, sans-serif; font-size: 11px; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; }
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* wajib kalau mau fixed column */
+            table-layout: auto !important;
+            word-wrap: break-word; /* wajib kalau mau fixed column */
         }
 
         table th, table td {
@@ -18,7 +19,8 @@
             text-align: left;
             white-space: normal !important;      /* biar teks panjang turun ke bawah */
             word-break: break-word !important;    /* pecah kata panjang */
-            overflow: visible !important;        /* cegah teks ketimpa / hilang */
+            overflow: visible !important;
+            vertical-align: top;        /* cegah teks ketimpa / hilang */
         }
 
         table th { background-color: #f5f5f5; }
@@ -31,16 +33,16 @@
 
         /* General Journal */
         table th:nth-child(1),
-        table td:nth-child(1) { width: 90px; }   /* Tanggal */
+        table td:nth-child(1) { min-width: 90px; }   /* Tanggal */
 
         table th:nth-child(2),
-        table td:nth-child(2) { width: 90px; }   /* No Jurnal */
+        table td:nth-child(2) { min-width: 90px; }   /* No Jurnal */
 
         table th:nth-child(3),
         table td:nth-child(3) { width: 180px; }  /* Deskripsi */
 
         table th:nth-child(4),
-        table td:nth-child(4) { width: 70px; }   /* No. Akun */
+        table td:nth-child(4) { min-width: 70px; }   /* No. Akun */
 
         table th:nth-child(5),
         table td:nth-child(5) { width: 160px; }  /* Nama Akun */

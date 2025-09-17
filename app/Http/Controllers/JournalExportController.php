@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\License;
 use App\Models\AccountingAccount;   
 use App\Models\AccountingJournal;
+use App\Models\AccountingJournalDetail;
     
 
 class JournalExportController extends Controller
@@ -259,12 +260,13 @@ public function exportTrialBalance(Request $request)
         $licenseId = $request->license_id;
 
         // Query jurnal
-        $journals = AccountingJournal::with('details.account')
-            ->when($licenseId, function ($q) use ($licenseId) {
-                $q->where('license_id', $licenseId);
-            })
-            ->whereBetween('transaction_date', [$startDate, $endDate])
-            ->get();
+        $journals = AccountingJournalDetail::with('account')
+        ->whereHas('journal', function ($q) use ($startDate, $endDate, $licenseId) {
+            $q->whereBetween('transaction_date', [$startDate, $endDate])
+            ->when($licenseId, fn($q) => $q->where('license_id', $licenseId));
+        })
+        ->get();
+
 
         // Ambil semua akun
         $accounts = AccountingAccount::orderBy('account_code')->get();

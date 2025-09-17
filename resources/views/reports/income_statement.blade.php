@@ -18,7 +18,7 @@
 
         @role('Super-Admin')
         <div class="col-auto">
-            <select name="license_id" class="form-select">
+            <select name="license_id" class="form-select select2">
                 <option value="">-- Pilih Lisensi --</option>
                 @foreach($licenses as $license)
                     <option value="{{ $license->id }}" {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
@@ -30,7 +30,7 @@
         @endrole
 
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-primary text-white">
                 <i class="ti ti-filter"></i> Tampilkan
             </button>
         </div>
@@ -132,3 +132,12 @@
     </h4>
 </div>
 @endsection
+
+@push('js')
+<script>
+ $('.select2').select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
+</script>
+@endpush
