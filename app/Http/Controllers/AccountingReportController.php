@@ -6,6 +6,7 @@ use App\Models\AccountingAccount;
 use App\Models\License;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AccountingReportController extends Controller
 {
@@ -28,30 +29,31 @@ class AccountingReportController extends Controller
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    $accounts = AccountingAccount::with(['details.journal' => function ($q) use ($startDate, $endDate) {
-            $q->whereBetween('transaction_date', [$startDate, $endDate]);
-        }])
-        ->when($activeLicenseId, fn($q) => $q->where('license_id', $activeLicenseId))
-        ->whereIn('category', ['Pendapatan', 'Beban'])
-        ->get()
-        ->map(function ($account) {
-            $debit  = $account->details->sum('debit');
-            $credit = $account->details->sum('credit');
-
-            $balance = ($account->category === 'Pendapatan')
-                ? ($credit - $debit)
-                : ($debit - $credit);
-
-            return [
-                'code'        => $account->account_code,
-                'name'        => $account->account_name,
-                'category'    => $account->category,
-                'sub_category'=> $account->sub_category,
-                'is_parent'   => $account->is_parent,
-                'balance'     => $balance,
-            ];
-        })
-        ->reject(fn($acc) => $acc['is_parent']); // skip akun induk
+    $accounts = AccountingAccount::select(
+                'accounting_accounts.id',
+                'accounting_accounts.account_code',
+                'accounting_accounts.account_name',
+                'accounting_accounts.category',
+                'accounting_accounts.sub_category',
+                'accounting_accounts.is_parent',
+                DB::raw("SUM(CASE WHEN accounting_accounts.category = 'Pendapatan' THEN details.credit - details.debit ELSE details.debit - details.credit END) as balance")
+            )
+            ->leftJoin('accounting_account_details as details', 'details.accounting_account_id', '=', 'accounting_accounts.id')
+            ->leftJoin('journals', 'journals.id', '=', 'details.journal_id')
+            ->when($activeLicenseId, fn($q) => $q->where('accounting_accounts.license_id', $activeLicenseId))
+            ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
+            ->whereBetween('journals.transaction_date', [$startDate, $endDate])
+            ->groupBy(
+                'accounting_accounts.id',
+                'accounting_accounts.account_code',
+                'accounting_accounts.account_name',
+                'accounting_accounts.category',
+                'accounting_accounts.sub_category',
+                'accounting_accounts.is_parent'
+            )
+            ->orderBy('accounting_accounts.account_code')
+            ->get()
+            ->reject(fn($acc) => $acc['is_parent']); // skip akun induk
 
     // 🔹 Grouping by category & sub_category
     $grouped = $accounts->groupBy('category')->map(function ($catGroup) {
@@ -78,7 +80,6 @@ class AccountingReportController extends Controller
         'netIncome'
     ));
 }
-
 
 }
 

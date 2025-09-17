@@ -2,42 +2,143 @@
 
 @section('content')
 <div class="container">
-    <h4 class="mb-4">Laporan Laba Rugi</h4>
-    <p>Periode: {{ $startDate }} s/d {{ $endDate }}</p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 style="text-align:center;">Laporan Laba Rugi</h2>
+            
+                <a href="{{ route('ledger.export', request()->query()) }}" 
+                    class="btn btn-success">
+                    <i class="ti ti-file-export text-white"></i> Ekspor Excel
+                </a>
+            
+    </div>
 
-    <form method="GET" action="{{ route('reports.income_statement') }}" class="row g-2 mb-3">
-        <div class="col-auto">
-            <label for="start_date" class="col-form-label">Periode</label>
-        </div>
-        <div class="col-auto">
-            <input type="date" name="start_date" value="{{ $startDate }}" class="form-control">
-        </div>
-        <div class="col-auto">
-            <input type="date" name="end_date" value="{{ $endDate }}" class="form-control">
-        </div>
+    <div class="card shadow-sm border-0 mb-3">
+        <div class="card-body">
+            <form method="GET" action="{{ route('reports.income_statement') }}" class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Dari Tanggal</label>
+                    <input type="date" name="start_date" id="start_date" 
+                        class="form-control" value="{{ $startDate }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">Sampai Tanggal</label>
+                    <input type="date" name="end_date" id="end_date" 
+                        class="form-control" value="{{ $endDate }}">
+                </div>
+                @if(auth()->user()->hasRole('Super-Admin'))
+                    <div class="col-md-3">
+                        <label for="license_id" class="form-label">Lisensi</label>
+                        <select name="license_id" id="license_id" class="form-select select2">
+                            <option value="">-- Semua Lisensi --</option>
+                            @foreach ($licenses as $license)
+                                <option value="{{ $license->id }}" 
+                                    {{ $activeLicenseId == $license->id ? 'selected' : '' }}>
+                                    {{ $license->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                @else
+                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+                @endif
 
-        @role('Super-Admin')
-        <div class="col-auto">
-            <select name="license_id" class="form-select select2">
-                <option value="">-- Pilih Lisensi --</option>
-                @foreach($licenses as $license)
-                    <option value="{{ $license->id }}" {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
-                        {{ $license->name }}
-                    </option>
-                @endforeach
-            </select>
+                <div class="col-md-3 align-self-end">
+                    <button type="submit" class="btn btn-primary text-white">Filter</button>
+                </div>
+            </form>
         </div>
-        @endrole
+    </div>
 
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary text-white">
-                <i class="ti ti-filter"></i> Tampilkan
-            </button>
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-sm">
+                <thead class="table-light">
+                    <tr>
+                        <th>Kode Akun</th>
+                        <th>Nama Akun</th>
+                        <th class="text-end">Saldo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{-- 🔹 Pendapatan --}}
+                    <tr class="table-secondary">
+                        <td colspan="3"><strong>Pendapatan</strong></td>
+                    </tr>
+                    @if(isset($grouped['Pendapatan']))
+                        @foreach($grouped['Pendapatan'] as $subCat => $data)
+                            <tr>
+                                <td colspan="3"><em>{{ $subCat }}</em></td>
+                            </tr>
+                            @foreach($data['accounts'] as $acc)
+                                <tr>
+                                    <td>{{ $acc->account_code }}</td>
+                                    <td>{{ $acc->account_name }}</td>
+                                    <td class="text-end">{{ number_format($acc->balance, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                            <tr class="fw-bold">
+                                <td colspan="2">Subtotal {{ $subCat }}</td>
+                                <td class="text-end">{{ number_format($data['subtotal'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
+
+                    <tr class="fw-bold bg-light">
+                        <td colspan="2">Total Pendapatan</td>
+                        <td class="text-end">{{ number_format($totalIncome, 0, ',', '.') }}</td>
+                    </tr>
+
+                    {{-- 🔹 Beban --}}
+                    <tr class="table-secondary">
+                        <td colspan="3"><strong>Beban</strong></td>
+                    </tr>
+                    @if(isset($grouped['Beban']))
+                        @foreach($grouped['Beban'] as $subCat => $data)
+                            <tr>
+                                <td colspan="3"><em>{{ $subCat }}</em></td>
+                            </tr>
+                            @foreach($data['accounts'] as $acc)
+                                <tr>
+                                    <td>{{ $acc->account_code }}</td>
+                                    <td>{{ $acc->account_name }}</td>
+                                    <td class="text-end">{{ number_format($acc->balance, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                            <tr class="fw-bold">
+                                <td colspan="2">Subtotal {{ $subCat }}</td>
+                                <td class="text-end">{{ number_format($data['subtotal'], 0, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
+
+                    <tr class="fw-bold bg-light">
+                        <td colspan="2">Total Beban</td>
+                        <td class="text-end">{{ number_format($totalExpense, 0, ',', '.') }}</td>
+                    </tr>
+
+                    {{-- 🔹 Net Income --}}
+                    <tr class="table-dark text-white">
+                        <td colspan="2"><strong>Laba/Rugi Bersih</strong></td>
+                        <td class="text-end"><strong>{{ number_format($netIncome, 0, ',', '.') }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </form>
+    </div>
+</div>
+@endsection
+
+@push('js')
+<script>
+ $('.select2').select2({
+            placeholder: "-- Pilih --",
+            width: '100%'
+        });
+</script>
+@endpush
 
 
-    <div class="row">
+{{-- <div class="row">
         <div class="col-mb-3">
             <table class="table table-bordered">
                 <thead>
@@ -48,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- Pendapatan --}}
+                    
                     <tr class="bg-light fw-bold">
                         <td colspan="3">Pendapatan</td>
                     </tr>
@@ -75,7 +176,7 @@
                         <td class="text-end">{{ number_format($totalIncome, 2, ',', '.') }}</td>
                     </tr>
 
-                    {{-- Beban --}}
+                    
                     <tr class="bg-light fw-bold">
                         <td colspan="3">Beban</td>
                     </tr>
@@ -102,7 +203,7 @@
                         <td class="text-end">{{ number_format($totalExpense, 2, ',', '.') }}</td>
                     </tr>
 
-                    {{-- Laba Bersih --}}
+                    
                     <tr class="table-dark fw-bold">
                         <td colspan="2" class="text-end">Laba/Rugi</td>
                         <td class="text-end">{{ number_format($netIncome, 2, ',', '.') }}</td>
@@ -125,19 +226,8 @@
                     </a>
             </div>
         </div>
-    </div>
+</div>
 
     <h4 class="text-end mt-4">
         Laba/Rugi: {{ number_format($netIncome, 2, ',', '.') }}
-    </h4>
-</div>
-@endsection
-
-@push('js')
-<script>
- $('.select2').select2({
-            placeholder: "-- Pilih --",
-            width: '100%'
-        });
-</script>
-@endpush
+    </h4> --}}

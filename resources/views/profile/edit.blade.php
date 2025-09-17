@@ -150,6 +150,13 @@
     
     <script>
     document.addEventListener("DOMContentLoaded", function() {
+        console.log("Bootstrap global:", window.bootstrap);
+
+        if (window.bootstrap) {
+            console.log("✅ Bootstrap sudah ke-load!");
+        } else {
+            console.error("❌ Bootstrap BELUM ke-load!");
+        }
         // Inisialisasi tooltip
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function(el) {
