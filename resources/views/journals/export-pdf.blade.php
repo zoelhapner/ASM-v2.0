@@ -1,19 +1,35 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Laporan Jurnal Umum</title>
     <style>
         body { font-family: Poppins, sans-serif; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
-        table th, table td { border: 1px solid #444; padding: 6px; word-wrap: break-word; font-size: 10px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed; /* wajib kalau mau fixed column */
+        }
+
+        table th, table td {
+            border: 1px solid #444;
+            padding: 6px;
+            font-size: 10px;
+            text-align: left; /* hapus koma */
+            word-wrap: break-word; /* biar teks panjang dipotong */
+            white-space: normal; /* cegah teks jadi vertikal */
+        }
+
         table th { background-color: #f5f5f5; }
+
         h3, p {
             text-align: center;
             margin-bottom: 10px;
             font-size: 12px;
         }
 
+        /* General Journal */
         table th:nth-child(1),
         table td:nth-child(1) { width: 70px; }   /* Tanggal */
 
@@ -21,19 +37,20 @@
         table td:nth-child(2) { width: 80px; }   /* No Jurnal */
 
         table th:nth-child(3),
-        table td:nth-child(3) { width: 35%; }    /* Deskripsi */
+        table td:nth-child(3) { width: 180px; }  /* Deskripsi */
 
         table th:nth-child(4),
         table td:nth-child(4) { width: 70px; }   /* No. Akun */
 
         table th:nth-child(5),
-        table td:nth-child(5) { width: 150px; }  /* Nama Akun */
+        table td:nth-child(5) { width: 160px; }  /* Nama Akun */
 
         table th:nth-child(6),
         table td:nth-child(6) { width: 90px; text-align: right; } /* Debit */
 
         table th:nth-child(7),
         table td:nth-child(7) { width: 90px; text-align: right; } /* Kredit */
+
 
     </style>
 </head>
