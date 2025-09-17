@@ -67,7 +67,7 @@ public function getPhotoUrlAttribute()
     }
 
     // fallback default
-    return asset('avatars/003m.jpg');
+    return asset('ahasquare.png');
 }
 
     protected $fillable = [

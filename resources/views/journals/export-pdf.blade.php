@@ -16,9 +16,11 @@
             border: 1px solid #444;
             padding: 6px;
             font-size: 10px;
-            text-align: left; /* hapus koma */
-            word-wrap: break-word; /* biar teks panjang dipotong */
-            white-space: normal; /* cegah teks jadi vertikal */
+            text-align: left;
+            white-space: normal;      /* biar teks panjang turun ke bawah */
+            word-wrap: break-word;    /* pecah kata panjang */
+            overflow: visible;        /* cegah teks ketimpa / hilang */
+            vertical-align: top;      /* teks nempel ke atas kalau rowspan */
         }
 
         table th { background-color: #f5f5f5; }
@@ -31,10 +33,10 @@
 
         /* General Journal */
         table th:nth-child(1),
-        table td:nth-child(1) { width: 70px; }   /* Tanggal */
+        table td:nth-child(1) { width: 90px; }   /* Tanggal */
 
         table th:nth-child(2),
-        table td:nth-child(2) { width: 80px; }   /* No Jurnal */
+        table td:nth-child(2) { width: 90px; }   /* No Jurnal */
 
         table th:nth-child(3),
         table td:nth-child(3) { width: 180px; }  /* Deskripsi */

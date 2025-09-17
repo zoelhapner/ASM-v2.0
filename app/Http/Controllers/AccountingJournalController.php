@@ -575,7 +575,7 @@ public function exportPDF(Request $request)
         'endDate',
         'totalDebit',
         'totalCredit'
-    ));
+    ))->setPaper('a4', 'landscape');
 
     return $pdf->stream('general.pdf');
 }

@@ -6,27 +6,36 @@
     <style>
         body { font-family: Poppins, sans-serif; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
-        table th, table td { border: 1px solid #444; padding: 6px; word-wrap: break-word; font-size: 10px; }
+ 
+        table th, table td { 
+            border: 1px solid #444; 
+            padding: 6px; 
+            word-wrap: break-word; 
+            font-size: 10px; 
+            white-space: normal; 
+            vertical-align: top;
+        }
+
         table th { background-color: #f5f5f5; }
         h2 { text-align: center; }
         
         table th:nth-child(1),
-        table td:nth-child(1) { width: 70px; } 
+        table td:nth-child(1) { width: 10%; } 
 
         table th:nth-child(2),
-        table td:nth-child(2) { width: 150px; }
+        table td:nth-child(2) { width: 20%; }
 
         table th:nth-child(3),
-        table td:nth-child(3) { width: 35%; }  
+        table td:nth-child(3) { width: 30%; }  
 
         table th:nth-child(4),
-        table td:nth-child(4) { width: 150px; }
+        table td:nth-child(4) { width: 15%; }
 
         table th:nth-child(5),
-        table td:nth-child(5) { width: 90px; text-align: right; } /* Debit */
+        table td:nth-child(5) { width: 12.5%; text-align: right; } /* Debit */
 
         table th:nth-child(6),
-        table td:nth-child(6) { width: 90px; text-align: right; } /* Kredit */
+        table td:nth-child(6) { width: 12.5%; text-align: right; } /* Kredit */
     </style>
 </head>
 <body>

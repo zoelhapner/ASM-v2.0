@@ -1,5 +1,5 @@
 import '../sass/tabler.scss';
-// import './bootstrap';
+import * as bootstrap from 'bootstrap';
 import './tabler-init';
 // resources/js/app.js
 
