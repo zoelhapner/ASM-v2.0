@@ -38,11 +38,11 @@ class AccountingReportController extends Controller
                 'accounting_accounts.is_parent',
                 DB::raw("SUM(CASE WHEN accounting_accounts.category = 'Pendapatan' THEN details.credit - details.debit ELSE details.debit - details.credit END) as balance")
             )
-            ->leftJoin('accounting_account_details as details', 'details.accounting_account_id', '=', 'accounting_accounts.id')
-            ->leftJoin('journals', 'journals.id', '=', 'details.journal_id')
+            ->leftJoin('accounting_journal_details as details', 'details.accounting_account_id', '=', 'accounting_accounts.id')
+            ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
             ->when($activeLicenseId, fn($q) => $q->where('accounting_accounts.license_id', $activeLicenseId))
             ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
-            ->whereBetween('journals.transaction_date', [$startDate, $endDate])
+            ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate])
             ->groupBy(
                 'accounting_accounts.id',
                 'accounting_accounts.account_code',
