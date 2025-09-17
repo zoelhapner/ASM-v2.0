@@ -147,13 +147,13 @@
 @endsection
 
 @push('js')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+    
     <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Inisialisasi tooltip
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function(el) {
-            return new bootstrap.Tooltip(el);
+            return new window.bootstrap.Tooltip(el);
         });
 
         // Toggle password
@@ -175,7 +175,7 @@
                 this.setAttribute("aria-label", title);
                 this.setAttribute("title", title);
 
-                const tooltip = bootstrap.Tooltip.getInstance(this);
+                const tooltip = window.bootstrap.Tooltip.getInstance(this);
                 if (tooltip) {
                     tooltip.setContent({ '.tooltip-inner': title });
                 }
@@ -184,3 +184,4 @@
     });
     </script>
 @endpush
+
