@@ -18,9 +18,9 @@
     </title>
 
     <!-- CSS/JS files -->
-    @if(config('tablar.vite'))
+    
         @vite(['resources/scss/bootstrap-override.scss', 'resources/js/app.js'])
-    @endif
+    
     <!-- SweetAlert2 CDN -->
     
     {{-- Livewire Styles --}}
