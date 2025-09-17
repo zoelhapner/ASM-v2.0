@@ -575,7 +575,9 @@ public function exportPDF(Request $request)
         'endDate',
         'totalDebit',
         'totalCredit'
-    ))->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
+    ))
+    ->setPaper('a4', 'portrait')
+    ->setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true]);
 
     return $pdf->stream('general.pdf');
 }

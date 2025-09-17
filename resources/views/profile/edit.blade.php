@@ -172,17 +172,16 @@
     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
     <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // Inisialisasi tooltip Bootstrap
+        // Inisialisasi tooltip
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+        tooltipTriggerList.map(function(el) {
+            return new bootstrap.Tooltip(el);
         });
 
-        // Toggle show/hide password untuk semua tombol
+        // Toggle password
         document.querySelectorAll(".toggle-password").forEach(function(toggle) {
             toggle.addEventListener("click", function(e) {
                 e.preventDefault();
-
                 const targetId = this.getAttribute("data-target");
                 const input = document.getElementById(targetId);
                 const eyeIcon = this.querySelector(".eyeIcon");
@@ -198,7 +197,6 @@
                 this.setAttribute("aria-label", title);
                 this.setAttribute("title", title);
 
-                // Update tooltip secara dinamis
                 const tooltip = bootstrap.Tooltip.getInstance(this);
                 if (tooltip) {
                     tooltip.setContent({ '.tooltip-inner': title });
