@@ -17,7 +17,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: auto !important; /* biar lebar otomatis */
+            table-layout: fixed; /* biar lebar otomatis */
         }
 
         table th, table td {
@@ -28,6 +28,7 @@
             vertical-align: top;
             white-space: normal !important;   /* teks bisa turun ke bawah */
             word-break: break-word !important; /* pecah kata panjang */
+            word-wrap: break-word !important;
             overflow: visible !important;
         }
 
@@ -36,13 +37,13 @@
         }
 
         /* Set minimal lebar agar tidak hilang */
-        table th:nth-child(1), table td:nth-child(1) { min-width: 90px; }   /* Tanggal */
-        table th:nth-child(2), table td:nth-child(2) { min-width: 90px; }   /* No Jurnal */
-        table th:nth-child(3), table td:nth-child(3) { min-width: 160px; }  /* Deskripsi */
-        table th:nth-child(4), table td:nth-child(4) { min-width: 60px; }   /* No. Akun */
-        table th:nth-child(5), table td:nth-child(5) { min-width: 120px; }  /* Nama Akun */
-        table th:nth-child(6), table td:nth-child(6) { min-width: 90px; text-align: right; } /* Debit */
-        table th:nth-child(7), table td:nth-child(7) { min-width: 90px; text-align: right; } /* Kredit */
+        table th:nth-child(1), table td:nth-child(1) { width: 60px; }   /* Tanggal */
+        table th:nth-child(2), table td:nth-child(2) { width: 80px; }   /* No Jurnal */
+        table th:nth-child(3), table td:nth-child(3) { width: 140px; }  /* Deskripsi */
+        table th:nth-child(4), table td:nth-child(4) { width: 60px; }   /* No. Akun */
+        table th:nth-child(5), table td:nth-child(5) { width: 120px; }  /* Nama Akun */
+        table th:nth-child(6), table td:nth-child(6) { width: 90px; text-align: right; } /* Debit */
+        table th:nth-child(7), table td:nth-child(7) { width: 90px; text-align: right; } /* Kredit */
 
         tfoot td {
             font-weight: bold;
