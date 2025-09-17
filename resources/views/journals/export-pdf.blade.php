@@ -19,7 +19,6 @@
             white-space: normal !important;      /* biar teks panjang turun ke bawah */
             word-break: break-word !important;    /* pecah kata panjang */
             overflow: visible !important;        /* cegah teks ketimpa / hilang */
-            vertical-align: top;      /* teks nempel ke atas kalau rowspan */
         }
 
         table th { background-color: #f5f5f5; }
