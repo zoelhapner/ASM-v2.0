@@ -8,7 +8,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
             table-layout: fixed; /* wajib kalau mau fixed column */
         }
 
@@ -17,9 +16,9 @@
             padding: 6px;
             font-size: 10px;
             text-align: left;
-            white-space: normal;      /* biar teks panjang turun ke bawah */
-            word-wrap: break-word;    /* pecah kata panjang */
-            overflow: visible;        /* cegah teks ketimpa / hilang */
+            white-space: normal !important;      /* biar teks panjang turun ke bawah */
+            word-break: break-word !important;    /* pecah kata panjang */
+            overflow: visible !important;        /* cegah teks ketimpa / hilang */
             vertical-align: top;      /* teks nempel ke atas kalau rowspan */
         }
 
