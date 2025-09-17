@@ -159,9 +159,7 @@
         }
         // Inisialisasi tooltip
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function(el) {
-            return new window.bootstrap.Tooltip(el);
-        });
+        tooltipTriggerList.map(el => new window.bootstrap.Tooltip(el))
 
         // Toggle password
         document.querySelectorAll(".toggle-password").forEach(function(toggle) {

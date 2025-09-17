@@ -97,8 +97,8 @@ public function exportPdf(Request $request)
 
 private function getReportData($request)
     {
-        $from = $request->from ?? date('Y-m-01');
-        $to = $request->to ?? date('Y-m-t');
+        $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+        $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
         return DB::table('accounting_accounts')
             ->select(
@@ -117,7 +117,7 @@ private function getReportData($request)
             ->leftJoin('accounting_journal_details as details', 'details.account_id', '=', 'accounting_accounts.id')
             ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
             ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
-            ->whereBetween('accounting_journals.transaction_date', [$from, $to])
+            ->whereBetween('accounting_journals.transaction_date', [$startdate, $endDate])
             ->groupBy(
                 'accounting_accounts.id',
                 'accounting_accounts.account_code',
