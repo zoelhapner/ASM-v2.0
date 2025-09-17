@@ -4,12 +4,14 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 style="text-align:center;">Laporan Laba Rugi</h2>
-            
-                <a href="{{ route('ledger.export', request()->query()) }}" 
-                    class="btn btn-success">
-                    <i class="ti ti-file-export text-white"></i> Ekspor Excel
-                </a>
-            
+        <div class="mb-3">
+            <a href="{{ route('reports.income_statement.pdf', request()->all()) }}" class="btn btn-danger btn-sm">
+                Export PDF
+            </a>
+            <a href="{{ route('reports.income_statement.excel', request()->all()) }}" class="btn btn-success btn-sm">
+                Export Excel
+            </a>
+        </div>    
     </div>
 
     <div class="card shadow-sm border-0 mb-3">

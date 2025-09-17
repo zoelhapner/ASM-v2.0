@@ -175,6 +175,11 @@ Route::get('/reports/balance_sheet', [AccountingJournalController::class, 'balan
 
 Route::get('/reports/income-statement', [AccountingReportController::class, 'incomeStatement'])
     ->name('reports.income_statement');
+Route::get('/reports/income-statement/pdf', [AccountingReportController::class, 'exportPdf'])
+    ->name('reports.income_statement.pdf');
+
+Route::get('/reports/income-statement/excel', [AccountingReportController::class, 'exportExcel'])
+    ->name('reports.income_statement.excel');
 
 Route::get('/journals/{journal}/export', [JournalExportController::class, 'export'])
     ->name('journals.export');
