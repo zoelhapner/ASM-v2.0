@@ -8,6 +8,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AccountingReportController extends Controller
 {
@@ -117,7 +120,7 @@ private function getReportData($request)
             ->leftJoin('accounting_journal_details as details', 'details.account_id', '=', 'accounting_accounts.id')
             ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
             ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
-            ->whereBetween('accounting_journals.transaction_date', [$startdate, $endDate])
+            ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate])
             ->groupBy(
                 'accounting_accounts.id',
                 'accounting_accounts.account_code',
@@ -129,6 +132,81 @@ private function getReportData($request)
             ->orderBy('accounting_accounts.account_code', 'asc')
             ->get();
     }
+
+    public function exportExcel(Request $request)
+{
+    $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
+    $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+
+    // 🔹 ambil data (sesuaikan query sama yang di incomeStatement)
+    $accounts = DB::table('accounting_accounts')
+        ->select(
+            'accounting_accounts.account_code',
+            'accounting_accounts.account_name',
+            'accounting_accounts.category',
+            'accounting_accounts.sub_category',
+            DB::raw("SUM(CASE 
+                WHEN accounting_accounts.category = 'Pendapatan' 
+                THEN details.credit - details.debit 
+                ELSE details.debit - details.credit 
+            END) as balance")
+        )
+        ->leftJoin('accounting_journal_details as details', 'details.account_id', '=', 'accounting_accounts.id')
+        ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
+        ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
+        ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate])
+        ->groupBy(
+            'accounting_accounts.account_code',
+            'accounting_accounts.account_name',
+            'accounting_accounts.category',
+            'accounting_accounts.sub_category'
+        )
+        ->orderBy('accounting_accounts.account_code', 'asc')
+        ->get();
+
+    // 🔹 Buat Excel
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Judul
+    $sheet->setCellValue('A1', 'Laporan Laba Rugi');
+    $sheet->setCellValue('A2', "Periode: $startDate s/d $endDate");
+
+    // Header tabel
+    $sheet->setCellValue('A4', 'Kode Akun');
+    $sheet->setCellValue('B4', 'Nama Akun');
+    $sheet->setCellValue('C4', 'Kategori');
+    $sheet->setCellValue('D4', 'Sub Kategori');
+    $sheet->setCellValue('E4', 'Saldo');
+
+    // Isi data
+    $row = 5;
+    foreach ($accounts as $acc) {
+        $sheet->setCellValue("A$row", $acc->account_code);
+        $sheet->setCellValue("B$row", $acc->account_name);
+        $sheet->setCellValue("C$row", $acc->category);
+        $sheet->setCellValue("D$row", $acc->sub_category);
+        $sheet->setCellValue("E$row", $acc->balance);
+        $row++;
+    }
+
+    // Auto-size kolom
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+    // Export
+    $fileName = "Laporan_Laba_Rugi_{$startDate}_sd_{$endDate}.xlsx";
+    $writer = new Xlsx($spreadsheet);
+
+    return new StreamedResponse(function () use ($writer) {
+        $writer->save('php://output');
+    }, 200, [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition' => "attachment;filename=\"$fileName\"",
+        'Cache-Control' => 'max-age=0',
+    ]);
+}
 
 }
 

@@ -176,8 +176,10 @@ public function exportLedger(Request $request)
         ->when($startDate, fn($q) => $q->whereHas('journal', fn($q2) => $q2->whereDate('transaction_date', '>=', $startDate)))
         ->when($endDate, fn($q) => $q->whereHas('journal', fn($q2) => $q2->whereDate('transaction_date', '<=', $endDate)))
         ->when($licenseId, fn($q) => $q->whereHas('journal', fn($q2) => $q2->where('license_id', $licenseId)))
-        ->orderBy('account_id')
-        ->orderBy('journal_id')
+        ->join('accounting_accounts', 'accounting_accounts.id', '=', 'accounting_journal_details.account_id')
+        ->orderBy('accounting_accounts.account_code', 'asc') // ✅ urut berdasarkan kode akun
+        ->orderBy('journal_id', 'asc')
+        ->select('accounting_journal_details.*') // penting biar model tetap bener
         ->get()
         ->groupBy('account_id');
 

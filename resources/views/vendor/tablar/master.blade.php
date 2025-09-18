@@ -51,5 +51,7 @@
     @endif
 
     @yield('tablar_js')
+    
+    @yield('js')
 </body>
 </html>
