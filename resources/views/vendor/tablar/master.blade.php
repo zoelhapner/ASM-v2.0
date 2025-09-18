@@ -29,7 +29,9 @@
     @endif
 
     {{-- Custom Stylesheets (post Tablar) --}}
-    @yield('tablar_css')
+    {{-- @yield('tablar_css') --}}
+    @stack('css')
+    @yield('css')
     
     <link rel="stylesheet" href="https://cdn.datatables.net/v/bs5/dt-2.3.2/fc-5.0.4/fh-4.0.3/datatables.min.css"/>
     <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.css') }}">
@@ -50,7 +52,9 @@
         @livewireScripts
     @endif
 
-    @yield('tablar_js')
+    {{-- @yield('tablar_js') --}}
+    @stack('js')
+    @yield('js')
 
 </body>
 </html>
