@@ -56,7 +56,7 @@
                     <td>{{ $acc->account_name }}</td>
                     <td>{{ $acc->category }}</td>
                     <td>{{ $acc->sub_category }}</td>
-                    <td style="text-align: right;">{{ number_format($acc->balance, 0, ',', '.') }}</td>
+                    <td style="text-align: right;">{{ number_format($acc->balance, 2, ',', '.') }}</td>
                 </tr>
                 @if($acc->category === 'Pendapatan')
                     @php $totalIncome += $acc->balance; @endphp
@@ -68,15 +68,15 @@
         <tfoot>
             <tr>
                 <td colspan="4" align="right">Total Pendapatan</td>
-                <td style="text-align: right;">{{ number_format($totalIncome, 0, ',', '.') }}</td>
+                <td style="text-align: right;">{{ number_format($totalIncome, 2, ',', '.') }}</td>
             </tr>
             <tr>
                 <td colspan="4" align="right">Total Beban</td>
-                <td style="text-align: right;">{{ number_format($totalExpense, 0, ',', '.') }}</td>
+                <td style="text-align: right;">{{ number_format($totalExpense, 2, ',', '.') }}</td>
             </tr>
             <tr>
                 <td colspan="4" align="right">Laba Bersih</td>
-                <td style="text-align: right;">{{ number_format($totalIncome - $totalExpense, 0, ',', '.') }}</td>
+                <td style="text-align: right;">{{ number_format($totalIncome - $totalExpense, 2, ',', '.') }}</td>
             </tr>
         </tfoot>
     </table>
