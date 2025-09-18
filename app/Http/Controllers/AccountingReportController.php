@@ -116,7 +116,7 @@ public function exportPdf(Request $request)
         ->orderBy('accounting_accounts.account_code', 'asc')
         ->get();
 
-    $pdf = Pdf::loadView('laporan.labarugi_pdf', [
+    $pdf = Pdf::loadView('income_statement_pdf', [
         'accounts' => $accounts,
         'startDate' => $startDate,
         'endDate' => $endDate,
