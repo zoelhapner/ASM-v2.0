@@ -26,6 +26,9 @@
         th {
             background: #f2f2f2;
         }
+        tfoot td {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -43,16 +46,39 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($data as $row)
+            @php
+                $totalIncome = 0;
+                $totalExpense = 0;
+            @endphp
+            @foreach($accounts as $acc)
                 <tr>
-                    <td>{{ $row->account_code }}</td>
-                    <td>{{ $row->account_name }}</td>
-                    <td>{{ $row->category }}</td>
-                    <td>{{ $row->sub_category }}</td>
-                    <td>{{ number_format($row->balance, 0, ',', '.') }}</td>
+                    <td>{{ $acc->account_code }}</td>
+                    <td>{{ $acc->account_name }}</td>
+                    <td>{{ $acc->category }}</td>
+                    <td>{{ $acc->sub_category }}</td>
+                    <td style="text-align: right;">{{ number_format($acc->balance, 0, ',', '.') }}</td>
                 </tr>
+                @if($acc->category === 'Pendapatan')
+                    @php $totalIncome += $acc->balance; @endphp
+                @else
+                    @php $totalExpense += $acc->balance; @endphp
+                @endif
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" align="right">Total Pendapatan</td>
+                <td style="text-align: right;">{{ number_format($totalIncome, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right">Total Beban</td>
+                <td style="text-align: right;">{{ number_format($totalExpense, 0, ',', '.') }}</td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right">Laba Bersih</td>
+                <td style="text-align: right;">{{ number_format($totalIncome - $totalExpense, 0, ',', '.') }}</td>
+            </tr>
+        </tfoot>
     </table>
 </body>
 </html>

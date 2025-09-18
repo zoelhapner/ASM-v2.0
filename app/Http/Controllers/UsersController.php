@@ -86,23 +86,35 @@ class UsersController extends Controller
        return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user) {
-        
-       $validated = $request->validate([
+public function update(Request $request, User $user) {
+    $validated = $request->validate([
         'name' => 'required',
         'email' => [
             'required',
             'email',
-             Rule::unique('users')->ignore($user->id),
+            Rule::unique('users')->ignore($user->id),
         ],
-        'password' => 'nullable',
+        'password' => 'nullable|min:6',
         'role' => 'required|string|exists:roles,name',
     ]);
 
-        $user->update($validated);
-        return redirect()->route('users.index')->with('success', 'Data berhasil diperbarui.');
+    // update user (kecuali role)
+    $user->update([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => $validated['password']
+            ? Hash::make($validated['password'])
+            : $user->password,
+    ]);
 
-    } 
+    // update role
+    if (isset($validated['role'])) {
+        $user->syncRoles([$validated['role']]);
+    }
+
+    return redirect()->route('users.index')->with('success', 'Data berhasil diperbarui.');
+}
+
 
     public function destroy(User $user) 
     {

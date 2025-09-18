@@ -50,7 +50,7 @@
 
                                 <div class="row mb-4">
                                     <div class="col-md-6 mb-3">
-                                        <label for="name">Nama: *</label>
+                                        <label for="name" class="required">Nama: </label>
                                         <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', $user->name) }}"
                                          @if(auth()->user()->hasRole('Pemilik Lisensi')) readonly @endif>
                                         @error('name')
@@ -80,7 +80,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="role">Role: *</label>
+                                        <label for="role" class="required">Role: </label>
                                         <select name="role" class="form-select" required>
                                             <option value="">-- Pilih Role --</option>
                                             @foreach (\Spatie\Permission\Models\Role::all() as $role)
