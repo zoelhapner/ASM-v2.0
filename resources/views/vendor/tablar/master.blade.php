@@ -52,6 +52,5 @@
 
     @yield('tablar_js')
 
-    @stack('js')
 </body>
 </html>
