@@ -178,7 +178,7 @@
 
             const tooltip = bootstrap.Tooltip.getInstance(togglePassword);
             if (tooltip) {
-                tooltip.setContent({ '.tooltip-inner': newTitle });
+                tooltip.setContent({ '.tooltip-inner': title });
             }
 
             // Update tooltip manually (needed for Bootstrap 5)
