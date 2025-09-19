@@ -38,10 +38,8 @@
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}?v={{ time() }}">
 </head>
 
-<body class="@yield('classes_body')">
-    @yield('body')
 
-    @yield('layout')
+    @yield('body')
 
     @include('tablar::extra.modal')
 
@@ -52,5 +50,5 @@
 
     @yield('tablar_js')
 
-</body>
+
 </html>
