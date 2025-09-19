@@ -47,7 +47,7 @@
                                     placeholder="Masukkan kata sandi lama" autocomplete="current-password">
                                 <span class="input-group-text">
                                     <a href="#" class="toggle-password link-secondary"
-                                       data-bs-toggle="tooltip" data-target="current_password"
+                                       data-toggle="tooltip" data-target="current_password"
                                        title="Show password" aria-label="Show password">
                                         <svg class="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -78,7 +78,7 @@
                                     placeholder="Masukkan kata sandi baru" autocomplete="new-password">
                                 <span class="input-group-text">
                                     <a href="#" class="toggle-password link-secondary"
-                                       data-bs-toggle="tooltip" data-target="password"
+                                       data-toggle="tooltip" data-target="password"
                                        title="Show password" aria-label="Show password">
                                         <svg class="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -109,7 +109,7 @@
                                     placeholder="Ulangi kata sandi baru" autocomplete="new-password">
                                 <span class="input-group-text">
                                     <a href="#" class="toggle-password link-secondary"
-                                       data-bs-toggle="tooltip" data-target="password_confirmation"
+                                       data-toggle="tooltip" data-target="password_confirmation"
                                        title="Show password" aria-label="Show password">
                                         <svg class="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -148,82 +148,31 @@
 
 @push('js')
     <script>
-        // Tooltip init
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
+    $(function () {
+        // Tooltip init (Bootstrap 4 pakai data-toggle, bukan data-bs-toggle)
+        $('[data-toggle="tooltip"]').tooltip();
 
         // Show/hide password toggle
-        const passwordInput = document.getElementById('password');
-        const togglePassword = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const eyeOffIcon = document.getElementById('eyeOffIcon');
-
-        togglePassword.addEventListener('click', function (e) {
-
+        $('.toggle-password').on('click', function (e) {
             e.preventDefault();
 
-            const isPassword = passwordInput.getAttribute('type') === 'password';
-            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+            const targetId = $(this).data('target');   // ambil ID input
+            const $input = $('#' + targetId);
 
-            eyeIcon.style.display = isPassword ? 'none' : 'inline';
-            eyeOffIcon.style.display = isPassword ? 'inline' : 'none';
+            const isPassword = $input.attr('type') === 'password';
+            $input.attr('type', isPassword ? 'text' : 'password');
 
+            // toggle icon
+            $(this).find('.eyeIcon').toggle(!isPassword);
+            $(this).find('.eyeOffIcon').toggle(isPassword);
+
+            // update tooltip title
             const title = isPassword ? 'Hide password' : 'Show password';
-
-            // Ubah atribut untuk aksesibilitas & tooltip dasar
-            togglePassword.setAttribute('aria-label', title);
-            togglePassword.setAttribute('title', title); // Ini penting untuk Bootstrap tooltip
-
-            const tooltip = bootstrap.Tooltip.getInstance(togglePassword);
-            if (tooltip) {
-                tooltip.setContent({ '.tooltip-inner': title });
-            }
-
-            // Update tooltip manually (needed for Bootstrap 5)
-            bootstrap.Tooltip.getInstance(togglePassword)?.setContent({ '.tooltip-inner': title });
-        });
-    </script>
-@endpush
-
-    {{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        console.log("Bootstrap global:", window.bootstrap);
-
-        if (window.bootstrap) {
-            console.log("✅ Bootstrap sudah ke-load!");
-        } else {
-            console.error("❌ Bootstrap BELUM ke-load!");
-        }
-        // Inisialisasi tooltip
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(el => new window.bootstrap.Tooltip(el))
-
-        // Toggle password
-        document.querySelectorAll(".toggle-password").forEach(function(toggle) {
-            toggle.addEventListener("click", function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute("data-target");
-                const input = document.getElementById(targetId);
-                const eyeIcon = this.querySelector(".eyeIcon");
-                const eyeOffIcon = this.querySelector(".eyeOffIcon");
-
-                const isPassword = input.type === "password";
-                input.type = isPassword ? "text" : "password";
-
-                eyeIcon.style.display = isPassword ? "none" : "inline";
-                eyeOffIcon.style.display = isPassword ? "inline" : "none";
-
-                const title = isPassword ? "Hide password" : "Show password";
-                this.setAttribute("aria-label", title);
-                this.setAttribute("title", title);
-
-                const tooltip = window.bootstrap.Tooltip.getInstance(this);
-                if (tooltip) {
-                    tooltip.setContent({ '.tooltip-inner': title });
-                }
-            });
+            $(this)
+                .attr('title', title)
+                .tooltip('dispose') // reset tooltip lama
+                .tooltip();         // aktifkan tooltip baru
         });
     });
-    </script> --}}
+</script>
+@endpush
