@@ -363,9 +363,8 @@ private function generateNis($licenseId)
         'where_know' => 'nullable|in:1,2,3,4,5,6,7,8,9',
     ]);
 
-    if ($request->birth_date) {
         $validated['age'] = Carbon::parse($request->birth_date)->age;
-    }
+    
 
     // Jika ada file baru
             if ($request->hasFile('photo')) {
@@ -376,12 +375,19 @@ private function generateNis($licenseId)
 
             // Simpan file baru
             $file = $request->file('photo');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('photos', $filename, 'public');
             $validated['photo'] = $filename;
         }
 
         $student->update($validated);
+
+        if ($student->user) {
+            $student->user->update([
+                'name'  => $student->fullname,
+                'email' => $student->email,
+            ]);
+        }
 
         return redirect()->route('students.index')->with('success', 'Data siswa berhasil diupdate.');
     }

@@ -9,8 +9,8 @@
                     'end_date' => request('end_date'),
                     'license_id' => request('license_id')
                 ]) }}" 
-                class="btn btn-success" target="_blank">
-                <i class="ti ti-file-export text-white"></i>Ekspor Excel
+                class="btn btn-success text white" target="_blank">
+                <i class="ti ti-file-export"></i>Ekspor Excel
             </a> 
     </div>
 

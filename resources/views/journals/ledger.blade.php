@@ -6,8 +6,8 @@
         <h2 style="text-align:center;">Buku Besar</h2>
             
                 <a href="{{ route('ledger.export', request()->query()) }}" 
-                    class="btn btn-success">
-                    <i class="ti ti-file-export text-white"></i> Ekspor Excel
+                    class="btn btn-success ">
+                    <i class="ti ti-file-export"></i> Ekspor Excel
                 </a>
             
     </div>
