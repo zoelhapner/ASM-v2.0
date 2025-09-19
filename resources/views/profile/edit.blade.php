@@ -147,8 +147,47 @@
 @endsection
 
 @push('js')
-    
     <script>
+        // Tooltip init
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Show/hide password toggle
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+        togglePassword.addEventListener('click', function (e) {
+
+            e.preventDefault();
+
+            const isPassword = passwordInput.getAttribute('type') === 'password';
+            passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+
+            eyeIcon.style.display = isPassword ? 'none' : 'inline';
+            eyeOffIcon.style.display = isPassword ? 'inline' : 'none';
+
+            const title = isPassword ? 'Hide password' : 'Show password';
+
+            // Ubah atribut untuk aksesibilitas & tooltip dasar
+            togglePassword.setAttribute('aria-label', title);
+            togglePassword.setAttribute('title', title); // Ini penting untuk Bootstrap tooltip
+
+            const tooltip = bootstrap.Tooltip.getInstance(togglePassword);
+            if (tooltip) {
+                tooltip.setContent({ '.tooltip-inner': newTitle });
+            }
+
+            // Update tooltip manually (needed for Bootstrap 5)
+            bootstrap.Tooltip.getInstance(togglePassword)?.setContent({ '.tooltip-inner': title });
+        });
+    </script>
+@endpush
+
+    {{-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         console.log("Bootstrap global:", window.bootstrap);
 
@@ -187,6 +226,4 @@
             });
         });
     });
-    </script>
-@endpush
-
+    </script> --}}

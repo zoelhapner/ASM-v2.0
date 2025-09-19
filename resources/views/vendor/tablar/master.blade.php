@@ -50,5 +50,4 @@
 
     @yield('tablar_js')
 
-
 </html>
