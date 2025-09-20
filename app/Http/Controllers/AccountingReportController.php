@@ -122,7 +122,7 @@ public function exportPdf(Request $request)
         'endDate' => $endDate,
     ])->setPaper('a4', 'portrait');
 
-    return $pdf->download("Laporan_Laba_Rugi_{$startDate}_sd_{$endDate}.pdf");
+    return $pdf->stream("Laporan_Laba_Rugi_{$startDate}_sd_{$endDate}.pdf");
 }
 
     public function exportExcel(Request $request)

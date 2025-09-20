@@ -5,7 +5,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 style="text-align:center;">Laporan Laba Rugi</h2>
         <div class="mb-3">
-            <a href="{{ route('reports.income_statement.pdf', request()->all()) }}" class="btn btn-danger btn-sm">
+            <a href="{{ route('reports.income_statement.pdf', request()->all()) }}" class="btn btn-danger btn-sm" target="_blank">
                 Export PDF
             </a>
             <a href="{{ route('reports.income_statement.excel', request()->all()) }}" class="btn btn-success btn-sm">
