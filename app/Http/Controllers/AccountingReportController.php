@@ -89,15 +89,16 @@ public function exportPdf(Request $request)
 {
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+    $activeLicenseId = $request->license_id ?? session('active_license_id');
 
     // 🔹 ambil data sama kayak di Excel
-    $accounts = \DB::table('accounting_accounts')
+    $query = DB::table('accounting_accounts')
         ->select(
             'accounting_accounts.account_code',
             'accounting_accounts.account_name',
             'accounting_accounts.category',
             'accounting_accounts.sub_category',
-            \DB::raw("SUM(CASE 
+            DB::raw("SUM(CASE 
                 WHEN accounting_accounts.category = 'Pendapatan' 
                 THEN details.credit - details.debit 
                 ELSE details.debit - details.credit 
@@ -106,7 +107,13 @@ public function exportPdf(Request $request)
         ->leftJoin('accounting_journal_details as details', 'details.account_id', '=', 'accounting_accounts.id')
         ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
         ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
-        ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate])
+        ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate]);
+
+    if ($activeLicenseId) {
+        $query->where('accounting_accounts.license_id', $activeLicenseId);
+    }
+        
+    $accounts = $query
         ->groupBy(
             'accounting_accounts.account_code',
             'accounting_accounts.account_name',
@@ -129,6 +136,7 @@ public function exportPdf(Request $request)
 {
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
+    $activeLicenseId = $request->license_id ?? session('active_license_id');
 
     // 🔹 ambil data (sesuaikan query sama yang di incomeStatement)
     $accounts = DB::table('accounting_accounts')
@@ -146,7 +154,13 @@ public function exportPdf(Request $request)
         ->leftJoin('accounting_journal_details as details', 'details.account_id', '=', 'accounting_accounts.id')
         ->leftJoin('accounting_journals', 'accounting_journals.id', '=', 'details.journal_id')
         ->whereIn('accounting_accounts.category', ['Pendapatan', 'Beban'])
-        ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate])
+        ->whereBetween('accounting_journals.transaction_date', [$startDate, $endDate]);
+
+    if ($activeLicenseId) {
+        $query->where('accounting_accounts.license_id', $activeLicenseId);
+    }
+
+    $accounts = $query
         ->groupBy(
             'accounting_accounts.account_code',
             'accounting_accounts.account_name',
