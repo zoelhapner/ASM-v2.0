@@ -128,3 +128,4 @@ public function update(Request $request, User $user) {
     }
 
 }
+

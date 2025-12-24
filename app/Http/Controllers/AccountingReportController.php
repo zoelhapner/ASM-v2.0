@@ -69,8 +69,8 @@ class AccountingReportController extends Controller
         });
     });
 
-    $totalIncome  = $grouped['Pendapatan']?->sum('subtotal') ?? 0;
-    $totalExpense = $grouped['Beban']?->sum('subtotal') ?? 0;
+    $totalIncome  = $grouped->get('Pendapatan', collect())->sum('subtotal');
+    $totalExpense = $grouped->get('Beban', collect())->sum('subtotal');
     $netIncome    = $totalIncome - $totalExpense;
 
     return view('reports.income_statement', compact(
@@ -139,7 +139,7 @@ public function exportPdf(Request $request)
     $activeLicenseId = $request->license_id ?? session('active_license_id');
 
     // 🔹 ambil data (sesuaikan query sama yang di incomeStatement)
-    $accounts = DB::table('accounting_accounts')
+    $query = DB::table('accounting_accounts')
         ->select(
             'accounting_accounts.account_code',
             'accounting_accounts.account_name',
