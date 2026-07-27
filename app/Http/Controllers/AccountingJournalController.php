@@ -912,7 +912,7 @@ public function balanceSheet(Request $request)
 
     $groupedAccounts = $this->getBalanceSheetAccounts($startDate, $endDate, $activeLicenseId);
 
-    $totals = BalanceSheetService::calculateBalanceSheet($groupedAccounts);
+    $totals = BalanceSheetService::calculate($groupedAccounts);
 
     $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
     $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
