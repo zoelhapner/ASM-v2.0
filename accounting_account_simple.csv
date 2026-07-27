@@ -1,0 +1,150 @@
+account_code;category;sub_category;account_name
+1;AKTIVA;-;AKTIVA
+100;AKTIVA;Aset Lancar - Kas & Bank;Kas & Bank
+101;AKTIVA;Aset Lancar - Kas & Bank;Kas Utama
+102;AKTIVA;Aset Lancar - Kas & Bank;Petty Cash
+103;AKTIVA;Aset Lancar - Kas & Bank;Cash in Transit
+104;AKTIVA;Aset Lancar - Kas & Bank;Bank CV, AHA Right Brain
+105;AKTIVA;Aset Lancar - Kas & Bank;Bank Lainnya
+110;AKTIVA;Aset Lancar - Persediaan Barang;Persediaan Barang
+120;AKTIVA;Aset Lancar - Piutang;Piutang
+121;AKTIVA;Aset Lancar - Piutang;Piutang Usaha
+122;AKTIVA;Aset Lancar - Piutang;Piutang Karyawan
+123;AKTIVA;Aset Lancar - Piutang;Piutang Siswa
+124;AKTIVA;Aset Lancar - Piutang;Piutang Lain - Lain
+130;AKTIVA;Aset Lancar - Dana Belum Disetor;Dana Belum Disetor
+131;AKTIVA;Aset Lancar - Dana Belum Disetor;Uang Muka
+132;AKTIVA;Aset Lancar - Dana Belum Disetor;Biaya Bayar Dimuka
+140;AKTIVA;Aset Lancar - Pajak Bayar Dimuka;Pajak Bayar Dimuka
+141;AKTIVA;Aset Lancar - Pajak Bayar Dimuka;PPN Masukan
+142;AKTIVA;Aset Lancar - Pajak Bayar Dimuka;Pajak Dibayar Dimuka - PPh 23
+143;AKTIVA;Aset Lancar - Pajak Bayar Dimuka;Pajak Dibayar Dimuka - PPh 25
+144;AKTIVA;Aset Lancar - Pajak Bayar Dimuka;Pajak Dibayar Dimuka Lainnya
+150;AKTIVA;Aset Tetap;Aset Tetap
+151;AKTIVA;Aset Tetap;Tanah
+152;AKTIVA;Aset Tetap;Bangunan
+153;AKTIVA;Aset Tetap;Kendaraan
+154;AKTIVA;Aset Tetap;Perlengkapan Kantor
+155;AKTIVA;Aset Tetap;Aset Tidak Berwujud
+160;AKTIVA;Penyusutan;Penyusutan
+161;AKTIVA;Penyusutan;Penyusutan Bangunan
+162;AKTIVA;Penyusutan;Penyusutan Kendaraan
+163;AKTIVA;Penyusutan;Penyusutan Perlengkapan Kantor
+2;KEWAJIBAN;-;KEWAJIBAN
+200;KEWAJIBAN;Hutang;Hutang
+201;KEWAJIBAN;Hutang;Hutang Usaha
+202;KEWAJIBAN;Hutang;Hutang Gaji
+203;KEWAJIBAN;Hutang;Hutang Deviden
+204;KEWAJIBAN;Hutang;Hutang Pemegang Saham
+205;KEWAJIBAN;Hutang;Hutang Lain-Lain
+210;KEWAJIBAN;Uang Muka Penjualan;Uang Muka Penjualan
+211;KEWAJIBAN;Uang Muka Penjualan;Uang Muka Penjualan
+212;KEWAJIBAN;Uang Muka Penjualan;Pendapatan Diterima Dimuka
+220;KEWAJIBAN;Pajak;Pajak
+221;KEWAJIBAN;Pajak;PPN Keluaran
+222;KEWAJIBAN;Pajak;Hutang Pajak PPh 23
+223;KEWAJIBAN;Pajak;Hutang Pajak PPh 25
+224;KEWAJIBAN;Pajak;Hutang Pajak Lainnya
+3;EKUITAS;-;EKUITAS
+300;Ekuitas;Modal;Modal
+301;Ekuitas;Modal;Modal Saham
+302;Ekuitas;Modal;Tambahan Modal Disetor
+303;Ekuitas;Modal;Laba Ditahan
+304;Ekuitas;Modal;Deviden
+305;Ekuitas;Modal;Prive
+4;PENDAPATAN;-;PENDAPATAN
+400;Pendapatan;Pendapatan Lisensi;Pendapatan Lisensi
+401;Pendapatan;Pendapatan Lisensi;Pembukaan Lisensi LC
+402;Pendapatan;Pendapatan Lisensi;Pembukaan Lisensi LO
+403;Pendapatan;Pendapatan Lisensi;Perpanjangan Lisensi LC
+404;Pendapatan;Pendapatan Lisensi;Perpanjangan Lisensi LO
+410;Pendapatan;Pendapatan Modul;Pendapatan Modul
+411;Pendapatan;Pendapatan Modul;Penjualan Modul Prebasic
+412;Pendapatan;Pendapatan Modul;Penjualan Modul Basic
+413;Pendapatan;Pendapatan Modul;Penjualan Modul Intermediate
+414;Pendapatan;Pendapatan Modul;Penjualan Modul Advance
+420;Pendapatan;Pendapatan Siswa;Pendapatan Siswa
+421;Pendapatan;Pendapatan Siswa;Pendaftaran Siswa
+422;Pendapatan;Pendapatan Siswa;SPP Siswa
+430;Pendapatan;Pendapatan Merchandise;Pendapatan Merchandise
+431;Pendapatan;Pendapatan Merchandise;Penjualan Gelang Prebasic
+432;Pendapatan;Pendapatan Merchandise;Penjualan Gelang Basic
+433;Pendapatan;Pendapatan Merchandise;Penjualan Gelang Intermediate
+434;Pendapatan;Pendapatan Merchandise;Penjualan Gelang Advance
+435;Pendapatan;Pendapatan Merchandise;Penjualan Totebag Prebasic
+436;Pendapatan;Pendapatan Merchandise;Penjualan Totebag Basic
+437;Pendapatan;Pendapatan Merchandise;Penjualan Totebag Intermediate
+438;Pendapatan;Pendapatan Merchandise;Penjualan Totebag Advance
+439;Pendapatan;Pendapatan Merchandise;Penjualan Kaos
+440;Pendapatan;Pendapatan Merchandise;Penjualan Gantungan Kunci
+450;Pendapatan;Pendapatan Lainnya;Pendapatan Lainnya
+451;Pendapatan;Pendapatan Lainnya;Training Instruktur
+452;Pendapatan;Pendapatan Lainnya;Pendapatan Lain-Lain
+453;Pendapatan;Pendapatan Lainnya;Diskon Penjualan
+454;Pendapatan;Pendapatan Lainnya;Retur Penjualan
+5;BEBAN;-;BEBAN
+500;BEBAN;Biaya Lisensi;Biya Lisensi
+501;BEBAN;Biaya Lisensi;Biaya Pembukaan Lisensi LC
+502;BEBAN;Biaya Lisensi;Biaya Pembukaan Lisensi LO
+503;BEBAN;Biaya Lisensi;Biaya Perpanjangan Lisensi LC
+504;BEBAN;Biaya Lisensi;Biaya Perpanjangan Lisensi LO
+510;BEBAN;Biaya Pembelian Modul;Biaya Pembelian Modul
+511;BEBAN;Biaya Pembelian Modul;Biaya Beli Modul Prebasic
+512;BEBAN;Biaya Pembelian Modul;Biaya Beli Modul Basic
+513;BEBAN;Biaya Pembelian Modul;Biaya Beli Modul Intermediate
+514;BEBAN;Biaya Pembelian Modul;Biaya Beli Modul Advance
+520;BEBAN;Biaya Pembelian Merchandise;Biaya Pembelian Merchandise
+521;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Gelang Prebasic
+522;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Gelang Basic
+523;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Gelang Intermediate
+524;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Gelang Advance
+525;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Totebag Prebasic
+526;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Totebag Basic
+527;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Totebag Intermediate
+528;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Totebag Advance
+529;BEBAN;Biaya Pembelian Merchandise;Biaya Beli Gantungan Kunci
+550;BEBAN;Biaya Produksi Modul;Biaya Produksi Modul
+551;BEBAN;Biaya Produksi Modul;Biaya Cetak Modul Prebasic
+552;BEBAN;Biaya Produksi Modul;Biaya Cetak Modul Basic
+553;BEBAN;Biaya Produksi Modul;Biaya Cetak Modul Intermediate
+554;BEBAN;Biaya Produksi Modul;Biaya Cetak Modul Advance
+560;BEBAN;Biaya Produksi Merchandise;Biaya Produksi Merchandise
+561;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Gelang Prebasic
+562;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Gelang Basic
+563;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Gelang Intermediate
+564;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Gelang Advance
+565;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Totebag Prebasic
+566;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Totebag Basic
+567;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Totebag Intermediate
+568;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Totebag Advance
+569;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Kaos
+570;BEBAN;Biaya Produksi Merchandise;Biaya Cetak Gantungan Kunci
+6;BEBAN;-;BEBAN
+600;BEBAN;Beban Penjualan & Pemasaran;Beban Penjualan & Pemasaran
+601;Beban;Beban Penjualan & Pemasaran;Biaya Transportasi
+602;Beban;Beban Penjualan & Pemasaran;Biaya Digital
+603;Beban;Beban Penjualan & Pemasaran;Biaya Packing
+604;Beban;Beban Penjualan & Pemasaran;Biaya Kirim Paket
+605;Beban;Beban Penjualan & Pemasaran;Biaya Marketing
+606;Beban;Beban Penjualan & Pemasaran;Biaya Event
+610;Beban;Beban Administrasi & Umum;Beban Administrasi & Umum
+611;Beban;Beban Administrasi & Umum;Biaya Training Instruktur
+612;Beban;Beban Administrasi & Umum;Biaya Gaji
+613;Beban;Beban Administrasi & Umum;Biaya Fee
+614;Beban;Beban Administrasi & Umum;Biaya Bonus
+615;Beban;Beban Administrasi & Umum;Biaya Konsumsi
+616;Beban;Beban Administrasi & Umum;Biaya ATK & FC
+617;Beban;Beban Administrasi & Umum;Biaya Listrik, Air, Pulsa, WiFi
+618;Beban;Beban Administrasi & Umum;Biaya Perlengkapan Kantor
+619;Beban;Beban Administrasi & Umum;Biaya FC, Print, dan Bendel
+620;Beban;Beban Administrasi & Umum;Biaya Administrasi Rekening
+621;Beban;Beban Administrasi & Umum;Biaya Sewa Ruko
+622;Beban;Beban Administrasi & Umum;Biaya Kebersihan Lingkungan
+623;Beban;Beban Administrasi & Umum;Biaya Keamanan
+624;Beban;Beban Administrasi & Umum;Biaya Perbaikan
+625;Beban;Beban Administrasi & Umum;Biaya Parkir
+626;Beban;Beban Administrasi & Umum;Biaya Donasi
+627;Beban;Beban Administrasi & Umum;Biaya Lain-Lain
+628;Beban;Beban Administrasi & Umum;Beban Penyusutan Bangunan
+629;Beban;Beban Administrasi & Umum;Beban Penyusutan kendaraan
+630;Beban;Beban Administrasi & Umum;Beban Penyusutan Perlengkapan Kantor

@@ -16,7 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use App\Services\ReportService;
+use App\Services\BalanceSheetService;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Yajra\DataTables\Facades\DataTables;
@@ -749,7 +749,7 @@ public function trialBalance(Request $request)
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
     // 🔹 Ambil akun yang sudah dikelompokkan
-    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+    $groupedAccounts = $this->getTrialBalanceAccounts($startDate, $endDate, $activeLicenseId);
 
     // 🔹 Hitung total debit & kredit
     $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
@@ -766,50 +766,82 @@ public function trialBalance(Request $request)
     ));
 }
 
-/**
- * Ambil akun + group berdasarkan kategori dan sub-kategori
- */
-    private function getGroupedAccounts($startDate, $endDate, $licenseId)
+private function buildGroupedAccounts(\Closure $journalFilter)
 {
-    $accounts = AccountingAccount::where('license_id', $licenseId)
-        ->with(['details.journal' => function ($q) use ($startDate, $endDate, $licenseId) {
-                $q->whereBetween('transaction_date', [$startDate, $endDate])
-                   ->where('license_id', $licenseId);
-        }])
+    $accounts = AccountingAccount::where('is_parent', false)
         ->get()
-        ->map(function ($account) {
-            $debit   = $account->details->sum('debit');
-            $credit  = $account->details->sum('credit');
-            $balance = $debit - $credit;
+        ->map(function ($account) use ($journalFilter) {
+
+            $debit = AccountingJournalDetail::query()
+                ->where('account_id', $account->id)
+                ->whereHas('journal', $journalFilter)
+                ->sum('debit');
+
+            $credit = AccountingJournalDetail::query()
+                ->where('account_id', $account->id)
+                ->whereHas('journal', $journalFilter)
+                ->sum('credit');
+
+            switch ($account->category) {
+
+                case 'AKTIVA':
+                case 'BEBAN':
+                    $balance = $debit - $credit;
+                    break;
+
+                case 'KEWAJIBAN':
+                case 'EKUITAS':
+                case 'PENDAPATAN':
+                    $balance = $credit - $debit;
+                    break;
+
+                default:
+                    $balance = $debit - $credit;
+            }
 
             return [
                 'account_code' => $account->account_code,
                 'account_name' => $account->account_name,
                 'category'     => $account->category,
                 'sub_category' => $account->sub_category,
-                'parent_id'    => $account->parent_id,
-                'is_parent'    => $account->is_parent,
-                'debit'        => $balance > 0 ? $balance : 0,
-                'credit'       => $balance < 0 ? abs($balance) : 0,
+                'debit'        => $debit,
+                'credit'       => $credit,
+                'balance'      => $balance,
             ];
-        })
-
-        ->filter(function ($acc) {
-            return !$acc['is_parent'] && $acc['category'] !== '-';
         });
 
-    // 🔹 Kelompokkan berdasarkan kategori & sub kategori
     return $accounts
         ->groupBy('category')
         ->map(function ($catGroup) {
+
             return $catGroup->groupBy('sub_category')->map(function ($subGroup) {
+
                 return [
-                    'accounts'       => $subGroup,
-                    'subtotalDebit'  => $subGroup->sum('debit'),
-                    'subtotalCredit' => $subGroup->sum('credit'),
+                    'accounts'         => $subGroup,
+                    'subtotalDebit'    => $subGroup->sum('debit'),
+                    'subtotalCredit'   => $subGroup->sum('credit'),
+                    'subtotalBalance'  => $subGroup->sum('balance'),
                 ];
+
             });
+
         });
+}
+private function getBalanceSheetAccounts($startDate, $endDate)
+{
+    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate) {
+
+        $query->whereBetween('transaction_date', [$startDate, $endDate]);
+
+    });
+}
+private function getTrialBalanceAccounts($startDate, $endDate)
+{
+    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate) {
+
+        $query->whereBetween('transaction_date', [$startDate, $endDate]);
+
+    });
 }
 
 public function exportTrial(Request $request)
@@ -878,7 +910,7 @@ public function balanceSheet(Request $request)
 
     $viewType = $request->get('view', 'default'); // 🔹 default | skontro
 
-    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+    $groupedAccounts = $this->getBalanceSheetAccounts($startDate, $endDate, $activeLicenseId);
 
     $totals = ReportService::calculateBalanceSheet($groupedAccounts);
 
