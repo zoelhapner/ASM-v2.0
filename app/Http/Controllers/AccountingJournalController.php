@@ -556,9 +556,6 @@ public function store(StoreAccountingJournalRequest $request)
 public function exportPDF(Request $request)
 {
     ini_set('memory_limit', '512M');
-    dd([
-        'before' => ini_get('memory_limit')
-    ]);
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;

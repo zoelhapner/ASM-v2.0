@@ -4,12 +4,12 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Jurnal</h2>
-        
+
             <div class="d-flex gap-2">
-                <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-primary">
+                <a href="{{ route('journals.export', $journal->id) }}" class="btn btn-success">
                     <i class="ti ti-file-export"></i> Ekspor
                 </a>
-                <a href="{{ route('journals.print', $journal->id) }}" target="_blank" class="btn btn-outline-dark">
+                <a href="{{ route('journals.print', $journal->id) }}" target="_blank" class="btn btn-danger">
                     <i class="ti ti-printer"></i> Cetak
                 </a>
             </div>

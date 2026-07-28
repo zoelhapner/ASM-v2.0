@@ -38,12 +38,13 @@
                             Ekspor Excel
                         </a>
 
-                        <a href="{{ route('journals.trial.pdf', request()->all()) }}"
-                           class="btn btn-outline-dark"
-                           target="_blank">
-
-                            <i class="ti ti-printer"></i>
-                            Cetak
+                        <a href="{{ route('journals.trial.pdf', [
+                                'start_date' => request('start_date'),
+                                'end_date' => request('end_date'),
+                                'license_id' => request('license_id')
+                            ]) }}" 
+                            class="btn btn-danger" target="_blank">
+                            <i class="ti ti-printer"></i>Cetak
                         </a>
 
                     </div>

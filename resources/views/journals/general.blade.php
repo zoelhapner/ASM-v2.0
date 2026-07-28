@@ -33,19 +33,20 @@
                     <div class="btn-list">
 
                         <a href="{{ route('general.export', request()->all()) }}"
-                           class="btn btn-primary"
+                           class="btn btn-success"
                            target="_blank">
 
                             <i class="ti ti-file-export"></i>
                             Ekspor Excel
                         </a>
 
-                        <a href="{{ route('journals.export.pdf', request()->all()) }}"
-                           class="btn btn-outline-dark"
-                           target="_blank">
-
-                            <i class="ti ti-printer"></i>
-                            Cetak PDF
+                        <a href="{{ route('journals.export.pdf', [
+                                    'start_date' => request('start_date'),
+                                    'end_date' => request('end_date'),
+                                    'license_id' => request('license_id')
+                                ]) }}" 
+                                class="btn btn-danger" target="_blank">
+                                <i class="ti ti-printer"></i> Cetak
                         </a>
 
                     </div>
