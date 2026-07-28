@@ -766,9 +766,13 @@ public function trialBalance(Request $request)
     ));
 }
 
-private function buildGroupedAccounts(\Closure $journalFilter)
+private function buildGroupedAccounts(\Closure $journalFilter, $licenseId = null)
 {
-    $accounts = AccountingAccount::where('is_parent', false)
+    $accounts = AccountingAccount::query()
+        ->where('is_parent', false)
+        ->when($licenseId, function ($q) use ($licenseId) {
+            $q->where('license_id', $licenseId);
+        })
         ->get()
         ->map(function ($account) use ($journalFilter) {
 
@@ -783,7 +787,6 @@ private function buildGroupedAccounts(\Closure $journalFilter)
                 ->sum('credit');
 
             switch ($account->category) {
-
                 case 'AKTIVA':
                 case 'BEBAN':
                     $balance = $debit - $credit;
@@ -813,35 +816,39 @@ private function buildGroupedAccounts(\Closure $journalFilter)
     return $accounts
         ->groupBy('category')
         ->map(function ($catGroup) {
-
             return $catGroup->groupBy('sub_category')->map(function ($subGroup) {
-
                 return [
-                    'accounts'         => $subGroup,
-                    'subtotalDebit'    => $subGroup->sum('debit'),
-                    'subtotalCredit'   => $subGroup->sum('credit'),
-                    'subtotalBalance'  => $subGroup->sum('balance'),
+                    'accounts'        => $subGroup,
+                    'subtotalDebit'   => $subGroup->sum('debit'),
+                    'subtotalCredit'  => $subGroup->sum('credit'),
+                    'subtotalBalance' => $subGroup->sum('balance'),
                 ];
-
             });
-
         });
 }
-private function getBalanceSheetAccounts($startDate, $endDate)
+private function getBalanceSheetAccounts($startDate, $endDate, $licenseId = null)
 {
-    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate) {
+    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate, $licenseId) {
 
         $query->whereBetween('transaction_date', [$startDate, $endDate]);
 
-    });
+        if ($licenseId) {
+            $query->where('license_id', $licenseId);
+        }
+
+    }, $licenseId);
 }
-private function getTrialBalanceAccounts($startDate, $endDate)
+private function getTrialBalanceAccounts($startDate, $endDate, $licenseId = null)
 {
-    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate) {
+    return $this->buildGroupedAccounts(function ($query) use ($startDate, $endDate, $licenseId) {
 
         $query->whereBetween('transaction_date', [$startDate, $endDate]);
 
-    });
+        if ($licenseId) {
+            $query->where('license_id', $licenseId);
+        }
+
+    }, $licenseId);
 }
 
 public function exportTrial(Request $request)

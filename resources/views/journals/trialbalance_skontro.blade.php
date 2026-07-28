@@ -69,7 +69,7 @@
 
             <div class="row">
                 
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div class="card shadow-sm mb-3">
                         <div class="card-header bg-primary text-white">
                             <strong>AKTIVA</strong>
@@ -117,9 +117,54 @@
                             </table>
                         </div>
                     </div>
-                </div>
-
+                </div> --}}
                 <div class="col-md-6">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-primary text-black">
+                            <strong>AKTIVA</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Aset Lancar</td>
+                                        <td class="text-end">Rp {{ number_format($asetLancar, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Persediaan Barang</td>
+                                        <td class="text-end">Rp {{ number_format($persediaan, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Piutang</td>
+                                        <td class="text-end">Rp {{ number_format($piutang, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dana Belum Disetor</td>
+                                        <td class="text-end">Rp {{ number_format($dana, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pajak Bayar Dimuka</td>
+                                        <td class="text-end">Rp {{ number_format($pajak, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Aset Tetap</td>
+                                        <td class="text-end">Rp {{ number_format($asetTetap, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Akumulasi Penyusutan</td>
+                                        <td class="text-end text-danger">Rp ({{ number_format($penyusutan, 2, ',', '.') }})</td>
+                                    </tr>
+                                    
+                                    <tr class="fw-bold table-secondary">
+                                        <td>Total Aktiva</td>
+                                        <td class="text-end">Rp {{ number_format($totalAktiva, 2, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="col-md-6">
                     <div class="card shadow-sm mb-3">
                         <div class="card-header bg-success text-white">
                             <strong>PASSIVA</strong>
@@ -148,6 +193,38 @@
                             </table>
                         </div>
                     </div>
+                </div> --}}
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-secondary text-white">
+                            <strong>PASSIVA</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm">
+                                <tbody>
+                                    <tr>
+                                        <td>Kewajiban</td>
+                                        <td class="text-end">Rp {{ number_format($kewajiban, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Ekuitas</td>
+                                        <td class="text-end">Rp {{ number_format($ekuitas, 2, ',', '.') }}</td>
+                                    </tr>
+                                    <tr>
+                                    <td>Laba (Rugi) Berjalan</td>
+                                        <td class="text-end">
+                                            Rp {{ number_format($labaBerjalan,2,',','.') }}
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr class="fw-bold table-secondary">
+                                        <td>Total Passiva</td>
+                                        <td class="text-end">Rp {{ number_format($totalPassiva, 2, ',', '.') }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -170,7 +247,6 @@
 @push('js')
 <script>
  $('.select2').select2({
-            placeholder: "-- Pilih --",
             width: '100%'
         });
 </script>
