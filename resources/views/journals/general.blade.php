@@ -10,7 +10,7 @@
                     'end_date' => request('end_date'),
                     'license_id' => request('license_id')
                 ]) }}" 
-                class="btn btn-danger" target="_blank">
+                class="btn btn-success" target="_blank">
                 <i class="ti ti-file-export"></i> Ekspor
             </a>
         
