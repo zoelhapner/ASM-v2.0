@@ -7,7 +7,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AccountingAccountController;
 use App\Http\Controllers\AccountingJournalController;
-use App\Http\Controllers\AccountingClosingController;
+use App\Http\Controllers\AccountingPeriodController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LicensesController;
@@ -197,8 +197,11 @@ Route::patch('/notifications/{notification}/read', [LicenseNotificationControlle
 
 Route::post('/notifications/read-all', [LicenseNotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
 
-Route::get('/periods/close', [AccountingClosingController::class, 'showCloseForm'])->name('periods.close.form');
-Route::post('/periods/close', [AccountingClosingController::class, 'close'])->name('periods.close');
+    Route::get('/periods', [AccountingPeriodController::class, 'index'])->name('periods.index');
+    Route::post('/periods/close', [AccountingPeriodController::class, 'close'])->name('periods.close');
+    Route::post('/periods/reopen', [AccountingPeriodController::class, 'reopen'])->name('periods.reopen');
+    Route::delete('/periods/{period}', [AccountingPeriodController::class, 'destroy'])
+    ->name('periods.destroy');
 
 
 Route::middleware(['auth', 'role:Super-Admin'])->group(function () {

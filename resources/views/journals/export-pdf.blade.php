@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>General Journal</title>
+    <title>Jurnal Umum</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-    <h2>laporan Jurnal umum</h2>
+    <h2>Laporan Jurnal umum</h2>
 
     <p><strong>Periode:</strong> {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</p>
     <p><strong>Lisensi:</strong> {{ auth()->user()->license->name ?? '-' }}</p>

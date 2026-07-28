@@ -233,6 +233,11 @@ return [
                     'url' => '/reports/income-statement',
                     'icon' => 'ti ti-report-analytics',
                 ],
+                [
+                    'text' => 'Tutup Buku',
+                    'url' => '/periods',
+                    'icon' => 'ti ti-report-analytics',
+                ],
             ],
         ],
 

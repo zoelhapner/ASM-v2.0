@@ -5,7 +5,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-CZi_wkmS.js",
+    "file": "assets/app-BCdBMmKn.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
@@ -25,6 +25,11 @@
   "resources/scss/bootstrap-override.scss": {
     "file": "assets/bootstrap-override.css",
     "src": "resources/scss/bootstrap-override.scss",
+    "isEntry": true
+  },
+  "resources/scss/login.scss": {
+    "file": "assets/login.css",
+    "src": "resources/js/login.js",
     "isEntry": true
   }
 }

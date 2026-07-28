@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::create('accounting_periods', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->year('year');
             $table->uuid('license_id');
             $table->foreign('license_id')->references('id')->on('licenses')->onDelete('cascade');
-            $table->string('period_name');
             $table->date('start_date');
             $table->date('end_date');
             $table->boolean('is_closed')->default(false);
             $table->uuid('closed_by');
             $table->foreign('closed_by')->references('id')->on('users')->nullOnDelete();
             $table->timestamp('closed_at')->nullable();
+            $table->timestamps();
 
+            $table->unique(['year']);
         });
     }
 

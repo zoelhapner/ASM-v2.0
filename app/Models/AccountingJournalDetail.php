@@ -13,7 +13,8 @@ class AccountingJournalDetail extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     public $timestamps = false;
-
+    protected $table = 'accounting_journal_details';
+    
     protected $fillable = [
         'journal_id',
         'account_id',

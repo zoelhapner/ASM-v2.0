@@ -724,7 +724,7 @@ public function exportLedgerPdf(Request $request)
         'ledger', 'licenseName', 'startDate', 'endDate'
     ))->setPaper('a4', 'landscape');
 
-    return $pdf->stream('ledger_'.$startDate.'_to_'.$endDate.'.pdf');
+    return $pdf->stream('Buku Besar '.$startDate.'_to_'.$endDate.'.pdf');
 }
 
 
@@ -858,7 +858,6 @@ public function exportTrial(Request $request)
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate   = $request->end_date ?? now()->endOfMonth()->toDateString();
 
-    // 🔹 Filter lisensi sesuai role → sama seperti trialBalance()
     if ($user->hasRole('Super-Admin')) {
         $licenses = License::all();
     } elseif ($user->hasRole('Pemilik Lisensi')) {
@@ -867,15 +866,20 @@ public function exportTrial(Request $request)
         $licenses = $user->employee?->licenses ?? collect();
     }
 
-   $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
+    $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
 
-    // 🔹 Ambil data yang sama seperti di view trial balance
-    $groupedAccounts = $this->getGroupedAccounts($startDate, $endDate, $activeLicenseId);
+    $groupedAccounts = $this->getTrialBalanceAccounts(
+        $startDate,
+        $endDate,
+        $activeLicenseId
+    );
 
-    $totalDebit  = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
-    $totalCredit = collect($groupedAccounts)->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+    $totalDebit  = collect($groupedAccounts)
+        ->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalDebit']));
 
-    // 🔹 Generate PDF
+    $totalCredit = collect($groupedAccounts)
+        ->sum(fn($cat) => collect($cat)->sum(fn($sub) => $sub['subtotalCredit']));
+
     $pdf = Pdf::loadView('journals.trialbalance-pdf', [
         'groupedAccounts' => $groupedAccounts,
         'startDate'       => $startDate,
@@ -893,9 +897,9 @@ public function exportTrial(Request $request)
 public function print(AccountingJournal $journal)
 {
     $pdf = Pdf::loadView('journals.print', compact('journal'))
-        ->setPaper('a4', 'landscape'); // bisa juga landscape
+        ->setPaper('a4', 'landscape');
 
-    return $pdf->stream('journal-'.$journal->journal_code.'.pdf');
+    return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
 }
 
 public function balanceSheet(Request $request)

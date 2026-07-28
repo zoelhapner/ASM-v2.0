@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 // }
     public function run(): void
 {
-    $this->call(PermissionsSeeder::class);
+    $this->call(AccountingPeriodSeeder::class);
 }
 
 }
