@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use App\Services\BalanceSheetService;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Yajra\DataTables\Facades\DataTables;
 
 
@@ -61,7 +62,7 @@ class AccountingJournalController extends Controller
         return DataTables::of($journals)
             ->addIndexColumn()
             ->editColumn('transaction_date', function ($row) {
-                return \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y');
+                return Carbon::parse($row->transaction_date)->format('d/m/Y');
             })
             ->addColumn('journal_code', function ($row) {
                 return '<a href="' . route('journals.show', $row->id) . '" 
@@ -560,10 +561,20 @@ public function exportPDF(Request $request)
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
 
     // Ambil data sesuai filter
-    $journals = AccountingJournal::with(['details.account'])
+    $journals = AccountingJournal::query()
+        ->select([
+            'id',
+            'journal_code',
+            'transaction_date',
+            'license_id',
+        ])
+        ->with([
+            'details:id,journal_id,account_id,debit,credit,description',
+            'details.account:id,account_code,account_name',
+        ])
         ->whereBetween('transaction_date', [$startDate, $endDate])
         ->where('license_id', $activeLicenseId)
-        ->orderBy('transaction_date', 'asc')
+        ->orderBy('transaction_date')
         ->get();
 
     $totalDebit = $journals->sum(fn($j) => $j->details->sum('debit'));
@@ -579,7 +590,13 @@ public function exportPDF(Request $request)
     ))
     ->setPaper('a4', 'landscape');
 
-    return $pdf->stream('general.pdf');
+    $filename = sprintf(
+        'Jurnal Umum %s - %s.pdf',
+        Carbon::parse($startDate)->format('d-m-Y'),
+        Carbon::parse($endDate)->format('d-m-Y')
+    );
+
+    return $pdf->stream($filename);
 }
 
 public function ledger(Request $request)
@@ -895,30 +912,12 @@ public function exportTrial(Request $request)
     return $pdf->stream('trial-balance.pdf');
 }
 
-// public function print(AccountingJournal $journal)
-// {
-//     ini_set('memory_limit', '512M');
-//     $pdf = Pdf::loadView('journals.print', compact('journal'))
-//         ->setPaper('a4', 'landscape');
-
-//     return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
-// }
 public function print(AccountingJournal $journal)
 {
-    try {
-        $pdf = Pdf::loadView('journals.print', compact('journal'))
-            ->setPaper('a4', 'landscape');
+    $pdf = Pdf::loadView('journals.print', compact('journal'))
+        ->setPaper('a4', 'landscape');
 
-        return $pdf->stream('test.pdf');
-    } catch (\Throwable $e) {
-        Log::error($e);
-
-        dd([
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-        ]);
-    }
+    return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
 }
 
 public function balanceSheet(Request $request)
