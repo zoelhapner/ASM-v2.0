@@ -894,8 +894,22 @@ public function exportTrial(Request $request)
     return $pdf->stream('trial-balance.pdf');
 }
 
+// public function print(AccountingJournal $journal)
+// {
+//     $pdf = Pdf::loadView('journals.print', compact('journal'))
+//         ->setPaper('a4', 'landscape');
+
+//     return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
+// }
 public function print(AccountingJournal $journal)
 {
+    $journal = AccountingJournal::query()
+        ->with([
+            'license:id,name',
+            'details.account:id,account_code,account_name',
+        ])
+        ->findOrFail($journal->id);
+
     $pdf = Pdf::loadView('journals.print', compact('journal'))
         ->setPaper('a4', 'landscape');
 

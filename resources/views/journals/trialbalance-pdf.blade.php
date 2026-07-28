@@ -60,14 +60,12 @@
                         <td colspan="4" class="fw-semibold fst-italic"><em>{{ $subCat }}</em></td>
                     </tr>
                     @foreach($data['accounts'] as $acc)
-                        @if(!$acc['is_parent'])
                             <tr>
                                 <td>{{ $acc['account_code'] }}</td>
                                 <td class="text-left">{{ $acc['account_name'] }}</td>
                                 <td>Rp {{ number_format($acc['debit'], 2, ',', '.') }}</td>
                                 <td>Rp {{ number_format($acc['credit'], 2, ',', '.') }}</td>
                             </tr>
-                        @endif
                     @endforeach
                     <tr>
                         <td colspan="2" class="text-right"><strong>Subtotal {{ $subCat }}</strong></td>
