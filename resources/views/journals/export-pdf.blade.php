@@ -17,7 +17,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* biar lebar otomatis */
         }
 
         table th, table td {
@@ -36,14 +35,13 @@
             background: #f2f2f2;
         }
 
-        /* Set minimal lebar agar tidak hilang */
-        table th:nth-child(1), table td:nth-child(1) { width: 65px; }   /* Tanggal */
-        table th:nth-child(2), table td:nth-child(2) { width: 80px; }   /* No Jurnal */
-        table th:nth-child(3), table td:nth-child(3) { width: 170px; }  /* Deskripsi */
-        table th:nth-child(4), table td:nth-child(4) { width: 55px; }   /* No. Akun */
-        table th:nth-child(5), table td:nth-child(5) { width: 120px; }  /* Nama Akun */
-        table th:nth-child(6), table td:nth-child(6) { width: 85px; text-align: right; } /* Debit */
-        table th:nth-child(7), table td:nth-child(7) { width: 85px; text-align: right; } /* Kredit */
+        /* table th:nth-child(1), table td:nth-child(1) { width: 65px; }   
+        table th:nth-child(2), table td:nth-child(2) { width: 80px; }
+        table th:nth-child(3), table td:nth-child(3) { width: 170px; }  
+        table th:nth-child(4), table td:nth-child(4) { width: 55px; }   
+        table th:nth-child(5), table td:nth-child(5) { width: 120px; }  
+        table th:nth-child(6), table td:nth-child(6) { width: 85px; text-align: right; } 
+        table th:nth-child(7), table td:nth-child(7) { width: 85px; text-align: right; }  */
 
         tfoot td {
             font-weight: bold;
@@ -70,11 +68,11 @@
             </tr>
         </thead>
         <tbody>
-            @php
+            {{-- @php
                 $totalDebit = 0;
                 $totalCredit = 0;
             @endphp
-            {{-- @foreach($journals as $journal)
+            @foreach($journals as $journal)
                 @foreach($journal->details as $detail)
                     @php
                         $totalDebit += $detail->debit;
@@ -98,8 +96,8 @@
                     <td>{{ $row->description ?? '-' }}</td>
                     <td>{{ $row->account_code ?? '-' }}</td>
                     <td>{{ $row->account_name ?? '-' }}</td>
-                    <td>Rp {{ number_format($row->debit, 2, ',', '.') }}</td>
-                    <td>Rp {{ number_format($row->credit, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($totalCredit, 2, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
