@@ -21,14 +21,14 @@
 
         table th, table td {
             border: 1px solid #444;
-            padding: 5px;
-            text-align: left;
+            padding: 4px;
+            /* text-align: left; */
             font-size: 9px;
-            vertical-align: top;
-            white-space: normal !important;   /* teks bisa turun ke bawah */
-            word-break: break-word !important; /* pecah kata panjang */
+            /* vertical-align: top; */
+            /* white-space: normal !important;   
+            word-break: break-word !important; 
             word-wrap: break-word !important;
-            overflow: visible !important;
+            overflow: visible !important; */
         }
 
         table th {

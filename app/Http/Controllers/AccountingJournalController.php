@@ -578,18 +578,7 @@ public function exportPDF(Request $request)
 
     $totalDebit = $rows->sum('debit');
     $totalCredit = $rows->sum('credit');
-    $html = view('journals.export-pdf', compact(
-        'rows',
-        'startDate',
-        'endDate',
-        'totalDebit',
-        'totalCredit'
-    ))->render();
-
-    dd([
-        'rows' => $rows->count(),
-        'html_size' => strlen($html),
-    ]);
+    
     $pdf = Pdf::loadView('journals.export-pdf', compact(
         'rows',
         'startDate',
