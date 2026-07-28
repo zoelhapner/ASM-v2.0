@@ -561,20 +561,11 @@ public function exportPDF(Request $request)
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
 
     // Ambil data sesuai filter
-    $journals = AccountingJournal::query()
-        ->select([
-            'id',
-            'journal_code',
-            'transaction_date',
-            'license_id',
-        ])
-        ->with([
-            'details:id,journal_id,account_id,debit,credit,description',
-            'details.account:id,account_code,account_name',
-        ])
+    $journals = AccountingJournal::with(['details.account'])
         ->whereBetween('transaction_date', [$startDate, $endDate])
         ->where('license_id', $activeLicenseId)
         ->orderBy('transaction_date')
+        ->take(50)
         ->get();
 
     $totalDebit = $journals->sum(fn($j) => $j->details->sum('debit'));
