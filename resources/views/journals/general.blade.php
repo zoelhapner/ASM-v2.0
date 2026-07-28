@@ -104,7 +104,6 @@
             </thead>
                 <tbody>
                     @foreach ($journals as $journal)
-                        Jumlah jurnal: {{ $journal->count() }}
                         @php
                             $rowCount = $journal->details->count();
                         @endphp

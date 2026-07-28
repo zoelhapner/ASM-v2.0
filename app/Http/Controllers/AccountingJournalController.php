@@ -578,12 +578,7 @@ public function exportPDF(Request $request)
 
     $totalDebit = $rows->sum('debit');
     $totalCredit = $rows->sum('credit');
-    dd([
-        'request_license' => $request->license_id,
-        'activeLicenseId' => $activeLicenseId,
-        'license_id' => $activeLicenseId,
-        'rows' => $rows->count(),
-    ]);
+
     $pdf = Pdf::loadView('journals.export-pdf', compact(
         'rows',
         'startDate',
@@ -591,14 +586,15 @@ public function exportPDF(Request $request)
         'totalDebit',
         'totalCredit'
     ))->setPaper('a4', 'landscape');
+    return response($pdf->output())
+        ->header('Content-Type', 'application/pdf');
+    // $filename = sprintf(
+    //     'Jurnal Umum %s - %s.pdf',
+    //     Carbon::parse($startDate)->format('d-m-Y'),
+    //     Carbon::parse($endDate)->format('d-m-Y')
+    // );
 
-    $filename = sprintf(
-        'Jurnal Umum %s - %s.pdf',
-        Carbon::parse($startDate)->format('d-m-Y'),
-        Carbon::parse($endDate)->format('d-m-Y')
-    );
-
-    return $pdf->stream($filename);
+    // return $pdf->stream($filename);
 }
 
 public function ledger(Request $request)
