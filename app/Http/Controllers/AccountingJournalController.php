@@ -15,6 +15,7 @@ use App\Models\LicenseHolder;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Services\BalanceSheetService;
 use Illuminate\Support\Facades\Storage;
@@ -894,29 +895,31 @@ public function exportTrial(Request $request)
     return $pdf->stream('trial-balance.pdf');
 }
 
-public function print(AccountingJournal $journal)
-{
-    ini_set('memory_limit', '512M');
-    $pdf = Pdf::loadView('journals.print', compact('journal'))
-        ->setPaper('a4', 'landscape');
-
-    return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
-}
 // public function print(AccountingJournal $journal)
 // {
 //     ini_set('memory_limit', '512M');
-//     $journal = AccountingJournal::query()
-//         ->with([
-//             'license:id,name',
-//             'details.account:id,account_code,account_name',
-//         ])
-//         ->findOrFail($journal->id);
-
 //     $pdf = Pdf::loadView('journals.print', compact('journal'))
 //         ->setPaper('a4', 'landscape');
 
 //     return $pdf->stream('Jurnal Transaksi '.$journal->journal_code.'.pdf');
 // }
+public function print(AccountingJournal $journal)
+{
+    try {
+        $pdf = Pdf::loadView('journals.print', compact('journal'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->stream('test.pdf');
+    } catch (\Throwable $e) {
+        Log::error($e);
+
+        dd([
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+        ]);
+    }
+}
 
 public function balanceSheet(Request $request)
 {
