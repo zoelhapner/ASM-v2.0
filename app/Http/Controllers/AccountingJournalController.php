@@ -555,6 +555,10 @@ public function store(StoreAccountingJournalRequest $request)
 
 public function exportPDF(Request $request)
 {
+    ini_set('memory_limit', '512M');
+    dd([
+        'before' => ini_get('memory_limit')
+    ]);
     $startDate = $request->start_date ?? now()->startOfMonth()->toDateString();
     $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
@@ -578,29 +582,7 @@ public function exportPDF(Request $request)
 
     $totalDebit = $rows->sum('debit');
     $totalCredit = $rows->sum('credit');
-    dd([
-        'memory_limit' => ini_get('memory_limit'),
 
-        'journal_count' => AccountingJournal::whereBetween('transaction_date', [$startDate, $endDate])
-            ->where('license_id', $activeLicenseId)
-            ->count(),
-
-        'detail_count' => $rows->count(),
-
-        'max_description' => $rows->max(fn ($r) => strlen($r->description ?? '')),
-
-        'max_account_name' => $rows->max(fn ($r) => strlen($r->account_name ?? '')),
-
-        'html_size' => strlen(
-            view('journals.export-pdf', compact(
-                'rows',
-                'startDate',
-                'endDate',
-                'totalDebit',
-                'totalCredit'
-            ))->render()
-        ),
-    ]);
     $pdf = Pdf::loadView('journals.export-pdf', compact(
         'rows',
         'startDate',
