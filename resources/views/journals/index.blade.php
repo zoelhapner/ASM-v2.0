@@ -28,19 +28,18 @@ $(function () {
     const table = $('#journals-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{{ route("journals.index") }}',
-        // ajax: {
-        //             url: 'https://asm.aharightbrain.com/journals', 
-        //             type: 'GET',
-        //             xhrFields: {
-        //                 withCredentials: true 
-        //             },
-        //             error: function (xhr, error, thrown) {
-        //                 console.error("❌ AJAX Error:", error, thrown);
-        //                 console.log("📄 Response Text:", xhr.responseText);
-        //                 alert("Gagal memuat data! Cek console untuk detail error.");
-        //             }
-        //         },
+        ajax: {
+                    url: 'https://asm.aharightbrain.com/journals', 
+                    type: 'GET',
+                    xhrFields: {
+                        withCredentials: true 
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error("❌ AJAX Error:", error, thrown);
+                        console.log("📄 Response Text:", xhr.responseText);
+                        alert("Gagal memuat data! Cek console untuk detail error.");
+                    }
+                },
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
             { data: 'license_type', name: 'licenses.license_type' },
