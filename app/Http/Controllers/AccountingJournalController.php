@@ -578,7 +578,29 @@ public function exportPDF(Request $request)
 
     $totalDebit = $rows->sum('debit');
     $totalCredit = $rows->sum('credit');
+    dd([
+        'memory_limit' => ini_get('memory_limit'),
 
+        'journal_count' => AccountingJournal::whereBetween('transaction_date', [$startDate, $endDate])
+            ->where('license_id', $activeLicenseId)
+            ->count(),
+
+        'detail_count' => $rows->count(),
+
+        'max_description' => $rows->max(fn ($r) => strlen($r->description ?? '')),
+
+        'max_account_name' => $rows->max(fn ($r) => strlen($r->account_name ?? '')),
+
+        'html_size' => strlen(
+            view('journals.export-pdf', compact(
+                'rows',
+                'startDate',
+                'endDate',
+                'totalDebit',
+                'totalCredit'
+            ))->render()
+        ),
+    ]);
     $pdf = Pdf::loadView('journals.export-pdf', compact(
         'rows',
         'startDate',
@@ -586,15 +608,14 @@ public function exportPDF(Request $request)
         'totalDebit',
         'totalCredit'
     ))->setPaper('a4', 'landscape');
-    return response($pdf->output())
-        ->header('Content-Type', 'application/pdf');
-    // $filename = sprintf(
-    //     'Jurnal Umum %s - %s.pdf',
-    //     Carbon::parse($startDate)->format('d-m-Y'),
-    //     Carbon::parse($endDate)->format('d-m-Y')
-    // );
 
-    // return $pdf->stream($filename);
+    $filename = sprintf(
+        'Jurnal Umum %s - %s.pdf',
+        Carbon::parse($startDate)->format('d-m-Y'),
+        Carbon::parse($endDate)->format('d-m-Y')
+    );
+
+    return $pdf->stream($filename);
 }
 
 public function ledger(Request $request)
