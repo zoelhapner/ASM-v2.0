@@ -13,7 +13,6 @@ class AccountingPeriodSeeder extends Seeder
     public function run(): void
     {
         $licenseId = License::first()->id ?? Str::uuid();
-        $userId = User::first()->id ?? Str::uuid();
 
         $startYear = 2025; // bebas
         $endYear   = date('Y') + 10; // auto sampai 5 tahun ke depan
@@ -24,7 +23,6 @@ class AccountingPeriodSeeder extends Seeder
                     [
                         'license_id' => $licenseId,
                         'year' => $year,
-                        'closed_by' => $userId,
                     ],
                     [
                         'id'         => Str::uuid(),
