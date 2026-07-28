@@ -104,6 +104,7 @@
             </thead>
                 <tbody>
                     @foreach ($journals as $journal)
+                        Jumlah jurnal: {{ $journal->count() }}
                         @php
                             $rowCount = $journal->details->count();
                         @endphp
@@ -161,7 +162,6 @@
 @push('js')
 <script>
  $('.select2').select2({
-            placeholder: "-- Pilih --",
             width: '100%'
         });
 </script>
