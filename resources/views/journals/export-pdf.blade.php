@@ -19,7 +19,7 @@
             border-collapse: collapse;
         }
 
-        table th, table td {
+        th, td {
             border: 1px solid #444;
             padding: 4px;
             /* text-align: left; */
@@ -31,9 +31,9 @@
             overflow: visible !important; */
         }
 
-        table th {
+        /* table th {
             background: #f2f2f2;
-        }
+        } */
 
         /* table th:nth-child(1), table td:nth-child(1) { width: 65px; }   
         table th:nth-child(2), table td:nth-child(2) { width: 80px; }
@@ -93,7 +93,8 @@
                 <tr>
                     <td>{{ \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y') }}</td>
                     <td>{{ $row->journal_code }}</td>
-                    <td>{{ $row->description ?? '-' }}</td>
+                    {{-- <td>{{ $row->description ?? '-' }}</td> --}}
+                    <td>{{ $row->description ? 'Ada Deskripsi' : '-' }}</td>
                     <td>{{ $row->account_code ?? '-' }}</td>
                     <td>{{ $row->account_name ?? '-' }}</td>
                     <td>Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
