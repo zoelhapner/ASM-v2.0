@@ -58,8 +58,10 @@
                 {{-- Tanggal Transaksi --}}
                 <div class="col-md-4 mb-3">
                     <label for="transaction_date" class="required">Tanggal Transaksi</label>
-                    <input type="date" id="transaction_date" name="transaction_date" 
-                        class="form-control" required>
+                    <input type="date" id="transaction_date" name="transaction_date" class="form-control" required>
+                    <small id="period-warning" class="text-danger d-none">
+                        ⚠️ Periode sudah ditutup
+                    </small>
                 </div>
             </div>
   
@@ -439,13 +441,25 @@ $(document).ready(function () {
     });
 });
 </script>
+<script>
+$('#transaction_date').on('change', function () {
 
+    let selected = $(this).val();
+
+    if (!selected) return;
+
+    $.get('/check-period', { date: selected }, function(res) {
+
+        if (res.closed) {
+            $('#period-warning').removeClass('d-none');
+            $('button[type="submit"]').prop('disabled', true);
+        } else {
+            $('#period-warning').addClass('d-none');
+            $('button[type="submit"]').prop('disabled', false);
+        }
+
+    });
+
+});
+</script>
 @endpush
-
-
-
-
-
-
-
-
