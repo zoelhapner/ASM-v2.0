@@ -29,7 +29,7 @@
                     <div class="btn-list">
 
                         <a href="{{ route('ledger.export', request()->all()) }}"
-                           class="btn btn-primary"
+                           class="btn btn-success"
                            target="_blank">
 
                             <i class="ti ti-file-export"></i>
@@ -37,7 +37,7 @@
                         </a>
 
                         <a href="{{ route('ledgerpdf', request()->all()) }}"
-                           class="btn btn-outline-dark"
+                           class="btn btn-danger"
                            target="_blank">
 
                             <i class="ti ti-printer"></i>

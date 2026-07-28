@@ -15,7 +15,7 @@ class AccountingPeriodSeeder extends Seeder
         $licenseId = License::first()->id ?? Str::uuid();
 
         $startYear = 2025; // bebas
-        $endYear   = date('Y') + 10; // auto sampai 5 tahun ke depan
+        $endYear   = date('Y') + 5; // auto sampai 5 tahun ke depan
 
             for ($year = $startYear; $year <= $endYear; $year++) {
 

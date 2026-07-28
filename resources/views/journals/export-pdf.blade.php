@@ -61,8 +61,8 @@
                     <td>{{ $row->description ?? '-' }}</td>
                     <td>{{ $row->account_code ?? '-' }}</td>
                     <td>{{ $row->account_name ?? '-' }}</td>
-                    <td>Rp {{ number_format($totalDebit, 2, ',', '.') }}</td>
-                    <td>Rp {{ number_format($totalCredit, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($row->debit, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($row->credit, 2, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

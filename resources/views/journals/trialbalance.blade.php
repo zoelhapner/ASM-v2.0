@@ -31,7 +31,7 @@
                     <div class="btn-list">
 
                         <a href="{{ route('trial.export', request()->all()) }}"
-                           class="btn btn-primary"
+                           class="btn btn-success"
                            target="_blank">
 
                             <i class="ti ti-file-export"></i>

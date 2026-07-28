@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid mt-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    {{-- <div class="d-flex justify-content-between align-items-center mb-3">
         <h3 class="mb-3">Neraca</h3>
             <a href="{{ route('trial.export', [
                     'start_date' => request('start_date'),
@@ -12,7 +12,45 @@
                 class="btn btn-success" target="_blank">
                 <i class="ti ti-file-export text-white"></i>Ekspor Excel
             </a> 
-    </div>
+    </div> --}}
+            <div class="row g-2 align-items-center">
+
+                {{-- LEFT --}}
+                <div class="col">
+                    <h2>
+                        Neraca Saldo
+                    </h2>
+
+                    <div class="text-muted mt-1">
+                        Laporan per akun dengan saldo berjalan
+                    </div>
+                </div>
+
+                {{-- RIGHT --}}
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+
+                        <a href="{{ route('trial.export', request()->all()) }}"
+                           class="btn btn-success"
+                           target="_blank">
+
+                            <i class="ti ti-file-export"></i>
+                            Ekspor Excel
+                        </a>
+
+                        <a href="{{ route('journals.trial.pdf', [
+                                'start_date' => request('start_date'),
+                                'end_date' => request('end_date'),
+                                'license_id' => request('license_id')
+                            ]) }}" 
+                            class="btn btn-danger" target="_blank">
+                            <i class="ti ti-printer"></i>Cetak
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
 
     {{-- 🔹 Filter --}}
     <div class="card shadow-sm border-0 mb-3">
@@ -228,7 +266,7 @@
                 </div>
             </div>
 
-                <div class="d-flex justify-content-start gap-2 mt-3">
+                {{-- <div class="d-flex justify-content-start gap-2 mt-3">
                     <a href="{{ route('journals.trial.pdf', [
                             'start_date' => request('start_date'),
                             'end_date' => request('end_date'),
@@ -237,7 +275,7 @@
                         class="btn btn-danger" target="_blank">
                         <i class="ti ti-printer"></i>Cetak
                     </a>
-                </div>
+                </div> --}}
         </div>
     </div>
 </div>
