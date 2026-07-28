@@ -6,6 +6,7 @@ use App\Models\AccountingAccount;
 use App\Models\AccountingClosingBalance;
 use App\Models\AccountingJournalDetail;
 use App\Models\AccountingPeriod;
+use App\Models\License;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -15,11 +16,19 @@ class AccountingPeriodController extends Controller
 {
     public function index()
     {
+        $licenses = License::orderBy('name')->get();
+        $activeLicenseId = request('license_id') ?? auth()->user()->license_id;
+
         $periods = DB::table('accounting_periods')
+            ->where('license_id', $activeLicenseId)
             ->orderByDesc('year')
             ->get();
 
-        return view('accounting.periods.index', compact('periods'));
+        return view('accounting.periods.index', compact(
+            'periods',
+            'activeLicenseId',
+            'licenses',
+        ));
     }
 
     public function close(Request $request)
@@ -29,8 +38,13 @@ class AccountingPeriodController extends Controller
         ]);
 
         $year = $request->year;
+        $licenseId = $request->license_id;
 
+        if (! auth()->user()->hasRole('Super-Admin')) {
+            $licenseId = auth()->user()->license_id;
+        }
         $period = DB::table('accounting_periods')
+            ->where('license_id', $licenseId)
             ->where('year', $year)
             ->first();
 
@@ -52,6 +66,7 @@ class AccountingPeriodController extends Controller
                     DB::raw('SUM(d.debit) as total_debit'),
                     DB::raw('SUM(d.credit) as total_credit')
                 )
+                ->where('j.license_id', $licenseId)
                 ->whereYear('j.transaction_date', $year)
                 ->whereNotIn('a.category', ['PENDAPATAN', 'BEBAN'])
                 ->groupBy('d.account_id')
@@ -78,6 +93,7 @@ class AccountingPeriodController extends Controller
             }
 
             DB::table('accounting_periods')
+                ->where('license_id', $licenseId)
                 ->where('year', $year)
                 ->update([
                     'is_closed' => true,
@@ -87,6 +103,7 @@ class AccountingPeriodController extends Controller
 
             DB::table('accounting_periods')->updateOrInsert(
                 [
+                    'license_id' => $licenseId,
                     'year' => $nextYear
                 ],
                 [

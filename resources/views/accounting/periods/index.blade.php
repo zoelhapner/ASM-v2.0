@@ -15,7 +15,21 @@
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-
+        @if(auth()->user()->hasRole('Super-Admin'))
+        <div class="mb-3">
+            <label>Lisensi</label>
+            <select id="license_id" class="form-select">
+                @foreach($licenses as $license)
+                    <option value="{{ $license->id }}"
+                        {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
+                        {{ $license->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        @else
+            <input type="hidden" id="license_id" value="{{ $activeLicenseId }}">
+        @endif
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -41,6 +55,7 @@
                             @if(!$p->is_closed)
                                 <form action="{{ route('periods.close') }}" method="POST" style="display:inline">
                                     @csrf
+                                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
                                     <input type="hidden" name="year" value="{{ $p->year }}">
                                     <button type="button"
                                         class="btn btn-sm btn-danger btn-close-period"
@@ -51,6 +66,7 @@
                             @else
                                 <form action="{{ route('periods.reopen') }}" method="POST" style="display:inline">
                                     @csrf
+                                    <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
                                     <input type="hidden" name="year" value="{{ $p->year }}">
                                     <button type="button"
                                         class="btn btn-sm btn-warning btn-reopen-period"
@@ -77,11 +93,13 @@
         <form id="closeForm" method="POST" action="{{ route('periods.close') }}">
             @csrf
             <input type="hidden" name="year" id="closeYear">
+            <input type="hidden" name="license_id" id="closeLicense">
         </form>
 
         <form id="reopenForm" method="POST" action="{{ route('periods.reopen') }}">
             @csrf
             <input type="hidden" name="year" id="reopenYear">
+            <input type="hidden" name="license_id" id="closeLicense">
         </form>
 
         <form id="deleteForm" method="POST">
@@ -112,7 +130,8 @@
 
                     document.getElementById('closeYear').value = year;
                     document.getElementById('closeForm').submit();
-
+                    document.getElementById('closeLicense').value =
+                    document.getElementById('license_id').value;
                 }
 
             });
@@ -135,12 +154,11 @@
                 confirmButtonText: 'Ya, Reopen',
                 cancelButtonText: 'Batal'
             }).then(result => {
-
                 if (result.isConfirmed) {
-
                     document.getElementById('reopenYear').value = year;
                     document.getElementById('reopenForm').submit();
-
+                    document.getElementById('closeLicense').value =
+                    document.getElementById('license_id').value;
                 }
 
             });

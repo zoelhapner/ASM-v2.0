@@ -445,15 +445,19 @@ $(document).ready(function () {
 $('#transaction_date').on('change', function () {
 
     let selected = $(this).val();
+    let licenseId = $('#license_id').val() ?? $('#activeLicenseId').val();
 
-    if (!selected) return;
+    if (!selected || !licenseId) return;
 
-    $.get('/check-period', { date: selected }, function(res) {
+    $.get('/check-period', {
+        date: selected,
+        license_id: licenseId
+    }, function(res) {
 
-        if (res.closed) {
+        if(res.closed){
             $('#period-warning').removeClass('d-none');
             $('button[type="submit"]').prop('disabled', true);
-        } else {
+        }else{
             $('#period-warning').addClass('d-none');
             $('button[type="submit"]').prop('disabled', false);
         }
