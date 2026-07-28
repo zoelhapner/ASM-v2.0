@@ -425,7 +425,6 @@ public function store(StoreAccountingJournalRequest $request)
         return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dihapus.');
     }
 
-
     public function report(Request $request)
 {
     $user = Auth::user();
@@ -560,26 +559,33 @@ public function exportPDF(Request $request)
     $endDate = $request->end_date ?? now()->endOfMonth()->toDateString();
     $activeLicenseId = $request->license_id ?? auth()->user()->license_id;
 
-    // Ambil data sesuai filter
-    $journals = AccountingJournal::with(['details.account'])
-        ->whereBetween('transaction_date', [$startDate, $endDate])
-        ->where('license_id', $activeLicenseId)
-        ->orderBy('transaction_date')
-        ->take(50)
+    $rows = AccountingJournalDetail::query()
+        ->join('accounting_journals as j', 'j.id', '=', 'accounting_journal_details.journal_id')
+        ->join('accounting_accounts as a', 'a.id', '=', 'accounting_journal_details.account_id')
+        ->select([
+            'j.transaction_date',
+            'j.journal_code',
+            'accounting_journal_details.description',
+            'a.account_code',
+            'a.account_name',
+            'accounting_journal_details.debit',
+            'accounting_journal_details.credit',
+        ])
+        ->whereBetween('j.transaction_date', [$startDate, $endDate])
+        ->where('j.license_id', $activeLicenseId)
+        ->orderBy('j.transaction_date')
         ->get();
 
-    $totalDebit = $journals->sum(fn($j) => $j->details->sum('debit'));
-    $totalCredit = $journals->sum(fn($j) => $j->details->sum('credit'));
+    $totalDebit = $rows->sum('debit');
+    $totalCredit = $rows->sum('credit');
 
-    // Load view khusus PDF
     $pdf = Pdf::loadView('journals.export-pdf', compact(
-        'journals',
+        'rows',
         'startDate',
         'endDate',
         'totalDebit',
         'totalCredit'
-    ))
-    ->setPaper('a4', 'landscape');
+    ))->setPaper('a4', 'landscape');
 
     $filename = sprintf(
         'Jurnal Umum %s - %s.pdf',

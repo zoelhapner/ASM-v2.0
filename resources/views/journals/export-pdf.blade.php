@@ -74,7 +74,7 @@
                 $totalDebit = 0;
                 $totalCredit = 0;
             @endphp
-            @foreach($journals as $journal)
+            {{-- @foreach($journals as $journal)
                 @foreach($journal->details as $detail)
                     @php
                         $totalDebit += $detail->debit;
@@ -90,6 +90,17 @@
                         <td>Rp {{ number_format($detail->credit, 2, ',', '.') }}</td>
                     </tr>
                 @endforeach
+            @endforeach --}}
+            @foreach($rows as $row)
+                <tr>
+                    <td>{{ \Carbon\Carbon::parse($row->transaction_date)->format('d/m/Y') }}</td>
+                    <td>{{ $row->journal_code }}</td>
+                    <td>{{ $row->description ?? '-' }}</td>
+                    <td>{{ $row->account_code ?? '-' }}</td>
+                    <td>{{ $row->account_name ?? '-' }}</td>
+                    <td>Rp {{ number_format($row->debit, 2, ',', '.') }}</td>
+                    <td>Rp {{ number_format($row->credit, 2, ',', '.') }}</td>
+                </tr>
             @endforeach
         </tbody>
         <tfoot>

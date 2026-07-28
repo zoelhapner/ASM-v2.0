@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    {{-- <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 style="text-align:center;">Buku Besar</h2>
             
                 <a href="{{ route('ledger.export', request()->query()) }}" 
@@ -10,7 +10,44 @@
                     <i class="ti ti-file-export"></i> Ekspor Excel
                 </a>
             
-    </div>
+    </div> --}}
+            <div class="row g-2 align-items-center">
+
+                {{-- LEFT --}}
+                <div class="col">
+                    <h2>
+                        Buku Besar
+                    </h2>
+
+                    <div class="text-muted mt-1">
+                        Laporan per akun dengan saldo berjalan
+                    </div>
+                </div>
+
+                {{-- RIGHT --}}
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+
+                        <a href="{{ route('ledger.export', request()->all()) }}"
+                           class="btn btn-primary"
+                           target="_blank">
+
+                            <i class="ti ti-file-export"></i>
+                            Ekspor Excel
+                        </a>
+
+                        <a href="{{ route('ledgerpdf', request()->all()) }}"
+                           class="btn btn-outline-dark"
+                           target="_blank">
+
+                            <i class="ti ti-printer"></i>
+                            Cetak
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
     
     <div class="card shadow-sm border-0 mb-3">
         <div class="card-body">
@@ -102,13 +139,13 @@
             
         </div>
     @endforeach
-    <div class="d-flex justify-content-start gap-2 mt-3">
+    {{-- <div class="d-flex justify-content-start gap-2 mt-3">
         <a href="{{ route('ledgerpdf', request()->query()) }}" 
                         target="_blank" 
                         class="btn btn-danger">
                         <i class="ti ti-printer"></i> Cetak
         </a>
-    </div>
+    </div> --}}
 </div>
 @endsection
 
