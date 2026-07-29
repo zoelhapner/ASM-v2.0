@@ -12,7 +12,7 @@ class AccountingPeriodSeeder extends Seeder
 {
     public function run(): void
     {
-        $licenseId = License::first()->id ?? Str::uuid();
+        $licenseId = config('app.license_id');
 
         $startYear = 2025; // bebas
         $endYear   = date('Y') + 5; // auto sampai 5 tahun ke depan

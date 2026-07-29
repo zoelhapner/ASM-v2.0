@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use App\Services\BalanceSheetService;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -124,6 +125,7 @@ class AccountingJournalController extends Controller
         ->where('is_closed', false)
         ->orderByDesc('year')
         ->first();
+        abort(403, 'Semua periode sudah ditutup.');
     $licenseIds = $activeLicenseId
         ? [(string) $activeLicenseId]
         : $licenses->pluck('id')->toArray();
@@ -223,13 +225,34 @@ public function store(StoreAccountingJournalRequest $request)
 {
     $user = Auth::user();
     $licenseId = $request->license_id;
+    $transactionDate = Carbon::parse($request->transaction_date);
 
+    $period = DB::table('accounting_periods')
+        ->where('license_id', $licenseId)
+        ->whereDate('start_date', '<=', $transactionDate)
+        ->whereDate('end_date', '>=', $transactionDate)
+        ->first();
+
+    if (!$period) {
+        return back()
+            ->withInput()
+            ->with('error', 'Periode akuntansi tidak ditemukan.');
+    }
+
+    if ($period->is_closed) {
+        return back()
+            ->withInput()
+            ->with('error', 'Periode akuntansi sudah ditutup. Tidak dapat membuat jurnal.');
+    }
     $cabangLicense = License::find($licenseId);
 
-    // Hitung total debit/credit (kalau mau validasi balance)
     $totalDebit = collect($request->details)->sum('debit');
     $totalCredit = collect($request->details)->sum('credit');
-
+    if ($totalDebit != $totalCredit) {
+        return back()
+            ->withInput()
+            ->with('error', 'Total debit dan kredit harus seimbang.');
+    }
     $enclosurePath = null;
     if ($request->hasFile('enclosure')) {
         $file = $request->file('enclosure');
@@ -239,28 +262,27 @@ public function store(StoreAccountingJournalRequest $request)
             'public'
         );
     }
-
-    // 1. Simpan jurnal di CABANG
-    $journal = AccountingJournal::create([
-        'license_id' => $licenseId,
-        'journal_code' => $request->journal_code,
-        'transaction_date' => $request->transaction_date,
-        'description' => $request->description,
-        'created_by' => $user->id,
-        'enclosure' => $enclosurePath,
-    ]);
-
-    foreach ($request->details as $detail) {
-        AccountingJournalDetail::create([
-            'journal_id' => $journal->id,
-            'account_id' => $detail['account_id'],
-            'person' => $detail['person'] ?? null,
-            'debit' => $detail['debit'] ?? 0,
-            'credit' => $detail['credit'] ?? 0,
-            'description' => $detail['description'] ?? null,
+    DB::transaction(function () use ($request, $user, $licenseId, $enclosurePath) {
+        $journal = AccountingJournal::create([
+            'license_id' => $licenseId,
+            'journal_code' => $request->journal_code,
+            'transaction_date' => $request->transaction_date,
+            'description' => $request->description,
+            'created_by' => $user->id,
+            'enclosure' => $enclosurePath,
         ]);
-    }
 
+        foreach ($request->details as $detail) {
+            AccountingJournalDetail::create([
+                'journal_id' => $journal->id,
+                'account_id' => $detail['account_id'],
+                'person' => $detail['person'] ?? null,
+                'debit' => $detail['debit'] ?? 0,
+                'credit' => $detail['credit'] ?? 0,
+                'description' => $detail['description'] ?? null,
+            ]);
+        }
+    });
     return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dibuat.');
 }
 
