@@ -125,7 +125,6 @@ class AccountingJournalController extends Controller
         ->where('is_closed', false)
         ->orderByDesc('year')
         ->first();
-        abort(403, 'Semua periode sudah ditutup.');
     $licenseIds = $activeLicenseId
         ? [(string) $activeLicenseId]
         : $licenses->pluck('id')->toArray();
