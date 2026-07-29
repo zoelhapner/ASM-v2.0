@@ -118,9 +118,12 @@ class AccountingJournalController extends Controller
     }
 
     $activeLicenseId = $request->get('license_id') ?? session('active_license_id');
-    
 
-    // Tentukan daftar license_id untuk query
+    $openPeriod = DB::table('accounting_periods')
+        ->where('license_id', $activeLicenseId)
+        ->where('is_closed', false)
+        ->orderByDesc('year')
+        ->first();
     $licenseIds = $activeLicenseId
         ? [(string) $activeLicenseId]
         : $licenses->pluck('id')->toArray();
@@ -176,7 +179,7 @@ class AccountingJournalController extends Controller
     : null; 
 
         return view('journals.create', compact(
-            'accounts', 'licenses', 'journalCode', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName'
+            'accounts', 'licenses', 'journalCode', 'activeLicenseId', 'students', 'employees', 'licenseholders', 'licenseList', 'pusatUserId', 'pusatUserName', 'openPeriod'
         ));
 }
 

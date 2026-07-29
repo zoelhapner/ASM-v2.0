@@ -200,13 +200,13 @@ return [
                 [
                     'text' => 'Detail Akun',
                     'url' => '/accounting',
-                    'icon' => 'ti ti-currency-dollar',
+                    'icon' => 'ti ti-list',
                     'can' => 'akun-akuntansi.lihat',
                 ],
                 [
                     'text' => 'Input Jurnal',
                     'url' => '/journals',
-                    'icon' => 'ti ti-report-analytics',
+                    'icon' => 'ti ti-notebook',
                 ],
                 [
                     'text' => 'Jurnal Umum',
@@ -216,7 +216,7 @@ return [
                 [
                     'text' => 'Transaksi',
                     'url' => '/journals/report',
-                    'icon' => 'ti ti-report-analytics',
+                    'icon' => 'ti ti-transaction-dollar',
                 ],
                 [
                     'text' => 'Buku Besar',
@@ -224,9 +224,9 @@ return [
                     'icon' => 'ti ti-report-analytics',
                 ],
                 [
-                    'text' => 'Neraca',
+                    'text' => 'Neraca Saldo',
                     'url' => '/reports/balance_sheet',
-                    'icon' => 'ti ti-report-analytics',
+                    'icon' => 'ti ti-scale',
                 ],
                 [
                     'text' => 'Laba Rugi',

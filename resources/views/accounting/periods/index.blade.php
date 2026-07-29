@@ -15,21 +15,32 @@
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-        @if(auth()->user()->hasRole('Super-Admin'))
-        <div class="mb-3">
-            <label>Lisensi</label>
-            <select id="license_id" class="form-select">
-                @foreach($licenses as $license)
-                    <option value="{{ $license->id }}"
-                        {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
-                        {{ $license->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        @else
-            <input type="hidden" id="license_id" value="{{ $activeLicenseId }}">
-        @endif
+        <form method="GET" action="{{ route('periods.index') }}" class="row g-2 mb-3">
+
+            @if(auth()->user()->hasRole('Super-Admin'))
+                <div class="col-md-5">
+                    <label class="form-label">Lisensi</label>
+                    <select id="license_id" name="license_id" class="form-select select2">
+                        <option value="">-- Semua Lisensi --</option>
+                        @foreach($licenses as $license)
+                            <option value="{{ $license->id }}"
+                                {{ $license->id == $activeLicenseId ? 'selected' : '' }}>
+                                {{ $license->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-auto d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-filter"></i> Filter
+                    </button>
+                </div>
+            @else
+                <input type="hidden" name="license_id" value="{{ $activeLicenseId }}">
+            @endif
+
+        </form>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -99,18 +110,23 @@
         <form id="reopenForm" method="POST" action="{{ route('periods.reopen') }}">
             @csrf
             <input type="hidden" name="year" id="reopenYear">
-            <input type="hidden" name="license_id" id="closeLicense">
+            <input type="hidden" name="license_id" id="reopenLicense">
         </form>
 
         <form id="deleteForm" method="POST">
             @csrf
             @method('DELETE')
+            <input type="hidden" name="license_id" id="deleteLicense">
         </form>
     </div>
 </div>
 @endsection
 @push('js')
 <script>
+    $('.select2').select2({
+        width: '100%'
+    });
+
     document.querySelectorAll('.btn-close-period').forEach(btn => {
 
         btn.addEventListener('click', function() {
@@ -127,11 +143,10 @@
             }).then(result => {
 
                 if (result.isConfirmed) {
-
                     document.getElementById('closeYear').value = year;
-                    document.getElementById('closeForm').submit();
                     document.getElementById('closeLicense').value =
-                    document.getElementById('license_id').value;
+                        document.getElementById('license_id').value;
+                    document.getElementById('closeForm').submit();
                 }
 
             });
@@ -156,9 +171,9 @@
             }).then(result => {
                 if (result.isConfirmed) {
                     document.getElementById('reopenYear').value = year;
+                    document.getElementById('reopenLicense').value =
+                        document.getElementById('license_id').value;
                     document.getElementById('reopenForm').submit();
-                    document.getElementById('closeLicense').value =
-                    document.getElementById('license_id').value;
                 }
 
             });
@@ -188,9 +203,9 @@
                     let form = document.getElementById('deleteForm');
 
                     form.action = '/periods/' + id;
-
+                    document.getElementById('deleteLicense').value =
+                        document.getElementById('license_id').value;
                     form.submit();
-
                 }
 
             });
