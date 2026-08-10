@@ -53,7 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
-    'license_id' => 'ff5584db-02e1-4c01-bcfd-52ab38eb0888',
+    'license_id' => 'da1bc76b-a7ea-4383-9e29-3ad4275abcd6',
 
     /*
     |--------------------------------------------------------------------------
