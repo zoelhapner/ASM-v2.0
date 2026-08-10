@@ -446,7 +446,10 @@ public function store(StoreAccountingJournalRequest $request)
         $journal->details()->delete();
         $journal->delete();
 
-        return redirect()->route('journals.index')->with('success', 'Jurnal berhasil dihapus.');
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jurnal berhasil dihapus.'
+        ]);
     }
 
     public function report(Request $request)
